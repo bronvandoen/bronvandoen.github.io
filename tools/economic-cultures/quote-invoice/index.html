@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>From Quote to Invoice</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:wght@400;600&family=Big+Shoulders+Display:wght@800;900&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<style>
+/* Same sheet as the hourly-rate tool: riso on paper, baseline Blue + Bright Red and black. */
+:root{
+  --paper:#F7F3EA; --paper-raised:#FBF8F1; --ink:#111111; --ink-soft:#4A463F;
+  --ink-1:#0078BF; --ink-2:#F15060; --display-ink:#0078BF; --eyebrow-ink:#3D5588; --accent-text:#B8293A;
+  --display:"Big Shoulders Display","Oswald","Arial Narrow",sans-serif;
+  --text:"Source Serif 4",Georgia,serif;
+  --readable:"Atkinson Hyperlegible Next",Verdana,sans-serif;
+  --label:"Atkinson Hyperlegible Mono","Courier New",monospace;
+  --rule:2px; --rule-heavy:3px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--text);font-size:17px;line-height:1.6;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 120px}
+body.readable{font-family:var(--readable)}
+.wrap{max-width:560px;margin:0 auto}
+a{color:var(--ink);text-decoration-thickness:2px;text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+
+header.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:16px 8px;border-bottom:var(--rule) solid var(--ink)}
+.studio{font-family:var(--display);font-weight:900;font-size:20px;white-space:nowrap;letter-spacing:.01em}
+.toggle{font-family:var(--label);font-size:13px;font-weight:600;background:var(--paper-raised);color:var(--ink);border:var(--rule) solid var(--ink);min-height:44px;padding:0 12px;cursor:pointer;border-radius:0}
+.toggle[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+.progress{font-family:var(--label);font-size:13px;color:var(--ink-soft);padding-top:16px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.eyebrow{font-family:var(--display);font-weight:800;font-size:16px;letter-spacing:.08em;color:var(--eyebrow-ink);text-transform:uppercase;margin:20px 0 6px}
+.over{position:relative;margin:0 0 16px}
+.over h1,.over .ghost{font-family:var(--display);font-weight:900;font-size:clamp(38px,11vw,56px);line-height:.9;text-transform:uppercase;margin:0;text-wrap:balance;mix-blend-mode:multiply}
+.over h1{position:relative;color:var(--display-ink)}
+.over .ghost{position:absolute;left:3px;top:3px;color:var(--ink-2)}
+p{margin:0 0 14px}
+.lead{font-size:19px}
+.note{font-family:var(--label);font-size:13px;color:var(--ink-soft)}
+.accent{font-style:italic;color:var(--accent-text)}
+
+.panel{background:var(--paper-raised);border:var(--rule-heavy) solid var(--ink);padding:20px 16px;margin:18px 0}
+.panel h2{font-family:var(--display);font-weight:900;font-size:26px;line-height:1;text-transform:uppercase;margin:0 0 10px}
+.panel h3{font-family:var(--label);font-weight:600;font-size:14px;margin:0 0 4px;text-transform:uppercase;letter-spacing:.04em}
+
+.f{display:block;padding:10px 0;border-bottom:1px solid #CFC8B8}
+.f:last-child{border-bottom:0}
+.f label,.f .lbl{display:block;font-family:var(--readable);font-weight:600;font-size:16px;line-height:1.3;margin-bottom:6px}
+.f .hint{display:block;font-family:var(--readable);font-size:14px;color:var(--ink-soft);line-height:1.4;margin-top:4px}
+.f input,.f textarea,.f select,.ln input,.ln select{width:100%;min-height:44px;font-family:var(--readable);font-size:17px;padding:8px 10px;border:var(--rule) solid var(--ink);background:var(--paper);color:var(--ink);-webkit-text-fill-color:var(--ink);border-radius:0}
+.f textarea{min-height:88px;resize:vertical;line-height:1.4}
+.f input.ex,.f textarea.ex,.ln input.ex{color:#6A655B;-webkit-text-fill-color:#6A655B;border-style:dashed}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+input,button,select,textarea{color-scheme:light}
+
+.ln{border:var(--rule) solid var(--ink);background:var(--paper);padding:10px;margin:10px 0}
+.ln .row3{display:grid;grid-template-columns:1fr 1.1fr 1.2fr;gap:8px;margin-top:8px}
+.ln .mini{display:block;font-family:var(--label);font-size:12px;margin-bottom:2px}
+.ln .amt{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-family:var(--label);font-size:14px;font-variant-numeric:tabular-nums}
+.ln input[type=number]{text-align:right;font-variant-numeric:tabular-nums}
+
+.totals{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0 0}
+.total{flex:1 1 140px;border-top:var(--rule-heavy) solid var(--ink);padding-top:6px}
+.total .k{font-family:var(--label);font-size:13px}
+.total .v{font-family:var(--display);font-weight:900;font-size:34px;line-height:1;font-variant-numeric:tabular-nums}
+
+.other{border-left:var(--rule-heavy) solid var(--ink-2);padding:2px 0 2px 12px;margin:16px 0;font-size:16px}
+.other b{font-family:var(--label);font-size:13px;display:block}
+.fair{border:var(--rule) solid var(--ink-1);padding:10px 12px;margin:16px 0;font-size:16px;background:var(--paper-raised)}
+.fair b{font-family:var(--label);font-size:13px;display:block;color:var(--eyebrow-ink);text-transform:uppercase;letter-spacing:.04em}
+.pause{display:block;font-family:var(--label);font-size:14px;font-weight:600;background:var(--ink);color:var(--paper);padding:12px 14px;margin:18px 0}
+.pause::before{content:"Pause · "}
+.round{display:block;font-family:var(--display);font-weight:900;font-size:22px;text-transform:uppercase;background:var(--ink-1);color:#fff;padding:10px 14px;margin:18px 0}
+
+.sum{width:100%;border-collapse:collapse;font-family:var(--readable);font-size:15px;font-variant-numeric:tabular-nums}
+.sum td{padding:7px 0;border-bottom:1px solid #CFC8B8;vertical-align:top}
+.sum td:last-child{text-align:right;white-space:nowrap;padding-left:12px}
+.sum tr.t td{border-top:var(--rule) solid var(--ink);border-bottom:0;font-weight:600}
+
+.btn{font-family:var(--label);font-weight:600;font-size:14px;min-height:48px;padding:0 18px;border:var(--rule) solid var(--ink);background:var(--paper-raised);color:var(--ink);cursor:pointer;border-radius:0}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.btn.small{min-height:44px;padding:0 12px;font-size:13px}
+.btn:disabled{opacity:.4;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+.choose{display:grid;gap:12px;margin:16px 0}
+.pick{display:block;text-align:left;width:100%;background:var(--paper-raised);border:var(--rule-heavy) solid var(--ink);padding:14px 16px;cursor:pointer;font:inherit;color:var(--ink);border-radius:0}
+.pick strong{font-family:var(--display);font-weight:900;font-size:28px;text-transform:uppercase;display:block;line-height:1}
+.pick[aria-pressed="true"]{box-shadow:inset 0 0 0 3px var(--ink-1);border-color:var(--ink-1)}
+
+.checks{list-style:none;margin:0;padding:0;font-family:var(--readable);font-size:15px}
+.checks li{display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-bottom:1px solid #CFC8B8}
+.checks li:last-child{border-bottom:0}
+.checks .m{font-family:var(--label);font-weight:600;min-width:1.6em}
+.checks li.no{color:var(--accent-text)}
+.diff{font-family:var(--label);font-size:13px;margin:8px 0;padding:0;list-style:none}
+.diff li{padding:3px 0}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}
+.tag{font-family:var(--label);font-size:12px;border:1px solid var(--ink);padding:2px 6px}
+.tag.new{background:var(--ink-1);color:#fff;border-color:var(--ink-1)}
+
+/* The document itself: plain, printable, a template to keep. */
+.doc{background:#fff;color:#111;border:var(--rule) solid var(--ink);padding:20px 14px;margin:18px 0;font-family:var(--readable);font-size:13px;line-height:1.45;position:relative;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.doc .dh{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.doc .kind{font-family:var(--display);font-weight:900;font-size:40px;line-height:.9;text-transform:uppercase;color:var(--display-ink)}
+.doc .kind small{display:block;font-family:var(--label);font-size:12px;font-weight:600;color:#111;letter-spacing:.04em;margin-top:6px}
+.doc .from{text-align:right;min-width:12em}
+.doc .from b,.doc .to b{font-size:14px}
+.doc .grid{display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px 20px;margin:22px 0 14px;align-items:flex-end}
+.doc .to{min-width:12em;flex:1 1 12em}
+.doc .meta{border-collapse:collapse}
+.doc .meta td{padding:1px 0 1px 10px;vertical-align:top}
+.doc .meta td:first-child{white-space:nowrap}
+.doc .meta td:first-child{color:#555;padding-left:0}
+.doc .for{margin:10px 0 14px}
+.doc .for p{margin:0 0 6px}
+.doc .k2{font-family:var(--label);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#555;display:block}
+.doc table.lines{width:100%;border-collapse:collapse;margin:8px 0}
+.doc table.lines th{font-family:var(--label);font-size:11px;font-weight:600;text-align:right;border-bottom:2px solid #111;padding:4px 0 4px 12px;white-space:nowrap}
+.doc table.lines th:first-child,.doc table.lines td:first-child{text-align:left;padding-left:0}
+.doc table.lines td{padding:6px 0 6px 12px;border-bottom:1px solid #ccc;text-align:right;vertical-align:top}
+.doc table.lines td:first-child{white-space:normal}
+.doc table.lines td:not(:first-child){white-space:nowrap}
+.doc .tot{margin-left:auto;border-collapse:collapse;min-width:60%}
+.doc .tot td{padding:3px 0 3px 12px;text-align:right;white-space:nowrap}
+.doc .tot tr.g td{border-top:2px solid #111;font-weight:600;font-size:15px;padding-top:6px}
+.doc .pay{margin:18px 0 0}
+.doc .sign{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
+.doc .sign div{border-top:1px solid #111;padding-top:4px;font-size:11px;color:#555}
+.doc .foot{border-top:1px solid #111;margin-top:22px;padding-top:6px;font-size:11px;color:#333}
+.doc .stamp{position:absolute;right:14px;bottom:30px;transform:rotate(-8deg);font-family:var(--display);font-weight:900;font-size:22px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);border:3px solid var(--ink-2);padding:2px 10px;opacity:.85;pointer-events:none;mix-blend-mode:multiply}
+.doc .empty{color:#9a958b;font-style:italic}
+
+.qr svg{width:180px;height:180px;display:block}
+.linkbox{font-family:var(--label);font-size:12px;word-break:break-all;background:var(--paper);border:1px solid var(--ink);padding:8px;max-height:5.5em;overflow:auto;display:block}
+nav.bar{position:fixed;left:0;right:0;bottom:0;background:var(--paper);border-top:var(--rule-heavy) solid var(--ink);
+  padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));z-index:5}
+nav.bar .in{max-width:560px;margin:0 auto;display:flex;gap:10px;align-items:center}
+nav.bar .live{flex:1;text-align:center;font-family:var(--label);font-size:13px;line-height:1.2}
+nav.bar .live b{display:block;font-family:var(--display);font-weight:900;font-size:24px}
+footer{padding:28px 0 0;font-family:var(--label);font-size:12px;color:var(--ink-soft)}
+
+#printarea{display:none}
+@media print{
+  @page{margin:14mm}
+  body{padding:0;background:#fff}
+  .wrap,nav.bar{display:none!important}
+  #printarea{display:block}
+  #printarea .doc{border:0;margin:0;padding:0}
+  #printarea .reopen{break-before:page;font-family:var(--readable);font-size:13px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <span class="studio">a Situated Studio</span>
+    <button class="toggle" id="readable" aria-pressed="false">Readable mode</button>
+  </header>
+  <div class="progress" id="progress"></div>
+  <main id="stage" aria-live="polite"></main>
+  <footer>Economic Cultures · DAE Blueprints · a prototype by a Situated Studio. Nothing you type leaves this phone.</footer>
+</div>
+<nav class="bar" aria-label="Steps">
+  <div class="in">
+    <button class="btn" id="back">Back</button>
+    <div class="live" id="live"></div>
+    <button class="btn primary" id="next">Next</button>
+  </div>
+</nav>
+<div id="printarea" aria-hidden="true"></div>
+
+<script>
+(function(){
+"use strict";
+var VAT=0.21, LAST=9;
+var PRACTICE={kvk:"00000000",vat:"NL000000000B00",iban:"NL00 BANK 0000 0000 00"};
+function today(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function addDays(iso,n){if(!iso)return "";var p=iso.split("-"),d=new Date(+p[0],+p[1]-1,+p[2]);d.setDate(d.getDate()+n);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+
+/* ---------- the two examples: invented people, invented numbers ---------- */
+var PEOPLE={
+ sam:{who:"Sam",line:"Graphic designer, works at the kitchen table. Charges by the hour.",
+  v:{mode:"hours",
+   me:{name:"Studio Keukentafel",person:"Sam de Wit",street:"Voorbeeldstraat 1",city:"5600 AA Eindhoven",email:"sam@example.com",kvk:PRACTICE.kvk,vat:PRACTICE.vat,iban:PRACTICE.iban},
+   cl:{name:"Ilse Bakker",org:"Koffiebar De Hoek",street:"Hoekstraat 8",city:"5611 AB Eindhoven",email:"ilse@example.org",ref:""},
+   br:{what:"A poster for the café's first birthday and a new menu card.",deadline:"In three weeks",incl:"Two rounds of changes. Print-ready files.",excl:"Printing and photography."},
+   q:{no:"Q2026-001",valid:30,term:30,terms:"My general terms and conditions apply.",lines:[
+     {d:"Design: birthday poster and menu card",q:20,u:"hours",p:45},
+     {d:"Changes: two rounds",q:4,u:"hours",p:45},
+     {d:"Test prints",q:1,u:"item",p:35}]},
+   ok:{how:"email"},
+   inv:{no:"2026-001"}}},
+ noor:{who:"Noor",line:"Makes objects in a shared workshop. Works on commission for a fixed fee.",
+  v:{mode:"fee",
+   me:{name:"Noor Haddad Objects",person:"Noor Haddad",street:"Werkplaatslaan 12",city:"5611 XX Eindhoven",email:"noor@example.com",kvk:PRACTICE.kvk,vat:PRACTICE.vat,iban:PRACTICE.iban},
+   cl:{name:"Mark Jansen",org:"Hotel Het Veld",street:"Veldweg 3",city:"5612 CD Eindhoven",email:"mark@example.org",ref:"PO 4471"},
+   br:{what:"Twelve ceramic wall lamps for the hotel lobby.",deadline:"Before the reopening, in two months",incl:"Design, making, and delivery in Eindhoven.",excl:"Installation and electrical work."},
+   q:{no:"Q2026-001",valid:30,term:30,terms:"My general terms and conditions apply.",lines:[
+     {d:"Commission: twelve ceramic wall lamps",q:1,u:"item",p:2400},
+     {d:"Materials: clay, glaze, fittings",q:1,u:"item",p:480},
+     {d:"Transport and delivery",q:1,u:"item",p:90}]},
+   ok:{how:"signed"},
+   inv:{no:"2026-001"}}}
+};
+function copy(o){return JSON.parse(JSON.stringify(o));}
+function fresh(p){
+  var v=copy(PEOPLE[p].v);
+  v.q.date=today(); v.ok.date=""; v.inv.date=""; v.inv.done=""; v.inv.lines=null;
+  return v;
+}
+
+/* ---------- state ---------- */
+var S={start:"sam",w:fresh("sam"),step:0};
+function get(path){return path.split(".").reduce(function(o,k){return o==null?undefined:o[k];},S.w);}
+function set(path,val){var ks=path.split("."),o=S.w;for(var i=0;i<ks.length-1;i++){o=o[ks[i]];}o[ks[ks.length-1]]=val;}
+function exVal(path){return path.split(".").reduce(function(o,k){return o==null?undefined:o[k];},PEOPLE[S.start].v);}
+function isEx(path){var e=exVal(path);return e!==undefined&&String(e)===String(get(path));}
+
+function encode(){
+  var o={s:S.start==="noor"?1:0,t:S.step,w:S.w};
+  var b=btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+  return b.replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function decode(str){
+  var b=str.replace(/-/g,"+").replace(/_/g,"/"); while(b.length%4)b+="=";
+  var o=JSON.parse(decodeURIComponent(escape(atob(b))));
+  var base=fresh(o.s===1?"noor":"sam"), w=o.w||{};
+  ["me","cl","br","q","ok","inv"].forEach(function(k){ if(w[k]&&typeof w[k]==="object") Object.keys(base[k]).concat(Object.keys(w[k])).forEach(function(f){ if(w[k][f]!==undefined) base[k][f]=w[k][f]; }); });
+  if(w.mode==="hours"||w.mode==="fee") base.mode=w.mode;
+  base.q.lines=cleanLines(base.q.lines)||[];
+  base.inv.lines=cleanLines(base.inv.lines);
+  S.start=o.s===1?"noor":"sam"; S.w=base; S.step=Math.min(LAST,Math.max(0,+o.t||0));
+}
+function cleanLines(a){
+  if(!Array.isArray(a)) return null;
+  return a.slice(0,20).map(function(l){return {d:String(l.d||"").slice(0,120),q:Math.max(0,Number(l.q)||0),u:["hours","days","item"].indexOf(l.u)>=0?l.u:"item",p:Math.max(0,Number(l.p)||0)};});
+}
+var saveTimer=null;
+function persist(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(function(){
+    var code=encode();
+    try{history.replaceState(null,"","#s="+code);}catch(e){}
+    try{localStorage.setItem("ec-quote-invoice",code);}catch(e){}
+  },300);
+}
+function load(){
+  var h=""; try{h=location.hash||"";}catch(e){}
+  try{ if(h.indexOf("#s=")===0){decode(h.slice(3));return;} }catch(e){}
+  try{ var c=localStorage.getItem("ec-quote-invoice"); if(c){decode(c);} }catch(e){}
+}
+
+/* ---------- money ---------- */
+function r2(n){return Math.round((n+Number.EPSILON)*100)/100;}
+function sums(lines){
+  var sub=0; (lines||[]).forEach(function(l){sub+=r2(l.q*l.p);});
+  sub=r2(sub); var vat=r2(sub*VAT); return {sub:sub,vat:vat,tot:r2(sub+vat)};
+}
+function eur2(n){return "€"+Number(n||0).toLocaleString("en-GB",{minimumFractionDigits:2,maximumFractionDigits:2});}
+function invLines(){return S.w.inv.lines||S.w.q.lines;}
+
+/* ---------- helpers ---------- */
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function dmy(iso){if(!iso)return "";var p=iso.split("-");return p.length===3?p[2]+"-"+p[1]+"-"+p[0]:iso;}
+function heading(eyebrow,title){
+  return '<div class="eyebrow">'+eyebrow+'</div><div class="over"><div class="ghost" aria-hidden="true">'+title+'</div><h1 tabindex="-1">'+title+'</h1></div>';
+}
+function txt(path,label,hint,type,area){
+  var v=get(path), id="f-"+path.replace(/\./g,"-"), cls=isEx(path)?"ex":"";
+  var input=area?'<textarea id="'+id+'" data-p="'+path+'" class="'+cls+'" maxlength="300">'+esc(v)+'</textarea>'
+    :'<input id="'+id+'" data-p="'+path+'" class="'+cls+'" type="'+(type||"text")+'" '+(type==="number"?'inputmode="numeric" min="0" step="1"':'maxlength="120"')+' value="'+esc(v)+'">';
+  return '<div class="f"><label for="'+id+'">'+label+'</label>'+input+(hint?'<span class="hint">'+hint+'</span>':'')+'</div>';
+}
+function fair(tag,t){return '<p class="fair"><b>Fair practice · '+tag+'</b>'+t+'</p>';}
+function pause(t){return '<span class="pause">'+t+'</span>';}
+function out(name){return '<span data-o="'+name+'"></span>';}
+function other(){return S.start==="sam"?"noor":"sam";}
+function otherLine(t){return '<p class="other"><b>'+PEOPLE[other()].who.toUpperCase()+' DID IT DIFFERENTLY</b>'+t+'</p>';}
+var UNITS={hours:["hour","hours"],days:["day","days"],item:["",""]};
+function qtyText(l){var u=UNITS[l.u]||UNITS.item;var q=Number(l.q);var n=(q%1?q.toLocaleString("en-GB"):String(q));return u[0]?n+" "+(q===1?u[0]:u[1]):n;}
+
+function linesEditor(which){
+  var arr=which==="q"?S.w.q.lines:S.w.inv.lines;
+  return arr.map(function(l,i){
+    var base=which+"L."+i;
+    var ex=function(k){if(which!=="q")return "";var e=PEOPLE[S.start].v.q.lines[i];return e&&String(e[k])===String(l[k])?"ex":"";};
+    return '<div class="ln"><span class="mini">Line '+(i+1)+'</span>'+
+      '<input type="text" maxlength="120" aria-label="Line '+(i+1)+' description" data-l="'+base+'.d" class="'+ex("d")+'" value="'+esc(l.d)+'" placeholder="What is it?">'+
+      '<div class="row3"><span><span class="mini">Quantity</span><input type="number" inputmode="decimal" min="0" step="any" aria-label="Line '+(i+1)+' quantity" data-l="'+base+'.q" class="'+ex("q")+'" value="'+l.q+'"></span>'+
+      '<span><span class="mini">Unit</span><select aria-label="Line '+(i+1)+' unit" data-l="'+base+'.u">'+[["hours","hours"],["days","days"],["item","items"]].map(function(o){return '<option value="'+o[0]+'"'+(l.u===o[0]?" selected":"")+'>'+o[1]+'</option>';}).join("")+'</select></span>'+
+      '<span><span class="mini">Price €</span><input type="number" inputmode="decimal" min="0" step="any" aria-label="Line '+(i+1)+' price per unit" data-l="'+base+'.p" class="'+ex("p")+'" value="'+l.p+'"></span></div>'+
+      '<div class="amt"><span>Amount '+out(which+"amt"+i)+'</span><button class="btn small" data-del="'+which+'.'+i+'">Remove</button></div></div>';
+  }).join("")+'<div class="row"><button class="btn" data-add="'+which+'">Add a line</button></div>';
+}
+function totalsBox(which){
+  return '<table class="sum" style="margin-top:14px"><tr><td>Subtotal, without VAT</td><td>'+out(which+"sub")+'</td></tr><tr><td>VAT 21%</td><td>'+out(which+"vat")+'</td></tr><tr class="t"><td>Total, with VAT</td><td>'+out(which+"tot")+'</td></tr></table>';
+}
+
+/* ---------- the document ---------- */
+function isPractice(){var m=S.w.me;return m.kvk===PRACTICE.kvk||m.vat===PRACTICE.vat||m.iban===PRACTICE.iban;}
+function v(s,fallback){return s?esc(s):'<span class="empty">'+fallback+'</span>';}
+function docHtml(kind){
+  var w=S.w,m=w.me,c=w.cl,b=w.br,q=w.q,inv=w.inv,isQ=kind==="quote";
+  var lines=isQ?q.lines:invLines(), t=sums(lines);
+  var meta=isQ?[["Quote number",v(q.no,"number")],["Date",v(dmy(q.date),"date")],["Valid until",v(dmy(addDays(q.date,+q.valid||0)),"date")]]
+    :[["Invoice number",v(inv.no,"number")],["Invoice date",v(dmy(inv.date),"date")],["Work delivered",v(dmy(inv.done),"date")],["Pay before",v(dmy(addDays(inv.date,+q.term||0)),"date")]];
+  if(!isQ&&c.ref) meta.push(["Your reference",esc(c.ref)]);
+  if(!isQ&&q.no) meta.push(["Our quote",esc(q.no)+(w.ok.date?", accepted "+esc(dmy(w.ok.date)):"")]);
+  var h='<div class="doc" data-kind="'+kind+'">'+(isPractice()?'<div class="stamp" aria-label="Practice document">Practice</div>':'')+
+   '<div class="dh"><div class="kind">'+(isQ?"Quote":"Invoice")+(isQ?'<small>Concept, until both of us agree</small>':'')+'</div>'+
+   '<div class="from"><b>'+v(m.name,"your studio")+'</b><br>'+(m.person?esc(m.person)+'<br>':'')+v(m.street,"street and number")+'<br>'+v(m.city,"postcode and city")+'<br>'+v(m.email,"email")+'</div></div>'+
+   '<div class="grid"><div class="to"><span class="k2">To</span><b>'+v(c.org||c.name,"client")+'</b><br>'+(c.org&&c.name?'Attn. '+esc(c.name)+'<br>':'')+v(c.street,"street and number")+'<br>'+v(c.city,"postcode and city")+'</div>'+
+   '<table class="meta">'+meta.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>';}).join("")+'</table></div>'+
+   '<div class="for"><span class="k2">For</span><p>'+v(b.what,"what the client asked for")+'</p>'+
+   (isQ?(b.deadline?'<p><b>When:</b> '+esc(b.deadline)+'</p>':'')+(b.incl?'<p><b>Included:</b> '+esc(b.incl)+'</p>':'')+(b.excl?'<p><b>Not included:</b> '+esc(b.excl)+'</p>':''):'')+'</div>'+
+   '<table class="lines"><thead><tr><th>Description</th><th>Qty</th><th>Price</th><th>Amount</th></tr></thead><tbody>'+
+   (lines.length?lines.map(function(l){return '<tr><td>'+v(l.d,"description")+'</td><td>'+qtyText(l)+'</td><td>'+eur2(l.p)+'</td><td>'+eur2(r2(l.q*l.p))+'</td></tr>';}).join(""):'<tr><td colspan="4"><span class="empty">No lines yet</span></td></tr>')+
+   '</tbody></table>'+
+   '<table class="tot"><tr><td>Subtotal excl. VAT</td><td>'+eur2(t.sub)+'</td></tr><tr><td>VAT 21%</td><td>'+eur2(t.vat)+'</td></tr><tr class="g"><td>Total incl. VAT</td><td>'+eur2(t.tot)+'</td></tr></table>';
+  if(isQ){
+    h+='<div class="pay"><p>This quote is valid for '+(+q.valid||0)+' days. Payment within '+(+q.term||0)+' days of the invoice date. '+esc(q.terms)+'</p><p>Work starts after you accept this quote by signing it or by replying in writing.</p></div>'+
+     '<div class="sign"><div>Accepted by (name, signature)</div><div>Date</div></div>';
+  }else{
+    h+='<div class="pay"><p>Please transfer '+eur2(t.tot)+' before '+v(dmy(addDays(inv.date,+q.term||0)),"the due date")+' to '+v(m.iban,"your IBAN")+' in the name of '+v(m.name,"your studio")+', stating invoice number '+v(inv.no,"number")+'.</p></div>';
+  }
+  h+='<div class="foot">'+v(m.name,"your studio")+' · KvK '+v(m.kvk,"number")+' · VAT '+v(m.vat,"number")+' · IBAN '+v(m.iban,"number")+(m.email?' · '+esc(m.email):'')+'</div></div>';
+  return h;
+}
+
+/* ---------- checks ---------- */
+function hasLines(ls){return ls.length>0&&ls.every(function(l){return l.d&&l.q>0;});}
+function quoteChecks(){
+  var w=S.w,m=w.me,c=w.cl;
+  return [["Your name, address and contact",m.name&&m.street&&m.city&&m.email],["Your KvK and VAT numbers",m.kvk&&m.vat],["The client's name and address",(c.name||c.org)&&c.street&&c.city],
+    ["Date and quote number",w.q.date&&w.q.no],["What the work is, and what is and isn't included",w.br.what&&w.br.incl],["Price per line, and the total",hasLines(w.q.lines)],
+    ["How long the quote is valid",+w.q.valid>0],["Your payment term",+w.q.term>0],["A reference to your terms",!!w.q.terms]];
+}
+function invoiceChecks(){
+  var w=S.w,m=w.me,c=w.cl,inv=w.inv;
+  return [["Your name and address",m.name&&m.street&&m.city],["Your KvK and VAT numbers",m.kvk&&m.vat],["The client's name and address",(c.name||c.org)&&c.street&&c.city],
+    ["A unique invoice number",!!inv.no],["The invoice date",!!inv.date],["When the work was delivered",!!inv.done],
+    ["What you did, how much, at what price",hasLines(invLines())],["VAT rate and VAT amount","ok"],["Total with VAT","ok"],
+    ["When and how to pay (due date and IBAN)",inv.date&&+w.q.term>0&&m.iban],["The quote it belongs to",!!w.q.no]];
+}
+function checkList(list){return '<ul class="checks">'+list.map(function(x){var ok=!!x[1];return '<li class="'+(ok?"":"no")+'"><span class="m">'+(ok?"✓":"–")+'</span><span>'+x[0]+(ok?"":" <i>(missing)</i>")+'</span></li>';}).join("")+'</ul>';}
+function diffList(){
+  var a=S.w.q.lines,b=invLines(),items=[],n=Math.max(a.length,b.length);
+  for(var i=0;i<n;i++){
+    var x=a[i],y=b[i];
+    if(x&&!y) items.push("Removed: "+esc(x.d||"line "+(i+1)));
+    else if(!x&&y) items.push("Added: "+esc(y.d||"line "+(i+1))+", "+eur2(r2(y.q*y.p)));
+    else{
+      var ch=[];
+      if(x.d!==y.d) ch.push("description");
+      if(x.q!==y.q||x.u!==y.u) ch.push("quantity "+qtyText(x)+" → "+qtyText(y));
+      if(x.p!==y.p) ch.push("price "+eur2(x.p)+" → "+eur2(y.p));
+      if(ch.length) items.push(esc(y.d||"Line "+(i+1))+": "+ch.join(", "));
+    }
+  }
+  var s1=sums(a).tot,s2=sums(b).tot;
+  if(s1!==s2) items.push("Total "+eur2(s1)+" → "+eur2(s2));
+  return items.length?'<ul class="diff">'+items.map(function(t){return "<li>"+t+"</li>";}).join("")+'</ul>':'<p class="note">Nothing changed since the quote.</p>';
+}
+
+/* ---------- steps ---------- */
+var STEPS=[
+ {t:"Start",r:function(){
+   return heading("Economic Cultures · Day 2","From quote to invoice")+
+   '<p class="lead">A quote is a promise: this is what I will do, and what it costs. An invoice is a request: this is what I did, please pay.</p>'+
+   '<p>You make both in two rounds of the role play. Round 1 is the client meeting, and it ends with a quote. Round 2 is the handshake, and the same document becomes an invoice.</p>'+
+   '<p class="note">Everything you type stays on this phone. We don\'t collect anything.</p>'+
+   '<div class="panel"><h2>Start from someone else\'s</h2><p>Pick one, then change their details into yours as you go.</p><div class="choose">'+
+   ["sam","noor"].map(function(p){return '<button class="pick" data-start="'+p+'" aria-pressed="'+(S.start===p)+'"><strong>'+PEOPLE[p].who+'</strong>'+PEOPLE[p].line+'</button>';}).join("")+
+   '</div><p class="note">Dashed boxes still hold the example. Once you type your own, the box turns solid.</p></div>';
+ }},
+ {t:"Who you are",r:function(){
+   return '<span class="round">Round 1 · The client meeting</span>'+heading("Step 1","Who you are")+
+   '<p class="lead">Your client needs to know who they are dealing with, and who to pay.</p>'+
+   '<div class="panel">'+txt("me.name","Your studio or business name")+txt("me.person","Your name")+txt("me.street","Street and number")+txt("me.city","Postcode and city")+txt("me.email","Email","","email")+'</div>'+
+   '<div class="panel"><h2>Your numbers</h2><p>In the Netherlands every business has a KvK number and a VAT number. Today we use practice numbers; keep them as they are.</p>'+
+   txt("me.kvk","KvK number")+txt("me.vat","VAT number")+txt("me.iban","Bank account (IBAN)")+
+   '<p class="note">While a practice number is on it, your document carries a PRACTICE stamp.</p></div>';
+ }},
+ {t:"Your client",r:function(){
+   return heading("Step 2","Your client")+
+   '<p class="lead">Who is your classmate playing? Write down who they are, as they told you.</p>'+
+   '<div class="panel">'+txt("cl.name","Contact person")+txt("cl.org","Organisation","Leave empty if they hire you as a person.")+txt("cl.street","Street and number")+txt("cl.city","Postcode and city")+txt("cl.email","Email","","email")+
+   txt("cl.ref","Their reference","Some clients give you an order number to put on the invoice. Ask for it.")+'</div>'+
+   pause("Meet your client now. Listen to what they need; you write the brief in the next step.");
+ }},
+ {t:"The brief",r:function(){
+   return heading("Step 3","The brief")+
+   '<p class="lead">What did your client ask for? Write it in a way you would both sign.</p>'+
+   '<div class="panel">'+txt("br.what","What they asked for","",null,true)+txt("br.deadline","When")+
+   txt("br.incl","What is included","Rounds of changes, files, delivery.",null,true)+txt("br.excl","What is not included","Saying it now saves an argument later.",null,true)+'</div>'+
+   fair("Transparency","Ask what the budget is. Openness about money works both ways.")+
+   pause("What did you forget to ask? Go back to your client and ask it now.");
+ }},
+ {t:"How you charge",r:function(){
+   return heading("Step 4","How you charge")+
+   '<p class="lead">By the hour, or for the finished work?</p>'+
+   '<div class="choose">'+
+   '<button class="pick" data-mode="hours" aria-pressed="'+(S.w.mode==="hours")+'"><strong>By the hour</strong>The client pays for the time you spend. Good when the work is open, or keeps changing.</button>'+
+   '<button class="pick" data-mode="fee" aria-pressed="'+(S.w.mode==="fee")+'"><strong>A fixed fee</strong>The client pays for the result. Your hours are inside the price, and so is the risk.</button></div>'+
+   otherLine(S.start==="sam"?"Noor charges a fixed fee for twelve lamps. Her client knows the price up front; she carries the risk if the glaze fails.":"Sam charges by the hour. His client pays for every change, so Sam writes down how many rounds are included.")+
+   '<p class="note">Your choice sets the first line in the next step. You can still mix: a fee plus hours for extra changes.</p>';
+ }},
+ {t:"Your price",r:function(){
+   return heading("Step 5","Your price")+
+   '<p class="lead">'+(S.w.mode==="hours"?"How many hours, at what rate? Add your costs as their own lines.":"What is the finished work worth? Add your costs as their own lines.")+'</p>'+
+   '<p>Your hourly rate from Day 1 is a floor, not a price tag. Round it, raise it, or build a fee from it.</p>'+
+   '<div class="panel">'+linesEditor("q")+totalsBox("q")+'</div>'+
+   fair("Fair pay","Does this price cover your hours, including the ones nobody sees?");
+ }},
+ {t:"Your quote",r:function(){
+   return heading("Step 6","Your quote")+
+   '<p class="lead">A few details turn your price into a quote.</p>'+
+   '<div class="panel">'+txt("q.no","Quote number","Numbering your quotes keeps them findable.")+
+   '<div class="f"><label for="f-q-date">Date</label><input id="f-q-date" type="date" data-p="q.date" value="'+esc(S.w.q.date)+'"></div>'+
+   '<div class="two">'+txt("q.valid","Valid for (days)","","number")+txt("q.term","Payment term (days)","","number")+'</div>'+
+   txt("q.terms","Your terms","The rules you work by: rounds of changes, cancelling, who owns what. Write your own terms later; refer to them now.",null,true)+'</div>'+
+   fair("Trust","Agree before you start. Work begins after a yes in writing.")+
+   '<div class="panel"><h2>Check your quote</h2>'+out("qChecks")+'</div>'+
+   out("docQ")+
+   '<div class="row"><button class="btn primary" data-act="print" data-what="quote">Save the quote as a PDF</button></div>'+
+   pause("Show your quote to your client. Negotiate. Then go to round 2.");
+ }},
+ {t:"The handshake",r:function(){
+   if(!S.w.inv.lines) S.w.inv.lines=copy(S.w.q.lines);
+   if(S.w.ok.how&&!S.w.ok.date) S.w.ok.date=today();
+   return '<span class="round">Round 2 · The handshake</span>'+heading("Step 7","The handshake")+
+   '<p class="lead">You agreed, but on what? Change the lines to what you and your client settled on, or to what the work really took.</p>'+
+   '<div class="panel"><h2>What changed</h2>'+out("diff")+'</div>'+
+   '<div class="panel">'+linesEditor("i")+totalsBox("i")+
+   '<div class="row" style="margin-top:12px"><button class="btn small" data-act="reset" id="resetBtn">Undo my changes: back to the quote</button><span class="note" id="resetMsg"></span></div></div>'+
+   '<div class="panel"><h2>How did they say yes?</h2><div class="choose">'+
+   [["signed","They signed the quote"],["email","They said yes by email"],["spoken","They said yes in the meeting"]].map(function(o){return '<button class="pick" data-ok="'+o[0]+'" aria-pressed="'+(S.w.ok.how===o[0])+'"><strong style="font-size:22px">'+o[1]+'</strong></button>';}).join("")+'</div>'+
+   '<div class="f"><label for="f-ok-date">On</label><input id="f-ok-date" type="date" data-p="ok.date" value="'+esc(S.w.ok.date)+'"></div>'+
+   '<p class="note" data-o="okNote"></p></div>';
+ }},
+ {t:"Your invoice",r:function(){
+   if(!S.w.inv.lines) S.w.inv.lines=copy(S.w.q.lines);
+   if(!S.w.inv.date) S.w.inv.date=today();
+   return heading("Step 8","Your invoice")+
+   '<p class="lead">Most of your invoice comes from the quote. Only a few things are new.</p>'+
+   '<div class="tags"><span class="tag">You</span><span class="tag">Your client</span><span class="tag">What it is</span><span class="tag">Price lines</span><span class="tag">VAT</span><span class="tag">Payment term</span>'+
+   '<span class="tag new">Invoice number</span><span class="tag new">Invoice date</span><span class="tag new">Delivery date</span><span class="tag new">Due date</span><span class="tag new">Quote reference</span></div>'+
+   '<div class="panel">'+txt("inv.no","Invoice number","One series, in order: no gaps, no repeats. Your first invoice could be 2026-001.")+
+   '<div class="f"><label for="f-inv-date">Invoice date</label><input id="f-inv-date" type="date" data-p="inv.date" value="'+esc(S.w.inv.date)+'"></div>'+
+   '<div class="f"><label for="f-inv-done">Work delivered on</label><input id="f-inv-done" type="date" data-p="inv.done" value="'+esc(S.w.inv.done)+'"><span class="hint">'+(S.w.ok.date?"Your client said yes on "+dmy(S.w.ok.date)+". The work was delivered after that.":"After the day your client said yes (step 7).")+'</span></div>'+
+   '<table class="sum"><tr><td>Payment term from your quote</td><td>'+out("term")+'</td></tr><tr class="t"><td>Pay before</td><td>'+out("due")+'</td></tr></table></div>'+
+   fair("Fair pay","Invoice when the work is delivered, not months later. Being paid on time is part of being paid fairly.");
+ }},
+ {t:"Check and hand over",r:function(){
+   return heading("Step 9","Check and hand over")+
+   '<div class="panel"><h2>Everything on it?</h2>'+out("iChecks")+'</div>'+
+   out("docI")+
+   pause("Swap phones. Client: does this invoice match what you agreed? Ask about anything that surprises you.")+
+   '<div class="panel"><h2>Quote and invoice compared</h2>'+out("diff")+'</div>'+
+   '<div class="panel"><h2>Keep it</h2><p class="pause" style="background:var(--accent-text)">Before you close this page, save the PDFs or the link. We don\'t keep anything, so without them it is gone.</p>'+
+   '<div class="row"><button class="btn primary" data-act="print" data-what="invoice">Save the invoice as a PDF</button><button class="btn" data-act="print" data-what="quote">Save the quote as a PDF</button></div>'+
+   '<p class="note" style="margin-top:12px">Keep the PDF as a template. Put in your real numbers once you have them, and the PRACTICE stamp goes.</p>'+
+   '<h3 style="margin-top:16px">Reopen it later</h3><p>This link and QR code reopen the tool as you left it. Everything lives in the link, not with us.</p>'+
+   '<div class="qr" data-o="qr"></div><a class="linkbox" data-o="link" target="_blank" rel="noopener"></a>'+
+   '<div class="row" style="margin-top:10px"><button class="btn" data-act="copy">Copy link</button><span class="note" data-o="copyMsg"></span></div></div>'+
+   '<p class="note">More to read: <a href="https://fairpracticecode.nl/" target="_blank" rel="noopener">Fair Practice Code</a> · <a href="https://www.kvk.nl/en/" target="_blank" rel="noopener">KVK</a> · <a href="https://www.belastingdienst.nl/" target="_blank" rel="noopener">Belastingdienst</a></p>';
+ }}
+];
+
+/* ---------- outputs ---------- */
+function update(){
+  var qs=sums(S.w.q.lines), is=sums(invLines());
+  var vals={qsub:eur2(qs.sub),qvat:eur2(qs.vat),qtot:eur2(qs.tot),isub:eur2(is.sub),ivat:eur2(is.vat),itot:eur2(is.tot),
+    term:(+S.w.q.term||0)+" days",due:S.w.inv.date?dmy(addDays(S.w.inv.date,+S.w.q.term||0)):"—"};
+  S.w.q.lines.forEach(function(l,i){vals["qamt"+i]=eur2(r2(l.q*l.p));});
+  (S.w.inv.lines||[]).forEach(function(l,i){vals["iamt"+i]=eur2(r2(l.q*l.p));});
+  document.querySelectorAll("[data-o]").forEach(function(el){
+    var k=el.getAttribute("data-o");
+    if(vals[k]!==undefined) el.textContent=vals[k];
+    else if(k==="docQ") el.innerHTML=docHtml("quote");
+    else if(k==="docI") el.innerHTML=docHtml("invoice");
+    else if(k==="qChecks") el.innerHTML=checkList(quoteChecks());
+    else if(k==="iChecks") el.innerHTML=checkList(invoiceChecks());
+    else if(k==="diff") el.innerHTML=diffList();
+    else if(k==="okNote") el.textContent=S.w.ok.how==="spoken"?"A spoken yes is not enough. Get it in writing: ask your client to reply yes to the email with your quote.":S.w.ok.how==="email"?"Keep that email. It is your agreement.":"Keep the signed quote. It is your agreement.";
+    else if(k==="link"){var u=shareUrl();el.textContent=u;el.setAttribute("href",u);}
+    else if(k==="qr") el.innerHTML=qrSvg(shareUrl());
+  });
+  var rb2=document.getElementById("resetBtn"); if(rb2) rb2.disabled=JSON.stringify(S.w.q.lines)===JSON.stringify(S.w.inv.lines||S.w.q.lines);
+  var live=document.getElementById("live");
+  live.innerHTML=S.step===0?"":S.step<=6?'Quote total<b>'+eur2(qs.tot)+'</b>':'Invoice total<b>'+eur2(is.tot)+'</b>';
+  persist();
+}
+function shareUrl(){var base="";try{base=location.href.split("#")[0];}catch(e){}return base+"#s="+encode();}
+function qrSvg(text){
+  try{ if(typeof qrcode!=="function") return '<p class="note">The QR code needs a connection to load. The link below works the same.</p>';
+    var q=qrcode(0,"L"); q.addData(text); q.make(); return q.createSvgTag({cellSize:2,margin:2,scalable:true});
+  }catch(e){return '<p class="note">The link is too long for a QR code. Copy the link instead.</p>';}
+}
+
+/* ---------- render & events ---------- */
+var stage=document.getElementById("stage");
+function render(focus){
+  stage.innerHTML=STEPS[S.step].r();
+  document.getElementById("progress").innerHTML='<span>'+(S.step?(S.step<=6?"Round 1":"Round 2")+" · Step "+S.step+" of 9 · "+STEPS[S.step].t:"Start")+'</span><span>'+(S.step?"Started from "+PEOPLE[S.start].who:"")+'</span>';
+  document.getElementById("back").disabled=S.step===0;
+  var n=document.getElementById("next"); n.textContent=S.step===0?"Begin":S.step===6?"Round 2":"Next"; n.disabled=S.step===LAST;
+  update();
+  if(focus){var h=stage.querySelector("h1");if(h)h.focus({preventScroll:true});window.scrollTo(0,0);}
+}
+function go(d){S.step=Math.min(LAST,Math.max(0,S.step+d));render(true);}
+document.getElementById("next").onclick=function(){if(S.step<LAST)go(1);};
+document.getElementById("back").onclick=function(){if(S.step>0)go(-1);};
+function onEdit(e){
+  var t=e.target,p=t.getAttribute("data-p"),l=t.getAttribute("data-l");
+  if(p){
+    var val=t.type==="number"?Math.max(0,Math.round(parseFloat(t.value)||0)):String(t.value).slice(0,300);
+    set(p,val); if(t.classList) t.classList.toggle("ex",isEx(p)); update(); return;
+  }
+  if(l){
+    var parts=l.split("."),arr=parts[0]==="qL"?S.w.q.lines:S.w.inv.lines,i=+parts[1],k=parts[2];
+    if(!arr[i]) return;
+    if(k==="q"||k==="p"){var n=parseFloat(String(t.value).replace(",","."));arr[i][k]=isFinite(n)&&n>=0?n:0;}
+    else arr[i][k]=String(t.value).slice(0,120);
+    if(parts[0]==="qL"){var e2=PEOPLE[S.start].v.q.lines[i];t.classList.toggle("ex",!!(e2&&String(e2[k])===String(arr[i][k]))&&t.tagName!=="SELECT");}
+    else t.classList.remove("ex");
+    update();
+  }
+}
+stage.addEventListener("input",onEdit);
+stage.addEventListener("change",function(e){if(e.target.tagName==="SELECT")onEdit(e);});
+stage.addEventListener("click",function(e){
+  var b=e.target.closest("button"); if(!b) return;
+  if(b.hasAttribute("data-start")){var p=b.getAttribute("data-start");S.start=p;S.w=fresh(p);render(false);return;}
+  if(b.hasAttribute("data-mode")){var md=b.getAttribute("data-mode");S.w.mode=md;
+    var first=S.w.q.lines[0];
+    if(!first) S.w.q.lines.push(md==="hours"?{d:"Design work",q:10,u:"hours",p:0}:{d:"Fee",q:1,u:"item",p:0});
+    else if(md==="hours"&&first.u==="item"&&first.q===1){first.u="hours";}
+    else if(md==="fee"&&first.u==="hours"){first.u="item";first.p=r2(first.q*first.p);first.q=1;}
+    render(false);return;}
+  if(b.hasAttribute("data-ok")){S.w.ok.how=b.getAttribute("data-ok");if(!S.w.ok.date)S.w.ok.date=today();render(false);return;}
+  if(b.hasAttribute("data-add")){var w=b.getAttribute("data-add"),arr=w==="q"?S.w.q.lines:S.w.inv.lines;if(arr.length<20)arr.push({d:"",q:1,u:S.w.mode==="hours"?"hours":"item",p:0});render(false);return;}
+  if(b.hasAttribute("data-del")){var pr=b.getAttribute("data-del").split("."),a2=pr[0]==="q"?S.w.q.lines:S.w.inv.lines;a2.splice(+pr[1],1);render(false);return;}
+  var a=b.getAttribute("data-act");
+  if(a==="reset"){S.w.inv.lines=copy(S.w.q.lines);render(false);var rm=document.getElementById("resetMsg");if(rm)rm.textContent="The lines are back to your quote.";return;}
+  if(a==="print"){printDoc(b.getAttribute("data-what"));return;}
+  if(a==="copy"){var url=shareUrl(),m=stage.querySelector('[data-o="copyMsg"]');
+    var fallback=function(){var box=stage.querySelector('[data-o="link"]');var r=document.createRange();r.selectNodeContents(box);var s=window.getSelection();s.removeAllRanges();s.addRange(r);m.textContent="Selected. Copy it from your phone's menu.";};
+    try{navigator.clipboard.writeText(url).then(function(){m.textContent="Copied.";},fallback);}catch(err){fallback();}}
+});
+function printDoc(what){
+  var u=shareUrl();
+  document.getElementById("printarea").innerHTML=docHtml(what)+
+    '<div class="reopen"><p><b>Reopen this in the tool.</b> Scan the code with your camera, or tap the link. Everything lives in the link, not with us.</p><div class="qr">'+qrSvg(u)+'</div><p class="linkbox"><a href="'+esc(u)+'">'+esc(u)+'</a></p></div>';
+  var prev=document.title;
+  try{document.title=(what==="quote"?"Quote "+S.w.q.no:"Invoice "+S.w.inv.no)+" "+(S.w.me.name||"");}catch(e){}
+  var done=function(){document.title=prev;window.removeEventListener("afterprint",done);};
+  window.addEventListener("afterprint",done);
+  try{window.print();}catch(err){}
+}
+var rb=document.getElementById("readable");
+try{if(localStorage.getItem("ec-readable")==="1"){document.body.classList.add("readable");rb.setAttribute("aria-pressed","true");}}catch(e){}
+rb.onclick=function(){var on=document.body.classList.toggle("readable");rb.setAttribute("aria-pressed",String(on));try{localStorage.setItem("ec-readable",on?"1":"0");}catch(e){}};
+
+load();
+render(false);
+})();
+</script>
+</body>
+</html>
