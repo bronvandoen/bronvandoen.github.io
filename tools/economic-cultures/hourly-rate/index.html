@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>My Hourly Rate</title>
+
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:wght@400;600&family=Big+Shoulders+Display:wght@800;900&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<style>
+/* Layout: one step per phone screen, a sheet of paper with raised panels; two inks (baseline Blue + Bright Red) and black. Single look by design: riso on paper. */
+:root{
+  --paper:#F7F3EA; --paper-raised:#FBF8F1; --ink:#111111; --ink-soft:#4A463F;
+  --ink-1:#0078BF; --ink-2:#F15060; --display-ink:#0078BF; --eyebrow-ink:#3D5588; --accent-text:#B8293A;
+  --display:"Big Shoulders Display","Oswald","Arial Narrow",sans-serif;
+  --text:"Source Serif 4",Georgia,serif;
+  --readable:"Atkinson Hyperlegible Next",Verdana,sans-serif;
+  --label:"Atkinson Hyperlegible Mono","Courier New",monospace;
+  --rule:2px; --rule-heavy:3px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--text);font-size:17px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 120px}
+body.readable{font-family:var(--readable)}
+.wrap{max-width:560px;margin:0 auto}
+a{color:var(--ink);text-decoration-thickness:2px;text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+
+header.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:16px 8px;border-bottom:var(--rule) solid var(--ink)}
+.studio{font-family:var(--display);font-weight:900;font-size:20px;white-space:nowrap;letter-spacing:.01em}
+.toggle{font-family:var(--label);font-size:13px;font-weight:600;background:var(--paper-raised);color:var(--ink);border:var(--rule) solid var(--ink);min-height:44px;padding:0 12px;cursor:pointer;border-radius:0}
+.toggle[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+.progress{font-family:var(--label);font-size:13px;color:var(--ink-soft);padding-top:16px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.eyebrow{font-family:var(--display);font-weight:800;font-size:16px;letter-spacing:.08em;color:var(--eyebrow-ink);text-transform:uppercase;margin:20px 0 6px}
+.over{position:relative;margin:0 0 16px}
+.over h1,.over .ghost{font-family:var(--display);font-weight:900;font-size:clamp(38px,11vw,56px);line-height:.9;text-transform:uppercase;margin:0;text-wrap:balance;mix-blend-mode:multiply}
+.over h1{position:relative;color:var(--display-ink)}
+.over .ghost{position:absolute;left:3px;top:3px;color:var(--ink-2)}
+p{margin:0 0 14px}
+.lead{font-size:19px}
+.note{font-family:var(--label);font-size:13px;color:var(--ink-soft)}
+.accent{font-style:italic;color:var(--accent-text)}
+
+.panel{background:var(--paper-raised);border:var(--rule-heavy) solid var(--ink);padding:20px 16px;margin:18px 0}
+.panel h2{font-family:var(--display);font-weight:900;font-size:26px;line-height:1;text-transform:uppercase;margin:0 0 10px}
+.panel h3{font-family:var(--label);font-weight:600;font-size:14px;margin:0 0 4px;text-transform:uppercase;letter-spacing:.04em}
+
+.field{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;padding:12px 0;border-bottom:1px solid #CFC8B8}
+.field:last-child{border-bottom:0}
+.field label{font-family:var(--readable);font-weight:600;font-size:16px;line-height:1.3}
+.field .hint{grid-column:1/-1;font-family:var(--readable);font-size:14px;color:var(--ink-soft);line-height:1.4}
+.money{display:flex;align-items:center;gap:6px;font-family:var(--label);font-size:13px}
+.money input{-webkit-text-fill-color:currentColor;width:6.2em;min-height:44px;font-family:var(--readable);font-size:18px;text-align:right;padding:0 8px;border:var(--rule) solid var(--ink);background:var(--paper);color:var(--ink);border-radius:0;font-variant-numeric:tabular-nums}
+.money input.ex{color:#6A655B;border-style:dashed}
+.chk{display:flex;align-items:center;gap:10px;min-height:44px;cursor:pointer;font-family:var(--readable);font-weight:600}
+.chk input{width:24px;height:24px;accent-color:var(--ink-1)}
+
+.totals{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0 0}
+.total{flex:1 1 140px;border-top:var(--rule-heavy) solid var(--ink);padding-top:6px}
+.total .k{font-family:var(--label);font-size:13px}
+.total .v{font-family:var(--display);font-weight:900;font-size:34px;line-height:1;font-variant-numeric:tabular-nums}
+
+.other{border-left:var(--rule-heavy) solid var(--ink-2);padding:2px 0 2px 12px;margin:16px 0;font-size:16px}
+.other b{font-family:var(--label);font-size:13px;display:block}
+.pause{display:block;font-family:var(--label);font-size:14px;font-weight:600;background:var(--ink);color:var(--paper);padding:12px 14px;margin:18px 0}
+.pause::before{content:"Pause · "}
+
+details{border:var(--rule) solid var(--ink);background:var(--paper-raised);margin:16px 0}
+summary{font-family:var(--label);font-weight:600;font-size:14px;min-height:44px;display:flex;align-items:center;padding:0 12px;cursor:pointer}
+details > div{padding:0 14px 12px;font-size:16px}
+
+.slider{width:100%;accent-color:var(--ink-1);min-height:44px}
+
+.year svg{display:block;width:100%;height:auto;shape-rendering:crispEdges}
+.year text{font-family:var(--label);font-size:13px;fill:var(--ink)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--label);font-size:12px;margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:18px;height:12px;border:1px solid var(--ink);display:inline-block}
+
+.rate{font-family:var(--display);font-weight:900;font-size:clamp(72px,24vw,120px);line-height:.85;color:var(--display-ink);font-variant-numeric:tabular-nums;margin:6px 0 4px}
+.rate small{font-size:.35em;color:var(--ink)}
+.sum{width:100%;border-collapse:collapse;font-family:var(--readable);font-size:15px;font-variant-numeric:tabular-nums}
+.sum td{padding:7px 0;border-bottom:1px solid #CFC8B8;vertical-align:top}
+.sum td:last-child{text-align:right;white-space:nowrap;padding-left:12px}
+.sum tr.t td{border-top:var(--rule) solid var(--ink);border-bottom:0;font-weight:600}
+
+.btn{font-family:var(--label);font-weight:600;font-size:14px;min-height:48px;padding:0 18px;border:var(--rule) solid var(--ink);background:var(--paper-raised);color:var(--ink);cursor:pointer;border-radius:0}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.btn:disabled{opacity:.4;cursor:default}
+.btn[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row input[type=text]{flex:1 1 160px;min-height:48px;font-family:var(--readable);font-size:17px;padding:0 10px;border:var(--rule) solid var(--ink);background:var(--paper);color:var(--ink);-webkit-text-fill-color:var(--ink);border-radius:0}
+input,button{color-scheme:light}
+
+.choose{display:grid;gap:12px;margin:16px 0}
+.pick{display:block;text-align:left;width:100%;background:var(--paper-raised);border:var(--rule-heavy) solid var(--ink);padding:14px 16px;cursor:pointer;font:inherit;color:var(--ink);border-radius:0}
+.pick strong{font-family:var(--display);font-weight:900;font-size:28px;text-transform:uppercase;display:block;line-height:1}
+.pick[aria-pressed="true"]{box-shadow:inset 0 0 0 3px var(--ink-1);border-color:var(--ink-1)}
+
+.cards{display:grid;gap:10px}
+.card{display:block;width:100%;text-align:left;background:var(--paper-raised);border:var(--rule) solid var(--ink);padding:12px 14px;cursor:pointer;font:inherit;color:var(--ink);border-radius:0;min-height:44px}
+.card b{font-family:var(--label);font-size:14px;text-transform:uppercase;letter-spacing:.03em;display:block}
+.card .q{font-style:italic;color:var(--accent-text)}
+.card[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.card[aria-pressed="true"] .q{color:var(--paper)}
+.card .chg{font-family:var(--label);font-size:12px;display:block;margin-top:4px}
+
+.tablewrap{overflow-x:auto;margin:12px 0}
+.cmp{border-collapse:collapse;font-family:var(--readable);font-size:14px;font-variant-numeric:tabular-nums;min-width:100%}
+.cmp th,.cmp td{border:1px solid var(--ink);padding:6px 8px;text-align:right;white-space:nowrap}
+.cmp th:first-child,.cmp td:first-child{text-align:left}
+.cmp thead th{font-family:var(--label);font-weight:600;background:var(--paper-raised)}
+.cmp tr.r td{font-weight:600;font-size:16px}
+
+.diff{font-family:var(--label);font-size:13px;margin:8px 0;padding:0;list-style:none}
+.diff li{padding:3px 0}
+
+nav.bar{position:fixed;left:0;right:0;bottom:0;background:var(--paper);border-top:var(--rule-heavy) solid var(--ink);
+  padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));z-index:5}
+nav.bar .in{max-width:560px;margin:0 auto;display:flex;gap:10px;align-items:center}
+nav.bar .live{flex:1;text-align:center;font-family:var(--label);font-size:13px;line-height:1.2}
+nav.bar .live b{display:block;font-family:var(--display);font-weight:900;font-size:24px}
+
+.qr svg{width:180px;height:180px;display:block}
+.linkbox{font-family:var(--label);font-size:12px;word-break:break-all;background:var(--paper);border:1px solid var(--ink);padding:8px;max-height:5.5em;overflow:auto}
+footer{padding:28px 0 0;font-family:var(--label);font-size:12px;color:var(--ink-soft)}
+
+@media print{
+  nav.bar,header.top,.progress,.noprint{display:none!important}
+  body{padding:0;font-size:12pt}
+  .panel{break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <span class="studio">a Situated Studio</span>
+    <button class="toggle" id="readable" aria-pressed="false">Readable mode</button>
+  </header>
+  <div class="progress" id="progress"></div>
+  <main id="stage" aria-live="polite"></main>
+  <footer class="noprint">Economic Cultures · DAE Blueprints · a prototype by a Situated Studio. Nothing you type leaves this phone.</footer>
+</div>
+<nav class="bar" aria-label="Steps">
+  <div class="in">
+    <button class="btn" id="back">Back</button>
+    <div class="live" id="live"></div>
+    <button class="btn primary" id="next">Next</button>
+  </div>
+</nav>
+
+<script>
+(function(){
+"use strict";
+/* ---------- model ---------- */
+var KEYS=["rent","food","health","move","joy","other","side","holiday","pension","buffer","cover",
+  "space","tools","materials","travel","accountant","insure","costother","tax",
+  "weeksOff","daysWeek","hoursDay","holidays","sick","paid","shareMask","shareN","extra"];
+var COSTS=["space","tools","materials","travel","accountant","insure","costother","extra"];
+var PEOPLE={
+  sam:{who:"Sam",line:"24, graduated this summer. Shares a house in Eindhoven and works at the kitchen table.",
+    v:{rent:650,food:300,health:160,move:90,joy:120,other:80,side:0,holiday:1,pension:0,buffer:50,cover:0,
+      space:0,tools:900,materials:600,travel:400,accountant:300,insure:400,costother:300,tax:20,
+      weeksOff:5,daysWeek:4,hoursDay:8,holidays:6,sick:6,paid:50,shareMask:0,shareN:2,extra:0}},
+  noor:{who:"Noor",line:"27, came to the Netherlands to study. Rents a small studio flat and a desk in a shared workshop.",
+    v:{rent:850,food:320,health:160,move:110,joy:120,other:140,side:0,holiday:1,pension:100,buffer:100,cover:0,
+      space:2400,tools:1200,materials:1500,travel:800,accountant:500,insure:500,costother:300,tax:25,
+      weeksOff:6,daysWeek:5,hoursDay:8,holidays:7,sick:6,paid:55,shareMask:0,shareN:2,extra:0}}
+};
+function copy(o){return JSON.parse(JSON.stringify(o));}
+function calc(v){
+  var lifeM=v.rent+v.food+v.health+v.move+v.joy+v.other;
+  var life=lifeM*12, side=v.side*12;
+  var hol=v.holiday?0.08*life:0;
+  var emp=hol+(v.pension+v.buffer+v.cover)*12;
+  var need=Math.max(0,life+emp-side);
+  var t=Math.min(0.9,Math.max(0,v.tax/100));
+  var beforeTax=need/(1-t), stateShare=beforeTax-need;
+  var costs=0, costsFull=0;
+  COSTS.forEach(function(k,i){var c=v[k]; costsFull+=c; costs+=((v.shareMask>>i)&1)?c/Math.max(1,v.shareN):c;});
+  var turnover=beforeTax+costs;
+  var fullH=52*v.daysWeek*v.hoursDay;
+  var afterRest=Math.max(0,(52-v.weeksOff)*v.daysWeek*v.hoursDay);
+  var afterHol=Math.max(0,afterRest-v.holidays*v.hoursDay);
+  var worked=Math.max(0,afterHol-v.sick*v.hoursDay);
+  var paidH=worked*v.paid/100;
+  var rate=paidH>0?turnover/paidH:0;
+  var day=rate*v.hoursDay;
+  return {lifeM:lifeM,life:life,side:side,hol:hol,emp:emp,need:need,beforeTax:beforeTax,stateShare:stateShare,
+    costs:costs,costsFull:costsFull,turnover:turnover,fullH:fullH,afterRest:afterRest,afterHol:afterHol,
+    worked:worked,paidH:paidH,unpaidH:worked-paidH,rate:rate,rateVat:rate*1.21,day:day,
+    budgetDays:day>0?10000/day:0};
+}
+/* ---------- state ---------- */
+var S={start:"sam",w:copy(PEOPLE.sam.v),vs:[],step:0,extraName:""};
+function encode(){
+  var pack=function(v){return KEYS.map(function(k){return v[k];});};
+  var o={s:S.start==="noor"?1:0,n:S.extraName,w:pack(S.w),vs:S.vs.map(function(x){return [x.name].concat(pack(x.v));})};
+  var b=btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+  return b.replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function decode(str){
+  var b=str.replace(/-/g,"+").replace(/_/g,"/"); while(b.length%4)b+="=";
+  var o=JSON.parse(decodeURIComponent(escape(atob(b))));
+  var un=function(a){var v={};KEYS.forEach(function(k,i){v[k]=Number(a[i])||0;});return v;};
+  S.start=o.s===1?"noor":"sam"; S.extraName=String(o.n||"").slice(0,40); S.w=un(o.w);
+  S.vs=(o.vs||[]).map(function(a){return {name:String(a[0]).slice(0,40),v:un(a.slice(1))};});
+}
+var saveTimer=null;
+function persist(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(function(){
+    var code=encode();
+    try{history.replaceState(null,"","#s="+code);}catch(e){}
+    try{localStorage.setItem("ec-hourly-rate",code);}catch(e){}
+  },300);
+}
+function load(){
+  var h=""; try{h=location.hash||"";}catch(e){}
+  try{ if(h.indexOf("#s=")===0){decode(h.slice(3));S.step=6;return;} }catch(e){}
+  try{ var c=localStorage.getItem("ec-hourly-rate"); if(c){decode(c);} }catch(e){}
+}
+/* ---------- helpers ---------- */
+function eur(n){return "€"+Math.round(n).toLocaleString("en-GB");}
+function eur2(n){return "€"+n.toLocaleString("en-GB",{minimumFractionDigits:2,maximumFractionDigits:2});}
+function num(n){return Math.round(n).toLocaleString("en-GB");}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function other(){return S.start==="sam"?"noor":"sam";}
+function ex(k){return PEOPLE[S.start].v[k]===S.w[k];}
+function field(k,label,hint,unit){
+  return '<div class="field"><label for="f-'+k+'">'+label+'</label><span class="money">'+(unit==="%"||unit==="days"||unit==="weeks"||unit==="hours"?"":"€")+
+    '<input type="number" inputmode="decimal" min="0" step="any" id="f-'+k+'" data-k="'+k+'" value="'+S.w[k]+'" class="'+(ex(k)?"ex":"")+'">'+unit+'</span>'+
+    (hint?'<span class="hint">'+hint+'</span>':'')+'</div>';
+}
+function heading(eyebrow,title){
+  return '<div class="eyebrow">'+eyebrow+'</div><div class="over"><div class="ghost" aria-hidden="true">'+title+'</div><h1 tabindex="-1">'+title+'</h1></div>';
+}
+function otherLine(text){return '<p class="other"><b>'+PEOPLE[other()].who.toUpperCase()+' DID IT DIFFERENTLY</b>'+text+'</p>';}
+function pause(t){return '<span class="pause">'+t+'</span>';}
+function out(name){return '<span data-o="'+name+'"></span>';}
+
+/* ---------- steps ---------- */
+var STEPS=[
+ {t:"Start",r:function(){
+   return heading("Economic Cultures · Day 1","What does your hour need to earn?")+
+   '<p class="lead">Your hourly rate is not a price on your talent. It comes out of your life: what you need, what your practice costs, and how many hours someone will actually pay for.</p>'+
+   '<p>We work it out together, step by step. You can always go back and change a number.</p>'+
+   '<p class="note">Everything you type stays on this phone. We don\'t collect anything.</p>'+
+   '<div class="panel"><h2>Start from someone else\'s numbers</h2><p>Pick one, then change their numbers into yours as you go.</p><div class="choose">'+
+   ["sam","noor"].map(function(p){return '<button class="pick" data-start="'+p+'" aria-pressed="'+(S.start===p)+'"><strong>'+PEOPLE[p].who+'</strong>'+PEOPLE[p].line+'</button>';}).join("")+
+   '</div><p class="accent">These are examples, not advice. Whatever is true for you is right for you.</p>'+
+   '<p class="note">Dashed boxes still hold the example. Once you type your own number, the box turns solid.</p></div>';
+ }},
+ {t:"My life right now",r:function(){
+   return heading("Step 1","My life right now")+
+   '<p class="lead">The year after your graduation show. What does a month of your life cost?</p>'+
+   '<div class="panel">'+field("rent","Rent and energy","Your room or flat, your share of the bills.","/month")+
+   field("food","Food and household","","/month")+
+   field("health","Health insurance","Basic insurance in the Netherlands costs around €160 a month in 2026.","/month")+
+   field("move","Phone and getting around","Phone plan, bike repairs, the train.","/month")+
+   field("joy","A bit of joy","Going out, books, a concert. Leave this out and you won\'t last.","/month")+
+   field("other","Everything else","Clothes, gifts, a flight home.","/month")+
+   field("side","Income from a side job","What a job or teaching brings in, after tax. It lowers what your practice has to earn.","/month")+
+   '<div class="totals"><div class="total"><div class="k">A month of my life</div><div class="v">'+out("lifeM")+'</div></div><div class="total"><div class="k">A year</div><div class="v">'+out("life")+'</div></div></div></div>'+
+   otherLine(S.start==="sam"?"Noor needs €1,700 a month: a studio flat of her own instead of a shared house, and she saves for a flight home.":"Sam needs €1,400 a month: a room in a shared house, and a bike for everything.")+
+   pause("Talk to your group: what did you forget? Change a number, or add it under Everything else.");
+ }},
+ {t:"Being my own employer",r:function(){
+   return heading("Step 2","Being my own employer")+
+   '<p class="lead">An employer quietly pays for things you now carry yourself. Which ones do you take on?</p>'+
+   '<p>Leaving something out is allowed. We come back to it in step 7.</p>'+
+   '<div class="panel"><h3>Holiday pay</h3><p>Employees get extra pay for their holidays. Nobody pays yours unless you do.</p>'+
+   '<label class="chk"><input type="checkbox" data-k="holiday" '+(S.w.holiday?"checked":"")+'> Add 8% to a year of my life ('+out("holAmt")+')</label></div>'+
+   '<div class="panel">'+field("pension","A pension","Nobody saves for your old age unless you do.","/month")+
+   field("buffer","A buffer for slow months","Every practice has empty months. A buffer turns panic into a plan.","/month")+
+   field("cover","Insurance for a long illness","If you can\'t work for months, what do you live on?","/month")+
+   '<div class="totals"><div class="total"><div class="k">My employer part, a year</div><div class="v">'+out("emp")+'</div></div><div class="total"><div class="k">What I need to keep</div><div class="v">'+out("need")+'</div></div></div></div>'+
+   otherLine(S.start==="sam"?"Noor puts aside €200 a month for a pension and a buffer. Her family is far away, so a slow month has no safety net.":"Sam keeps €50 a month as a buffer and skips the pension. At 24 it feels far away. That is a choice, and step 7 comes back to it.")+
+   '<details><summary>In the Netherlands</summary><div><p>Employees get holiday pay by law: at least 8% of their wage. As a freelancer you pay it to yourself.</p><p>Insurance for long illness is called an AOV. It is expensive, and many freelancers go without. Ask your peers what they chose.</p></div></details>';
+ }},
+ {t:"Running my practice",r:function(){
+   return heading("Step 3","Running my practice")+
+   '<p class="lead">What does your practice cost in a year, whether or not any work comes in?</p>'+
+   '<div class="panel">'+field("space","Workspace","A desk in a shared studio at €200 a month is €2,400 a year.","/year")+
+   field("tools","Tools and software","Laptop, licences, a camera, spread over the years they last.","/year")+
+   field("materials","Materials","","/year")+
+   field("travel","Travel for work","","/year")+
+   field("accountant","Help with books and tax","An accountant, or bookkeeping software.","/year")+
+   field("insure","Insurance and memberships","Liability insurance, a bank account, a professional network.","/year")+
+   field("costother","Everything else","Website, printing, postage.","/year")+
+   '<div class="totals"><div class="total"><div class="k">My practice, a year</div><div class="v">'+out("costs")+'</div></div></div></div>'+
+   otherLine(S.start==="sam"?"Noor\'s practice costs €7,200 a year: a desk in a shared workshop and materials for her objects.":"Sam\'s practice costs €2,900 a year: the kitchen table, a laptop and a few licences.")+
+   pause("Blind spots: what did your school pay for that you now pay yourself?");
+ }},
+ {t:"The state's share",r:function(){
+   return heading("Step 4","The state's share")+
+   '<p class="lead">Part of what you earn goes to the state. How much depends on where you live, what you earn and that year\'s rules.</p>'+
+   '<p>Pick a rough share. You can\'t get it exactly right here, and that\'s fine. Planning for it is what matters.</p>'+
+   '<div class="panel"><label for="f-tax" class="note">Roughly what share of my income goes to tax</label>'+
+   '<div class="total"><div class="v">'+out("taxPct")+'</div></div>'+
+   '<input type="range" class="slider" id="f-tax" data-k="tax" min="0" max="50" step="1" value="'+S.w.tax+'">'+
+   '<table class="sum"><tr><td>What I need to keep</td><td>'+out("need")+'</td></tr><tr><td>The state\'s share</td><td>'+out("stateShare")+'</td></tr><tr class="t"><td>What I need to earn before tax</td><td>'+out("beforeTax")+'</td></tr></table></div>'+
+   otherLine("Noor picked 25%, Sam 20%. Neither is exact. Both are planning for it.")+
+   '<details><summary>In the Netherlands</summary><div><p>You pay income tax on your profit, plus an income-dependent contribution for health care (the Zvw). Starting freelancers can use deductions that lower their tax, but these change every year.</p><p>The <a href="https://www.belastingdienst.nl/" target="_blank" rel="noopener">Belastingdienst</a> explains it in English. Get help with your first tax return: a friend, a peer, an accountant.</p></div></details>';
+ }},
+ {t:"Paid and unpaid hours",r:function(){
+   return heading("Step 5","Paid and unpaid hours")+
+   '<p class="lead">A year has fewer working hours than you think. And of the hours you work, only part is paid.</p>'+
+   '<div class="panel">'+field("daysWeek","Days a week I work","","days")+
+   field("hoursDay","Hours a working day","","hours")+
+   field("weeksOff","Weeks off a year","Holidays, visiting family, rest.","weeks")+
+   field("holidays","Public holidays on my work days","","days")+
+   field("sick","Days I\'m ill","Everybody is ill sometimes. Plan for it.","days")+'</div>'+
+   '<div class="panel"><h2>Unpaid hours</h2><p>Unpaid hours are work nobody asked for and nobody pays for: emails, admin, applications, your portfolio, research, your own projects, learning. They are part of your practice, and your paid hours have to cover them.</p>'+
+   '<label for="f-paid" class="note">Of the hours I work, the share a client pays for</label><div class="total"><div class="v">'+out("paidPct")+'</div></div>'+
+   '<input type="range" class="slider" id="f-paid" data-k="paid" min="10" max="100" step="5" value="'+S.w.paid+'"></div>'+
+   '<div class="panel year"><h2>My year in hours</h2><div data-o="yearSvg"></div>'+
+   '<div class="legend"><span><i class="sw" style="background:var(--ink-1)"></i>paid hours</span><span><i class="sw" data-pat="d50"></i>unpaid hours</span><span><i class="sw" data-pat="hatch"></i>not working</span></div></div>'+
+   otherLine(S.start==="sam"?"Noor works five days a week, and a client pays for 55% of her hours.":"Sam works four days a week, and a client pays for half of his hours.")+
+   pause("Look at the last line. How does it feel?");
+ }},
+ {t:"My rate",r:function(){
+   return heading("Step 6","My rate")+
+   '<div class="panel"><div class="note">My hourly rate, without VAT</div><div class="rate">'+out("rate")+'<small>/h</small></div>'+
+   '<p class="note">What a client pays with 21% VAT: '+out("rateVat")+'</p>'+
+   '<div class="totals"><div class="total"><div class="k">A day rate</div><div class="v">'+out("day")+'</div></div><div class="total"><div class="k">A €10,000 budget buys</div><div class="v">'+out("budgetDays")+'</div></div></div></div>'+
+   '<div class="panel"><h2>Where it comes from</h2><table class="sum"><tr><td>What I need to keep</td><td>'+out("need")+'</td></tr><tr><td>The state\'s share</td><td>'+out("stateShare")+'</td></tr><tr><td>My practice</td><td>'+out("costs")+'</td></tr><tr class="t"><td>What my practice has to bring in a year</td><td>'+out("turnover")+'</td></tr><tr><td>Divided by my paid hours</td><td>'+out("paidH")+'</td></tr><tr class="t"><td>My hourly rate</td><td>'+out("rate2")+'</td></tr></table></div>'+
+   '<details><summary>What is VAT?</summary><div><p>VAT (btw in Dutch) is a tax on what people buy. You add it to your invoice and pass it on to the tax office, usually every quarter. It is not your income. The usual Dutch rate is 21%.</p></div></details>'+
+   '<p>This number is a floor, not a price tag. Use it to check a fee, a commission or a project budget: does it cover your hours?</p>'+
+   '<div class="panel noprint"><h2>Save this as a version</h2><div class="row"><input type="text" id="vname" maxlength="40" value="'+(S.vs.length?"Version "+(S.vs.length+1):"Now")+'" aria-label="Name of this version"><button class="btn primary" data-act="save">Save version</button></div><p class="note" data-o="savedMsg"></p></div>'+
+   pause("Hold up your phone. Compare with your group, without judging.");
+ }},
+ {t:"Versions of me",r:function(){
+   return heading("Step 7","Versions of me")+
+   '<p class="lead">Your rate is not fixed. As your life changes, so do your standards. Try on a different life.</p>'+
+   '<p>Tap what might change. The numbers start from your current version.</p>'+
+   '<div class="cards">'+LIFE.map(function(c,i){return '<button class="card" data-card="'+i+'" aria-pressed="'+(picked.indexOf(i)>=0)+'"><b>'+c.t+'</b>'+c.s+'<span class="q"> '+c.q+'</span></button>';}).join("")+'</div>'+
+   '<div class="panel"><h2>This life</h2><ul class="diff" data-o="diff"></ul><table class="sum"><tr><td>My rate now</td><td>'+out("rate2")+'</td></tr><tr class="t"><td>My rate in this life</td><td>'+out("tryRate")+'</td></tr></table>'+
+   '<div class="row noprint" style="margin-top:12px"><input type="text" id="tname" maxlength="40" value="Me in ten years" aria-label="Name of this life"><button class="btn primary" data-act="savelife">Save as a version</button></div><p class="note" data-o="lifeMsg"></p></div>'+
+   '<div class="panel"><h2>My versions side by side</h2><div data-o="cmp"></div></div>';
+ }},
+ {t:"What could be shared",r:function(){
+   return heading("Step 8","What could be shared")+
+   '<p class="lead">Not all value is money. Some costs get lighter when you carry them with others.</p>'+
+   '<p>Tick the costs from step 3 you could share with peers, and choose with how many people.</p>'+
+   '<div class="panel">'+COSTS.map(function(k,i){if(k==="extra")return "";return '<label class="chk"><input type="checkbox" data-share="'+i+'" '+(((S.w.shareMask>>i)&1)?"checked":"")+'> <span>'+COSTNAMES[k]+'<br><span class="note" data-o="sh'+i+'"></span></span></label>';}).join("")+
+   '<div class="field"><label for="xname">Something you would only have together</label><span class="hint">A risograph, a van, a workshop.</span></div>'+
+   '<div class="row"><input type="text" id="xname" maxlength="40" placeholder="For example: a risograph" value="'+esc(S.extraName)+'" aria-label="Name of the shared thing"><span class="money">€<input type="number" inputmode="decimal" min="0" step="any" id="f-extra" data-k="extra" value="'+S.w.extra+'" aria-label="Its cost per year">/year</span></div>'+
+   '<label class="chk"><input type="checkbox" data-share="7" '+(((S.w.shareMask>>7)&1)?"checked":"")+'> <span>Share it<br><span class="note" data-o="sh7"></span></span></label>'+
+   '<p class="note" style="margin-top:10px">Shared with how many people, me included</p><div class="row">'+[2,3,4,5].map(function(n){return '<button class="btn" data-n="'+n+'" aria-pressed="'+(S.w.shareN===n)+'">'+n+'</button>';}).join("")+'</div></div>'+
+   '<div class="panel"><table class="sum"><tr><td>My practice without sharing</td><td>'+out("costsFull")+'</td></tr><tr><td>My practice, shared</td><td>'+out("costs")+'</td></tr><tr class="t"><td>My rate with sharing</td><td>'+out("rate2")+'</td></tr></table></div>'+
+   '<p>On Day 3 we look at how sharing works in practice.</p>'+
+   pause("Talk to your group: what could you share with the people around you?")+
+   '<div class="row noprint"><button class="btn primary" data-act="saveshare">Save as a version: shared</button></div><p class="note" data-o="shareMsg"></p>';
+ }},
+ {t:"Take it with you",r:function(){
+   return heading("Step 9","Take it with you")+
+   '<p class="pause" style="background:var(--accent-text)">Before you close this page, save your link or the PDF. We don\'t keep your numbers, so without it they are gone.</p>'+
+   '<div class="panel"><h2>My versions</h2><div data-o="cmp"></div></div>'+
+   '<div class="panel"><h2>Questions to take home</h2><p>Which version feels like the practice you want?</p><p>What would you have to change to get there?</p><p>Who could you share something with?</p></div>'+
+   '<div class="panel noprint"><h2>Save it</h2><p>Save this page as a PDF: tap the button, then choose “Save as PDF”.</p><div class="row"><button class="btn primary" data-act="print">Save as PDF</button></div></div>'+
+   '<div class="panel"><h2>Bring it back on Day 3</h2><p>This link and QR code reopen the tool with your numbers. The numbers live in the link, not with us.</p>'+
+   '<div class="qr" data-o="qr"></div><a class="linkbox" style="display:block" data-o="link" target="_blank" rel="noopener"></a><div class="row noprint" style="margin-top:10px"><button class="btn" data-act="copy">Copy link</button><span class="note" data-o="copyMsg"></span></div></div>'+
+   '<p class="note">More to read: <a href="https://fairpracticecode.nl/" target="_blank" rel="noopener">Fair Practice Code</a> · <a href="https://www.kvk.nl/en/" target="_blank" rel="noopener">KVK</a> · <a href="https://www.belastingdienst.nl/" target="_blank" rel="noopener">Belastingdienst</a></p>';
+ }}
+];
+var COSTNAMES={space:"Workspace",tools:"Tools and software",materials:"Materials",travel:"Travel for work",accountant:"Help with books and tax",insure:"Insurance and memberships",costother:"Everything else"};
+var LIFE=[
+ {t:"Living together",s:"You share a home with a partner or friends. Rent drops by 40%.",q:"Who would you share with?",f:function(v){v.rent=Math.round(v.rent*0.6/10)*10;}},
+ {t:"A child",s:"Childcare, more food, and days when your child is ill.",q:"Who would carry this with you?",f:function(v){v.food+=150;v.other+=500;v.sick+=5;}},
+ {t:"A studio of your own",s:"More room for your work: €300 a month.",q:"What would a studio change?",f:function(v){v.space+=3600;}},
+ {t:"Looking after my health",s:"Insurance for a long illness, and more honest sick days.",q:"What if you were ill for a month?",f:function(v){v.cover=Math.max(v.cover,120);v.sick=Math.max(v.sick,10);}},
+ {t:"A pension",s:"€200 a month for later.",q:"When do you want to start?",f:function(v){v.pension=Math.max(v.pension,200);}},
+ {t:"A real buffer",s:"€250 a month until three slow months are covered.",q:"What does a slow month do to you now?",f:function(v){v.buffer=Math.max(v.buffer,250);}},
+ {t:"Teaching one day a week",s:"€800 a month after tax, and one day less for your practice.",q:"Does it feed your practice or eat it?",f:function(v){v.side+=800;v.daysWeek=Math.max(1,v.daysWeek-1);}},
+ {t:"More rest",s:"Two more weeks off a year.",q:"What would you do with them?",f:function(v){v.weeksOff+=2;}}
+];
+var picked=[];
+function tried(){var v=copy(S.w);picked.slice().sort().forEach(function(i){LIFE[i].f(v);});return v;}
+
+/* ---------- outputs ---------- */
+var LABELS={rent:"Rent",food:"Food",other:"Everything else",sick:"Sick days",space:"Workspace",cover:"Illness insurance",pension:"Pension",buffer:"Buffer",side:"Side income",daysWeek:"Days a week",weeksOff:"Weeks off"};
+function yearSvg(c){
+  var W=340,rowH=34,gap=18,top=4,rows=[
+    ["A year of my work days",c.fullH,0,0],
+    ["Minus weeks off",c.afterRest,0,0],
+    ["Minus public holidays",c.afterHol,0,0],
+    ["Minus days I'm ill",c.worked,0,0],
+    ["Paid hours",c.paidH,c.worked,1]];
+  var H=top+rows.length*(rowH+gap);
+  var s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="My year in hours: '+num(c.fullH)+' hours shrink to '+num(c.paidH)+' paid hours"><defs>'+
+   '<pattern id="d50" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="3" height="3" style="fill:var(--ink-1)"/><rect x="3" y="3" width="3" height="3" style="fill:var(--ink-1)"/></pattern>'+
+   '<pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="2" height="7" style="fill:var(--ink-2)"/></pattern></defs>';
+  var scale=c.fullH>0?W/c.fullH:0;
+  rows.forEach(function(r,i){
+    var y=top+i*(rowH+gap), bw=Math.max(0,r[1]*scale);
+    s+='<text x="0" y="'+(y+12)+'">'+r[0]+'</text><text x="'+W+'" y="'+(y+12)+'" text-anchor="end">'+num(r[1])+' h</text>';
+    var by=y+16, bh=rowH-16;
+    s+='<rect x="0" y="'+by+'" width="'+W+'" height="'+bh+'" fill="url(#hatch)"/>';
+    if(r[3]){var ww=r[2]*scale; s+='<rect x="0" y="'+by+'" width="'+ww+'" height="'+bh+'" fill="url(#d50)" style="fill:var(--paper)"/><rect x="0" y="'+by+'" width="'+ww+'" height="'+bh+'" fill="url(#d50)"/>';
+      s+='<rect x="0" y="'+by+'" width="'+bw+'" height="'+bh+'" style="fill:var(--ink-1)"/>';}
+    else{s+='<rect x="0" y="'+by+'" width="'+bw+'" height="'+bh+'" style="fill:var(--paper)"/><rect x="0" y="'+by+'" width="'+bw+'" height="'+bh+'" fill="url(#d50)"/>';}
+    s+='<rect x="0.5" y="'+(by+0.5)+'" width="'+(W-1)+'" height="'+(bh-1)+'" fill="none" style="stroke:var(--ink)"/>';
+  });
+  return s+'</svg>';
+}
+function cmpTable(){
+  var list=S.vs.slice();
+  if(!list.length) return '<p class="note">No versions yet. Save one in step 6 or 7.</p>';
+  var cs=list.map(function(x){return calc(x.v);});
+  var head='<tr><th></th>'+list.map(function(x,i){return '<th>'+esc(x.name)+' <button class="btn noprint" style="min-height:32px;padding:0 6px;font-size:11px" data-del="'+i+'" aria-label="Remove '+esc(x.name)+'">×</button></th>';}).join("")+'</tr>';
+  var rowsDef=[["A month of my life",function(c){return eur(c.lifeM);}],["Employer part, a year",function(c){return eur(c.emp);}],["Practice, a year",function(c){return eur(c.costs);}],["Paid hours",function(c){return num(c.paidH);}],["Hourly rate",function(c){return eur2(c.rate);},"r"],["Day rate",function(c){return eur(c.day);}]];
+  return '<div class="tablewrap"><table class="cmp"><thead>'+head+'</thead><tbody>'+rowsDef.map(function(r){return '<tr class="'+(r[2]||"")+'"><td>'+r[0]+'</td>'+cs.map(function(c){return '<td>'+r[1](c)+'</td>';}).join("")+'</tr>';}).join("")+'</tbody></table></div>';
+}
+function update(){
+  var c=calc(S.w);
+  var vals={lifeM:eur(c.lifeM),life:eur(c.life),holAmt:eur(0.08*c.life),emp:eur(c.emp),need:eur(c.need),costs:eur(c.costs),costsFull:eur(c.costsFull),
+    taxPct:S.w.tax+"%",stateShare:eur(c.stateShare),beforeTax:eur(c.beforeTax),paidPct:S.w.paid+"%",
+    rate:c.rate?eur2(c.rate):"—",rate2:c.rate?eur2(c.rate):"—",rate3:c.rate?eur2(c.rate):"—",rateVat:c.rate?eur2(c.rateVat):"—",day:eur(c.day),budgetDays:(c.budgetDays?c.budgetDays.toFixed(1):"0")+" days",
+    turnover:eur(c.turnover),paidH:num(c.paidH)+" h"};
+  document.querySelectorAll("[data-o]").forEach(function(el){
+    var k=el.getAttribute("data-o");
+    if(vals[k]!==undefined) el.textContent=vals[k];
+    else if(k==="yearSvg") el.innerHTML=yearSvg(c);
+    else if(k==="cmp") el.innerHTML=cmpTable();
+    else if(k==="tryRate"){var t=calc(tried());el.textContent=t.rate?eur2(t.rate):"—";}
+    else if(k==="diff"){var t2=tried(),items=[];Object.keys(LABELS).forEach(function(key){if(t2[key]!==S.w[key])items.push('<li>'+LABELS[key]+': '+S.w[key]+' → '+t2[key]+'</li>');});
+      el.innerHTML=items.length?items.join(""):'<li>Tap a card above to try it.</li>';}
+    else if(k==="link"){var u=shareUrl();el.textContent=u;el.setAttribute("href",u);}
+    else if(/^sh\d$/.test(k)){var i=+k.slice(2),key=COSTS[i],amt=S.w[key];el.textContent=((S.w.shareMask>>i)&1)?eur(amt)+" ÷ "+S.w.shareN+" = "+eur(amt/S.w.shareN)+" a year":eur(amt)+" a year";}
+    else if(k==="qr"){el.innerHTML=qrSvg(shareUrl());}
+  });
+  document.querySelectorAll(".sw[data-pat]").forEach(function(el){
+    el.style.background=el.getAttribute("data-pat")==="d50"?"repeating-conic-gradient(var(--ink-1) 0 25%, var(--paper) 0 50%) 0 0/6px 6px":"repeating-linear-gradient(45deg,var(--ink-2) 0 2px,var(--paper) 2px 5px)";
+  });
+  var live=document.getElementById("live");
+  live.innerHTML=S.step>=6?'Rate now<b>'+(c.rate?eur2(c.rate):"—")+'</b>':'Step '+S.step+' of 9';
+  persist();
+}
+function shareUrl(){var base="";try{base=location.href.split("#")[0];}catch(e){}return base+"#s="+encode();}
+function qrSvg(text){
+  try{ if(typeof qrcode!=="function") return '<p class="note">The QR code needs a connection to load. The link below works the same.</p>';
+    var q=qrcode(0,"L"); q.addData(text); q.make(); return q.createSvgTag({cellSize:2,margin:2,scalable:true});
+  }catch(e){return '<p class="note">The link is too long for a QR code. Copy the link instead.</p>';}
+}
+
+/* ---------- render & events ---------- */
+var stage=document.getElementById("stage");
+function render(focus){
+  stage.innerHTML=STEPS[S.step].r();
+  document.getElementById("progress").innerHTML='<span>'+(S.step?"Step "+S.step+" of 9 · "+STEPS[S.step].t:"Start")+'</span><span>'+(S.step?"Started from "+PEOPLE[S.start].who:"")+'</span>';
+  document.getElementById("back").disabled=S.step===0;
+  var n=document.getElementById("next"); n.textContent=S.step===0?"Begin":"Next"; n.disabled=S.step===9;
+  update();
+  if(focus){var h=stage.querySelector("h1");if(h)h.focus({preventScroll:true});window.scrollTo(0,0);}
+}
+function go(d){S.step=Math.min(9,Math.max(0,S.step+d));render(true);}
+document.getElementById("next").onclick=function(){if(S.step<9)go(1);};
+document.getElementById("back").onclick=function(){if(S.step>0)go(-1);};
+stage.addEventListener("input",function(e){
+  var t=e.target,k=t.getAttribute("data-k");
+  if(k){
+    if(t.type==="checkbox") S.w[k]=t.checked?1:0;
+    else{var v=parseFloat(String(t.value).replace(",","."));S.w[k]=isFinite(v)&&v>=0?v:0;}
+    if(t.classList) t.classList.toggle("ex",ex(k));
+    update(); return;
+  }
+  if(t.id==="xname"){S.extraName=t.value.slice(0,40);update();return;}
+  var sh=t.getAttribute("data-share");
+  if(sh!==null){var i=+sh; S.w.shareMask=t.checked?(S.w.shareMask|(1<<i)):(S.w.shareMask&~(1<<i)); update();}
+});
+stage.addEventListener("click",function(e){
+  var b=e.target.closest("button"); if(!b) return;
+  if(b.hasAttribute("data-start")){var p=b.getAttribute("data-start");S.start=p;S.w=copy(PEOPLE[p].v);S.extraName="";render(false);return;}
+  if(b.hasAttribute("data-card")){var i=+b.getAttribute("data-card"),at=picked.indexOf(i);if(at>=0)picked.splice(at,1);else picked.push(i);b.setAttribute("aria-pressed",at<0);update();return;}
+  if(b.hasAttribute("data-n")){S.w.shareN=+b.getAttribute("data-n");stage.querySelectorAll("[data-n]").forEach(function(x){x.setAttribute("aria-pressed",x===b);});update();return;}
+  if(b.hasAttribute("data-del")){S.vs.splice(+b.getAttribute("data-del"),1);update();return;}
+  var a=b.getAttribute("data-act"),msg;
+  if(a==="save"){var nm=(document.getElementById("vname").value||"Now").trim().slice(0,40);S.vs.push({name:nm,v:copy(S.w)});msg=stage.querySelector('[data-o="savedMsg"]');update();msg.textContent="Saved “"+nm+"”. You find it again in steps 7 and 9.";}
+  if(a==="savelife"){var nm2=(document.getElementById("tname").value||"Another life").trim().slice(0,40);S.vs.push({name:nm2,v:tried()});update();stage.querySelector('[data-o="lifeMsg"]').textContent="Saved “"+nm2+"”.";}
+  if(a==="saveshare"){S.vs.push({name:"Shared",v:copy(S.w)});update();stage.querySelector('[data-o="shareMsg"]').textContent="Saved “Shared”. See it side by side in step 9.";}
+  if(a==="print"){try{window.print();}catch(err){}}
+  if(a==="copy"){var url=shareUrl(),m=stage.querySelector('[data-o="copyMsg"]');
+    var fallback=function(){var box=stage.querySelector('[data-o="link"]');var r=document.createRange();r.selectNodeContents(box);var s=window.getSelection();s.removeAllRanges();s.addRange(r);m.textContent="Selected. Copy it from your phone's menu.";};
+    try{navigator.clipboard.writeText(url).then(function(){m.textContent="Copied.";},fallback);}catch(err){fallback();}}
+});
+var rb=document.getElementById("readable");
+try{if(localStorage.getItem("ec-readable")==="1"){document.body.classList.add("readable");rb.setAttribute("aria-pressed","true");}}catch(e){}
+rb.onclick=function(){var on=document.body.classList.toggle("readable");rb.setAttribute("aria-pressed",String(on));try{localStorage.setItem("ec-readable",on?"1":"0");}catch(e){}};
+
+load();
+render(false);
+})();
+</script>
+
+</body>
+</html>
