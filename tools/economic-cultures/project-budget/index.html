@@ -149,9 +149,6 @@ nav.bar .in{max-width:560px;margin:0 auto;display:flex;gap:10px;align-items:cent
 nav.bar .live{flex:1;text-align:center;font-family:var(--label);font-size:13px;line-height:1.2}
 nav.bar .live b{display:block;font-family:var(--display);font-weight:900;font-size:24px}
 nav.bar .live b.warn{color:var(--accent-text)}
-.stepnav{display:flex;gap:10px;justify-content:space-between;align-items:center;border-top:var(--rule-heavy) solid var(--ink);margin-top:28px;padding-top:14px}
-.stepnav .btn{flex:0 0 auto}
-.stepnav .where{flex:1;text-align:center;font-family:var(--label);font-size:13px;line-height:1.3}
 footer{padding:28px 0 0;font-family:var(--label);font-size:12px;color:var(--ink-soft)}
 
 #printarea{display:none}
@@ -202,10 +199,10 @@ var PART_KEYS=PARTS.map(function(p){return p[0];});
 var CATS=[["material","Materials and production"],["rental","Equipment rental"],["location","Location"],["travel","Travel and stay"],
  ["transport","Transport and distribution"],["publicity","Publicity"],["permits","Permits and fees"],["other","Something else"]];
 var TYPES=[["kind","In kind"],["partner","Partner contribution"],["grant","Another fund or grant"],["sales","Sales"],["audience","Audience income"],["sponsor","Sponsoring"]];
-var STATUS=[["hoped","Hoped for"],["applied","Applied for"],["confirmed","Confirmed"]];
+var STATUS=[["hoped","Not asked yet"],["applied","Applied for"],["confirmed","Confirmed"]];
 var FUNDS={
- project:{name:"A project fund",max:25000,min:20,cap:82.5,line:"Pays part of a project. Asks that others pay at least a fifth. Your own money doesn't count as someone else's."},
- starter:{name:"A starter grant",max:25000,min:0,cap:82.5,line:"For makers a few years out of school. Can pay for all of it, your own hours too."}};
+ project:{name:"A project fund",max:25000,min:20,cap:82.5,line:"Usually pays only part of a project, and asks others to pay a share. The Stimuleringsfonds asks at least 20% from others; some funds pay at most half. Check the rules of yours."},
+ starter:{name:"A starter grant",max:25000,min:0,cap:82.5,line:"For makers at the start of their practice, a few years out of school. Usually pays for all of it, your own hours included."}};
 function label(list,k){for(var i=0;i<list.length;i++)if(list[i][0]===k)return list[i][1];return k;}
 
 /* ---------- the profiles: invented people, invented projects, rough numbers ---------- */
@@ -459,8 +456,8 @@ var STEPS=[
    var h=heading("Step 3","The people")+
    '<p class="lead">How many hours does each person put in, and at what rate?</p>'+
    '<p>One line per person, per part. Someone who gives their time still gets a rate: what their work would normally cost.</p>'+
-   '<div class="panel"><div class="f"><label for="f-day1">Your hourly rate from Day 1</label><input id="f-day1" type="number" data-n="1" data-p="day1" inputmode="decimal" min="0" step="any" value="'+esc(S.w.day1)+'">'+
-   '<span class="hint">A reference. In a funded project you can, and often should, ask more. Many funds pay up to €82.50 an hour.</span></div></div>';
+   '<div class="panel"><div class="f"><label for="f-day1">Your usual hourly rate, from Day 1</label><input id="f-day1" type="number" data-n="1" data-p="day1" inputmode="decimal" min="0" step="any" value="'+esc(S.w.day1)+'">'+
+   '<span class="hint">Your day-to-day rate is a floor. In a funded project, pay each role what it is worth: the hours are planned and the fund expects fair pay. The Stimuleringsfonds pays up to €82.50 an hour, for you and for everyone you hire.</span></div></div>';
    var any=false;
    S.w.parts.forEach(function(k){
      var idx=linesOfPart(k).filter(function(i){return S.w.people[i].who!=="none";});
@@ -471,7 +468,7 @@ var STEPS=[
        h+='<div class="ln"><div class="top2"><span><b>'+esc(personName(l))+'</b>'+(l.role?' · '+esc(l.role):'')+'</span><span>'+(l.who==="me"?"You":l.who==="free"?"Gives time":"Paid")+'</span></div>'+
          '<div class="two">'+cell(b+".h","Hours","number")+cell(b+".r","Rate per hour €","number")+'</div>'+
          cell(b+".note","Note (optional)")+
-         '<div class="amt"><span>Total '+out("pa"+i)+'</span></div>'+(l.who==="me"&&S.w.day1&&l.r<S.w.day1?'<p class="flag">Lower than your Day 1 rate.</p>':'')+'</div>';
+         '<div class="amt"><span>Total '+out("pa"+i)+'</span></div>'+(l.who==="me"&&S.w.day1&&l.r<S.w.day1?'<p class="flag">Lower than your usual rate.</p>':'')+'</div>';
      });
    });
    if(!any) h+='<p class="note">No people yet. Go back a step and tick the parts.</p>';
@@ -502,7 +499,7 @@ var STEPS=[
    });
    h+='<div class="row"><button class="btn" data-act="addmat">Add a cost</button></div>'+
    '<table class="sum" style="margin-top:14px"><tr class="t"><td>All material costs</td><td>'+out("mat")+'</td></tr></table></div>'+
-   tip("What most funds won't pay","Unforeseen costs: a fund wants to know what it pays for. Things that keep their value after the project, like a laptop or software: rent or borrow instead. Your studio rent: only a space you need for this project counts.")+
+   tip("What many funds won't pay","A fund wants to know what it pays for. A buffer for the unexpected, the few percent at the bottom of many budgets: the Stimuleringsfonds doesn't pay it, so check your fund. Things that keep their value after the project, like a laptop or software: rent or borrow instead. Running your studio, its rent, insurance or bookkeeping: the fund pays for the project, not for your business.")+
    tip("Ask around","Prices you know beat prices you guess. One email to a printer or a rental shop is worth it.");
    return h;
  }},
@@ -533,8 +530,9 @@ var STEPS=[
    });
    h+=(S.w.src.length<8?'<div class="row"><button class="btn" data-act="addsrc">Add someone</button></div>':'')+'</div>'+
    tip("Cofinancing is not a hurdle","Other money means other people believe in it. It can also be what makes the ambition possible at all.")+
-   tip("A school or a university","Can be a partner, but usually doesn\'t receive money from a fund. It shows what it gives instead: a lecturer\'s hours, a lab, a room.")+
-   tip("Your own money","Many funds don\'t count it as cofinancing. You can still put it in, to balance the budget.");
+   tip("Institutions that already get public money","Schools, universities, municipalities and many museums can be partners. Public funds usually won\'t pay them from your grant, because they are already paid with public money. They show what they give instead: a lecturer\'s hours, a lab, a room.")+
+   tip("Your own money","Money from your own pocket or savings. It balances the budget, but many funds don\'t count it towards the share others must pay. Your unpaid hours are something else: if you mark your own hours as paid by you, you work them for free, and the budget shows it.")+
+   pause("Look at your cofinancing. Who have you asked yet? Who would you ask first, and why would they say yes?");
    return h;
  }},
  {t:"Who pays for what",r:function(){
@@ -556,7 +554,7 @@ var STEPS=[
    });
    if(!S.w.mat.length) h+='<p class="note">No material costs yet.</p>';
    h+='</div><div class="panel"><h2>Your coverage plan</h2>'+out("cover")+'</div>'+
-   pause("Look at your cofinancing. Who did you ask yet? Who would you ask first, and why would they say yes?");
+   pause("Like Lego: the costs on one side, the money on the other. Where doesn\'t it fit? Go back a step and change a part, a payer or the ambition. Ask each other why it didn\'t fit.");
    return h;
  }},
  {t:"Check and take it with you",r:function(){
@@ -589,7 +587,7 @@ function checks(c){
   list.push(["The fund stays under its maximum",!f.max||c.fund<=f.max,c.fund>f.max?eur(c.fund-f.max)+" too much":""]);
   if(f.min>0) list.push(["Others pay at least "+f.min+"%",c.pct>=f.min,Math.round(c.pct)+"% now"]);
   var hoped=w.src.filter(function(s,i){return s.status==="hoped"&&c.by["s"+i]>0;}).map(function(s){return s.name;});
-  list.push(["No cofinancing only hoped for",!hoped.length,hoped.join(", ")+(hoped.length?": ask them":""),"soft"]);
+  list.push(["Everyone you count on has been asked",!hoped.length,hoped.join(", ")+(hoped.length?": not asked yet":""),"soft"]);
   return list;
 }
 function checkList(list){return '<ul class="checks">'+list.map(function(x){var ok=!!x[1],cls=ok?"":(x[3]==="soft"?"soft":"no");return '<li class="'+cls+'"><span class="m">'+(ok?"✓":x[3]==="soft"?"?":"–")+'</span><span>'+x[0]+(!ok&&x[2]?' <i>('+esc(x[2])+')</i>':'')+'</span></li>';}).join("")+'</ul>';}
@@ -685,8 +683,7 @@ function qrSvg(text){
 var stage=document.getElementById("stage");
 function render(focus){
   var y=window.scrollY;
-  var nx=S.step<LAST?(S.step===0?"Begin":"Next: "+STEPS[S.step+1].t):"";
-  stage.innerHTML=STEPS[S.step].r()+'<div class="stepnav"><button class="btn" data-go="-1"'+(S.step===0?" disabled":"")+'>Back</button><span class="where">'+(S.step?"Step "+S.step+" of 9":"")+'</span>'+(nx?'<button class="btn primary" data-go="1">'+nx+'</button>':'<span></span>')+'</div>';
+  stage.innerHTML=STEPS[S.step].r();
   document.getElementById("progress").innerHTML='<span>'+(S.step?"Step "+S.step+" of 9 · "+STEPS[S.step].t:"Start")+'</span><span>'+(S.step?"Started from "+(S.start==="own"?"my own project":PEOPLE[S.start].who):"")+'</span>';
   document.getElementById("back").disabled=S.step===0;
   var n=document.getElementById("next");n.textContent=S.step===0?"Begin":"Next";n.disabled=S.step===LAST;
@@ -719,7 +716,6 @@ function removeSource(i){
 stage.addEventListener("click",function(e){
   var b=e.target.closest("button");if(!b)return;
   var a;
-  if((a=b.getAttribute("data-go"))){go(+a);return;}
   if((a=b.getAttribute("data-start"))){S.start=a;S.w=fresh(a);render(false);return;}
   if((a=b.getAttribute("data-part"))){
     var i=S.w.parts.indexOf(a);
