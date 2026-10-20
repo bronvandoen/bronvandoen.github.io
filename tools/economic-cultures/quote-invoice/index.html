@@ -137,7 +137,8 @@ input,button,select,textarea{color-scheme:light}
 .doc .stamp{position:absolute;right:14px;bottom:30px;transform:rotate(-8deg);font-family:var(--display);font-weight:900;font-size:22px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);border:3px solid var(--ink-2);padding:2px 10px;opacity:.85;pointer-events:none;mix-blend-mode:multiply}
 .doc .empty{color:#9a958b;font-style:italic}
 
-.qr svg{width:180px;height:180px;display:block}
+.qr svg{width:min(100%,300px);height:auto;aspect-ratio:1;display:block;background:#fff}
+#printarea .qr svg{width:70mm}
 .linkbox{font-family:var(--label);font-size:12px;word-break:break-all;background:var(--paper);border:1px solid var(--ink);padding:8px;max-height:5.5em;overflow:auto;display:block}
 nav.bar{position:fixed;left:0;right:0;bottom:0;background:var(--paper);border-top:var(--rule-heavy) solid var(--ink);
   padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));z-index:5}
@@ -225,14 +226,54 @@ function set(path,val){var ks=path.split("."),o=S.w;for(var i=0;i<ks.length-1;i+
 function exVal(path){return path.split(".").reduce(function(o,k){return o==null?undefined:o[k];},PEOPLE[S.start].v);}
 function isEx(path){var e=exVal(path);return e!==undefined&&String(e)===String(get(path));}
 
-function encode(){
-  var o={s:S.start==="noor"?1:0,t:S.step,w:S.w};
-  var b=btoa(unescape(encodeURIComponent(JSON.stringify(o))));
-  return b.replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+/* The link carries everything. Short form: a compact array, deflated where the browser can, so the QR code stays scannable. */
+var U3=["hours","days","item"], HOW=["signed","email","spoken"];
+function b64u(bytes){var bin="";for(var i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);return btoa(bin).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");}
+function unb64u(str){var b=str.replace(/-/g,"+").replace(/_/g,"/");while(b.length%4)b+="=";var bin=atob(b),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return u;}
+function packLines(ls){if(!ls)return 0;var o=[];ls.forEach(function(l){o.push(l.d,l.q,U3.indexOf(l.u),l.p);});return o;}
+function unpackLines(a){if(!Array.isArray(a))return null;var o=[];for(var i=0;i+3<a.length;i+=4)o.push({d:a[i],q:a[i+1],u:U3[a[i+2]]||"item",p:a[i+3]});return o;}
+function d8(iso){return iso?iso.replace(/-/g,"").slice(2):"";}
+function un8(x){return x&&x.length===6?"20"+x.slice(0,2)+"-"+x.slice(2,4)+"-"+x.slice(4,6):"";}
+function compact(){
+  var w=S.w,m=w.me,c=w.cl,b=w.br,q=w.q;
+  var pr=function(k){return m[k]===PRACTICE[k]?0:m[k];};
+  return [2,S.start==="noor"?1:0,S.step,w.mode==="fee"?1:0,
+    [m.name,m.person,m.street,m.city,m.email,pr("kvk"),pr("vat"),pr("iban")],
+    [c.name,c.org,c.street,c.city,c.email,c.ref],[b.what,b.deadline,b.incl,b.excl],
+    [q.no,d8(q.date),q.valid,q.term,q.terms,packLines(q.lines)],
+    [HOW.indexOf(w.ok.how),d8(w.ok.date)],[w.inv.no,d8(w.inv.date),d8(w.inv.done),packLines(w.inv.lines)]];
+}
+function uncompact(a){
+  var start=a[1]===1?"noor":"sam",base=fresh(start),m=a[4]||[],c=a[5]||[],b=a[6]||[],q=a[7]||[],ok=a[8]||[],inv=a[9]||[];
+  var str=function(x){return x==null?"":String(x).slice(0,300);};
+  ["name","person","street","city","email"].forEach(function(k,i){base.me[k]=str(m[i]);});
+  ["kvk","vat","iban"].forEach(function(k,i){base.me[k]=m[5+i]===0?PRACTICE[k]:str(m[5+i]);});
+  ["name","org","street","city","email","ref"].forEach(function(k,i){base.cl[k]=str(c[i]);});
+  ["what","deadline","incl","excl"].forEach(function(k,i){base.br[k]=str(b[i]);});
+  base.mode=a[3]===1?"fee":"hours";
+  base.q.no=str(q[0]);base.q.date=un8(q[1]);base.q.valid=+q[2]||0;base.q.term=+q[3]||0;base.q.terms=str(q[4]);
+  base.q.lines=cleanLines(unpackLines(q[5]))||[];
+  base.ok.how=HOW[ok[0]]||"";base.ok.date=un8(ok[1]);
+  base.inv.no=str(inv[0]);base.inv.date=un8(inv[1]);base.inv.done=un8(inv[2]);base.inv.lines=cleanLines(unpackLines(inv[3]));
+  S.start=start;S.w=base;S.step=Math.min(LAST,Math.max(0,+a[2]||0));
+}
+function encodeSync(){return "j"+b64u(new TextEncoder().encode(JSON.stringify(compact())));}
+function canZip(){return typeof CompressionStream==="function"&&typeof DecompressionStream==="function"&&typeof Response==="function";}
+function encodeZip(){
+  var bytes=new TextEncoder().encode(JSON.stringify(compact()));
+  var stream=new Blob([bytes]).stream().pipeThrough(new CompressionStream("deflate-raw"));
+  return new Response(stream).arrayBuffer().then(function(buf){return "z"+b64u(new Uint8Array(buf));});
 }
 function decode(str){
-  var b=str.replace(/-/g,"+").replace(/_/g,"/"); while(b.length%4)b+="=";
-  var o=JSON.parse(decodeURIComponent(escape(atob(b))));
+  if(str.charAt(0)==="z"){
+    var stream=new Blob([unb64u(str.slice(1))]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+    return new Response(stream).text().then(function(t){uncompact(JSON.parse(t));});
+  }
+  if(str.charAt(0)==="j"){uncompact(JSON.parse(new TextDecoder().decode(unb64u(str.slice(1)))));return Promise.resolve();}
+  decodeOld(str); return Promise.resolve();
+}
+function decodeOld(str){
+  var o=JSON.parse(decodeURIComponent(escape(atob(str.replace(/-/g,"+").replace(/_/g,"/")+"===".slice((str.length+3)%4)))));
   var base=fresh(o.s===1?"noor":"sam"), w=o.w||{};
   ["me","cl","br","q","ok","inv"].forEach(function(k){ if(w[k]&&typeof w[k]==="object") Object.keys(base[k]).concat(Object.keys(w[k])).forEach(function(f){ if(w[k][f]!==undefined) base[k][f]=w[k][f]; }); });
   if(w.mode==="hours"||w.mode==="fee") base.mode=w.mode;
@@ -244,19 +285,28 @@ function cleanLines(a){
   if(!Array.isArray(a)) return null;
   return a.slice(0,20).map(function(l){return {d:String(l.d||"").slice(0,120),q:Math.max(0,Number(l.q)||0),u:["hours","days","item"].indexOf(l.u)>=0?l.u:"item",p:Math.max(0,Number(l.p)||0)};});
 }
-var saveTimer=null;
+var saveTimer=null, CODE="", codeFor="";
 function persist(){
   clearTimeout(saveTimer);
   saveTimer=setTimeout(function(){
-    var code=encode();
-    try{history.replaceState(null,"","#s="+code);}catch(e){}
-    try{localStorage.setItem("ec-quote-invoice",code);}catch(e){}
-  },300);
+    var key=JSON.stringify(compact());
+    if(key===codeFor&&CODE) return;
+    var store=function(code){
+      if(key!==JSON.stringify(compact())) return;
+      CODE=code; codeFor=key;
+      try{history.replaceState(null,"","#s="+code);}catch(e){}
+      try{localStorage.setItem("ec-quote-invoice",code);}catch(e){}
+      refreshLink();
+    };
+    if(canZip()) encodeZip().then(store,function(){store(encodeSync());}); else store(encodeSync());
+  },250);
 }
 function load(){
   var h=""; try{h=location.hash||"";}catch(e){}
-  try{ if(h.indexOf("#s=")===0){decode(h.slice(3));return;} }catch(e){}
-  try{ var c=localStorage.getItem("ec-quote-invoice"); if(c){decode(c);} }catch(e){}
+  var tryCode=function(c){try{return decode(c);}catch(e){return Promise.reject(e);}};
+  var fromStore=function(){try{var c=localStorage.getItem("ec-quote-invoice");if(c)return tryCode(c).catch(function(){});}catch(e){}return Promise.resolve();};
+  if(h.indexOf("#s=")===0) return tryCode(h.slice(3)).catch(fromStore);
+  return fromStore();
 }
 
 /* ---------- money ---------- */
@@ -492,18 +542,22 @@ function update(){
     else if(k==="iChecks") el.innerHTML=checkList(invoiceChecks());
     else if(k==="diff") el.innerHTML=diffList();
     else if(k==="okNote") el.textContent=S.w.ok.how==="spoken"?"A spoken yes is not enough. Get it in writing: ask your client to reply yes to the email with your quote.":S.w.ok.how==="email"?"Keep that email. It is your agreement.":"Keep the signed quote. It is your agreement.";
-    else if(k==="link"){var u=shareUrl();el.textContent=u;el.setAttribute("href",u);}
-    else if(k==="qr") el.innerHTML=qrSvg(shareUrl());
   });
   var rb2=document.getElementById("resetBtn"); if(rb2) rb2.disabled=JSON.stringify(S.w.q.lines)===JSON.stringify(S.w.inv.lines||S.w.q.lines);
   var live=document.getElementById("live");
   live.innerHTML=S.step===0?"":S.step<=6?'Quote total<b>'+eur2(qs.tot)+'</b>':'Invoice total<b>'+eur2(is.tot)+'</b>';
   persist();
 }
-function shareUrl(){var base="";try{base=location.href.split("#")[0];}catch(e){}return base+"#s="+encode();}
+function shareUrl(){var base="";try{base=location.href.split("#")[0];}catch(e){}return base+"#s="+(CODE&&codeFor===JSON.stringify(compact())?CODE:encodeSync());}
+function refreshLink(){
+  var u=shareUrl();
+  document.querySelectorAll('[data-o="link"]').forEach(function(el){el.textContent=u;el.setAttribute("href",u);});
+  document.querySelectorAll('[data-o="qr"]').forEach(function(el){el.innerHTML=qrSvg(u);});
+}
 function qrSvg(text){
   try{ if(typeof qrcode!=="function") return '<p class="note">The QR code needs a connection to load. The link below works the same.</p>';
-    var q=qrcode(0,"L"); q.addData(text); q.make(); return q.createSvgTag({cellSize:2,margin:2,scalable:true});
+    var q=qrcode(0,"L"); q.addData(text); q.make(); var svg=q.createSvgTag({cellSize:2,margin:4,scalable:true});
+    return q.getModuleCount()>97?svg+'<p class="note">This code is dense. If your camera can\'t read it, use the link.</p>':svg;
   }catch(e){return '<p class="note">The link is too long for a QR code. Copy the link instead.</p>';}
 }
 
@@ -515,6 +569,7 @@ function render(focus){
   document.getElementById("back").disabled=S.step===0;
   var n=document.getElementById("next"); n.textContent=S.step===0?"Begin":S.step===6?"Round 2":"Next"; n.disabled=S.step===LAST;
   update();
+  refreshLink();
   if(focus){var h=stage.querySelector("h1");if(h)h.focus({preventScroll:true});window.scrollTo(0,0);}
 }
 function go(d){S.step=Math.min(LAST,Math.max(0,S.step+d));render(true);}
@@ -571,8 +626,7 @@ var rb=document.getElementById("readable");
 try{if(localStorage.getItem("ec-readable")==="1"){document.body.classList.add("readable");rb.setAttribute("aria-pressed","true");}}catch(e){}
 rb.onclick=function(){var on=document.body.classList.toggle("readable");rb.setAttribute("aria-pressed",String(on));try{localStorage.setItem("ec-readable",on?"1":"0");}catch(e){}};
 
-load();
-render(false);
+load().then(function(){},function(){}).then(function(){render(false);refreshLink();});
 })();
 </script>
 </body>
