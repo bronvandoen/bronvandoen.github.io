@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>My Project Budget</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:wght@400;600&family=Big+Shoulders+Display:wght@800;900&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<style>
+/* Same sheet as the hourly-rate and quote-to-invoice tools: riso on paper, baseline Blue + Bright Red and black. */
+:root{
+  --paper:#F7F3EA; --paper-raised:#FBF8F1; --ink:#111111; --ink-soft:#4A463F;
+  --ink-1:#0078BF; --ink-2:#F15060; --display-ink:#0078BF; --eyebrow-ink:#3D5588; --accent-text:#B8293A;
+  --display:"Big Shoulders Display","Oswald","Arial Narrow",sans-serif;
+  --text:"Source Serif 4",Georgia,serif;
+  --readable:"Atkinson Hyperlegible Next",Verdana,sans-serif;
+  --label:"Atkinson Hyperlegible Mono","Courier New",monospace;
+  --rule:2px; --rule-heavy:3px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--text);font-size:17px;line-height:1.6;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 120px}
+body.readable{font-family:var(--readable)}
+.wrap{max-width:560px;margin:0 auto}
+a{color:var(--ink);text-decoration-thickness:2px;text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+
+header.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:16px 8px;border-bottom:var(--rule) solid var(--ink)}
+.studio{font-family:var(--display);font-weight:900;font-size:20px;white-space:nowrap;letter-spacing:.01em}
+.toggle{font-family:var(--label);font-size:13px;font-weight:600;background:var(--paper-raised);color:var(--ink);border:var(--rule) solid var(--ink);min-height:44px;padding:0 12px;cursor:pointer;border-radius:0}
+.toggle[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+.progress{font-family:var(--label);font-size:13px;color:var(--ink-soft);padding-top:16px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.eyebrow{font-family:var(--display);font-weight:800;font-size:16px;letter-spacing:.08em;color:var(--eyebrow-ink);text-transform:uppercase;margin:20px 0 6px}
+.over{position:relative;margin:0 0 16px}
+.over h1,.over .ghost{font-family:var(--display);font-weight:900;font-size:clamp(38px,11vw,56px);line-height:.9;text-transform:uppercase;margin:0;text-wrap:balance;mix-blend-mode:multiply}
+.over h1{position:relative;color:var(--display-ink)}
+.over .ghost{position:absolute;left:3px;top:3px;color:var(--ink-2)}
+p{margin:0 0 14px}
+.lead{font-size:19px}
+.note{font-family:var(--label);font-size:13px;color:var(--ink-soft)}
+
+.panel{background:var(--paper-raised);border:var(--rule-heavy) solid var(--ink);padding:20px 16px;margin:18px 0}
+.panel h2{font-family:var(--display);font-weight:900;font-size:26px;line-height:1;text-transform:uppercase;margin:0 0 10px}
+.panel h3{font-family:var(--label);font-weight:600;font-size:14px;margin:14px 0 4px;text-transform:uppercase;letter-spacing:.04em}
+
+.f{display:block;padding:10px 0;border-bottom:1px solid #CFC8B8}
+.f:last-child{border-bottom:0}
+.f label,.f .lbl{display:block;font-family:var(--readable);font-weight:600;font-size:16px;line-height:1.3;margin-bottom:6px}
+.f .hint{display:block;font-family:var(--readable);font-size:14px;color:var(--ink-soft);line-height:1.4;margin-top:4px}
+input,select,textarea{width:100%;min-height:44px;font-family:var(--readable);font-size:17px;padding:8px 10px;border:var(--rule) solid var(--ink);background:var(--paper);color:var(--ink);-webkit-text-fill-color:var(--ink);border-radius:0;color-scheme:light}
+textarea{min-height:88px;resize:vertical;line-height:1.4}
+input[type=number]{text-align:right;font-variant-numeric:tabular-nums}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.three{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:8px}
+.mini{display:block;font-family:var(--label);font-size:12px;margin-bottom:2px}
+
+.ln{border:var(--rule) solid var(--ink);background:var(--paper);padding:10px;margin:10px 0}
+.ln > * + *{margin-top:8px}
+.ln .top2{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-family:var(--label);font-size:13px}
+.ln .amt{display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:var(--label);font-size:14px;font-variant-numeric:tabular-nums}
+.ln.gap{border-color:var(--ink-2);border-style:dashed}
+.flag{font-family:var(--readable);font-size:14px;color:var(--accent-text);line-height:1.4}
+
+.part{border-bottom:1px solid #CFC8B8;padding:10px 0}
+.part:last-child{border-bottom:0}
+.tick{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;padding:4px 0;min-height:44px;font-family:var(--readable);font-weight:600;font-size:16px;color:var(--ink);cursor:pointer}
+.tick .box{flex:0 0 26px;height:26px;border:var(--rule) solid var(--ink);display:grid;place-items:center;font-family:var(--label);font-size:16px;background:var(--paper)}
+.tick[aria-pressed="true"] .box{background:var(--ink);color:var(--paper)}
+.who{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.who button{min-height:44px;font-family:var(--label);font-size:13px;font-weight:600;border:var(--rule) solid var(--ink);background:var(--paper-raised);color:var(--ink);cursor:pointer;border-radius:0;padding:4px 6px}
+.who button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.who button.none[aria-pressed="true"]{background:var(--ink-2);border-color:var(--ink-2);color:#111}
+
+.totals{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0 0}
+.total{flex:1 1 140px;border-top:var(--rule-heavy) solid var(--ink);padding-top:6px}
+.total .k{font-family:var(--label);font-size:13px}
+.total .v{font-family:var(--display);font-weight:900;font-size:34px;line-height:1;font-variant-numeric:tabular-nums}
+.total.warn .v{color:var(--accent-text)}
+
+.bars{margin:10px 0}
+.bar{height:22px;background:#E6DFD0;position:relative;border:1px solid var(--ink)}
+.bar span{position:absolute;left:0;top:0;bottom:0;background:var(--ink-1)}
+.bar + .mini{margin:4px 0 10px}
+
+.fair{border:var(--rule) solid var(--ink-1);padding:10px 12px;margin:16px 0;font-size:16px;background:var(--paper-raised)}
+.fair b{font-family:var(--label);font-size:13px;display:block;color:var(--eyebrow-ink);text-transform:uppercase;letter-spacing:.04em}
+.tip{border-left:var(--rule-heavy) solid var(--ink-2);padding:2px 0 2px 12px;margin:16px 0;font-size:16px}
+.tip b{font-family:var(--label);font-size:13px;display:block;text-transform:uppercase;letter-spacing:.04em}
+.pause{display:block;font-family:var(--label);font-size:14px;font-weight:600;background:var(--ink);color:var(--paper);padding:12px 14px;margin:18px 0}
+.pause::before{content:"Pause · "}
+
+.sum{width:100%;border-collapse:collapse;font-family:var(--readable);font-size:15px;font-variant-numeric:tabular-nums}
+.sum td{padding:7px 0;border-bottom:1px solid #CFC8B8;vertical-align:top}
+.sum td:last-child{text-align:right;white-space:nowrap;padding-left:12px}
+.sum tr.t td{border-top:var(--rule) solid var(--ink);border-bottom:0;font-weight:600}
+.sum tr.gapr td{color:var(--accent-text);font-weight:600}
+.sum small{display:block;font-family:var(--label);font-size:12px;color:var(--ink-soft);font-weight:400}
+
+.btn{font-family:var(--label);font-weight:600;font-size:14px;min-height:48px;padding:0 18px;border:var(--rule) solid var(--ink);background:var(--paper-raised);color:var(--ink);cursor:pointer;border-radius:0}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.btn.small{min-height:44px;padding:0 12px;font-size:13px}
+.btn:disabled{opacity:.4;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+.choose{display:grid;gap:12px;margin:16px 0}
+.pick{display:block;text-align:left;width:100%;background:var(--paper-raised);border:var(--rule-heavy) solid var(--ink);padding:14px 16px;cursor:pointer;font:inherit;font-size:16px;color:var(--ink);border-radius:0}
+.pick strong{font-family:var(--display);font-weight:900;font-size:28px;text-transform:uppercase;display:block;line-height:1}
+.pick em{font-family:var(--label);font-style:normal;font-size:12px;display:block;margin:4px 0;color:var(--eyebrow-ink);text-transform:uppercase;letter-spacing:.04em}
+.pick[aria-pressed="true"]{box-shadow:inset 0 0 0 3px var(--ink-1);border-color:var(--ink-1)}
+
+.checks{list-style:none;margin:0;padding:0;font-family:var(--readable);font-size:15px}
+.checks li{display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-bottom:1px solid #CFC8B8}
+.checks li:last-child{border-bottom:0}
+.checks .m{font-family:var(--label);font-weight:600;min-width:1.6em}
+.checks li.no{color:var(--accent-text)}
+.checks li.soft{color:var(--ink-soft)}
+
+/* The document: plain, printable, two pages like the fund's model budget. */
+.docs{overflow-x:auto;margin:18px 0}
+.doc{background:#fff;color:#111;border:var(--rule) solid var(--ink);padding:18px 14px;margin:0 0 14px;font-family:var(--readable);font-size:12px;line-height:1.4;font-variant-numeric:tabular-nums;min-width:520px}
+.doc .kind{font-family:var(--display);font-weight:900;font-size:34px;line-height:.9;text-transform:uppercase;color:var(--display-ink)}
+.doc .kind small{display:block;font-family:var(--label);font-size:11px;font-weight:600;color:#111;letter-spacing:.04em;margin-top:6px;text-transform:none}
+.doc .head{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+.doc .head .meta{text-align:right;max-width:55%}
+.doc h4{font-family:var(--label);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin:14px 0 4px;border-bottom:2px solid #111;padding-bottom:3px}
+.doc table{width:100%;border-collapse:collapse}
+.doc th{font-family:var(--label);font-size:10px;font-weight:600;text-align:right;padding:3px 0 3px 8px;white-space:nowrap;border-bottom:1px solid #111}
+.doc td{padding:4px 0 4px 8px;border-bottom:1px solid #ddd;text-align:right;vertical-align:top}
+.doc th:first-child,.doc td:first-child{text-align:left;padding-left:0}
+.doc td.l,.doc th.l{text-align:left}
+.doc td .n{display:block;font-size:10px;color:#555;font-style:italic}
+.doc tr.t td{border-top:2px solid #111;border-bottom:0;font-weight:600}
+.doc tr.g td{font-weight:600;color:#B8293A}
+.doc .k2{color:#555}
+.doc .empty{color:#9a958b;font-style:italic}
+.doc .foot{margin-top:12px;font-size:10px;color:#555}
+
+.qr svg{width:min(100%,300px);height:auto;aspect-ratio:1;display:block;background:#fff}
+#printarea .qr svg{width:70mm}
+.linkbox{font-family:var(--label);font-size:12px;word-break:break-all;background:var(--paper);border:1px solid var(--ink);padding:8px;max-height:5.5em;overflow:auto;display:block}
+nav.bar{position:fixed;left:0;right:0;bottom:0;background:var(--paper);border-top:var(--rule-heavy) solid var(--ink);
+  padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));z-index:5}
+nav.bar .in{max-width:560px;margin:0 auto;display:flex;gap:10px;align-items:center}
+nav.bar .live{flex:1;text-align:center;font-family:var(--label);font-size:13px;line-height:1.2}
+nav.bar .live b{display:block;font-family:var(--display);font-weight:900;font-size:24px}
+nav.bar .live b.warn{color:var(--accent-text)}
+footer{padding:28px 0 0;font-family:var(--label);font-size:12px;color:var(--ink-soft)}
+
+#printarea{display:none}
+@media print{
+  @page{margin:12mm}
+  body{padding:0;background:#fff}
+  .wrap,nav.bar{display:none!important}
+  #printarea{display:block}
+  #printarea .doc{border:0;margin:0;padding:0;min-width:0}
+  #printarea .doc + .doc,#printarea .reopen{break-before:page}
+  #printarea .reopen{font-family:var(--readable);font-size:13px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <span class="studio">a Situated Studio</span>
+    <button class="toggle" id="readable" aria-pressed="false">Readable mode</button>
+  </header>
+  <div class="progress" id="progress"></div>
+  <main id="stage" aria-live="polite"></main>
+  <footer>Economic Cultures · DAE Blueprints · a prototype by a Situated Studio. Nothing you type leaves this phone.</footer>
+</div>
+<nav class="bar" aria-label="Steps">
+  <div class="in">
+    <button class="btn" id="back">Back</button>
+    <div class="live" id="live"></div>
+    <button class="btn primary" id="next">Next</button>
+  </div>
+</nav>
+<div id="printarea" aria-hidden="true"></div>
+
+<script>
+(function(){
+"use strict";
+var LAST=9, HOURS_PER_DAY=8, WEEKS_PER_MONTH=4.33, STORE="ec-project-budget";
+
+/* ---------- fixed lists ---------- */
+var PARTS=[
+ ["research","Research and reading"],["field","Fieldwork and travel"],["make","Making, prototyping and tests"],
+ ["expert","Expert advice"],["people","Collaborators or communities taking part"],["docu","Documentation: photo, film, sound"],
+ ["present","Presentation or exhibition"],["publish","Publication, or another way to share it"],["comms","Communication"],
+ ["coord","Coordination and admin"],["coach","Coaching and feedback"]];
+var PART_KEYS=PARTS.map(function(p){return p[0];});
+var CATS=[["material","Materials and production"],["rental","Equipment rental"],["location","Location"],["travel","Travel and stay"],
+ ["transport","Transport and distribution"],["publicity","Publicity"],["permits","Permits and fees"],["other","Something else"]];
+var TYPES=[["kind","In kind"],["partner","Partner contribution"],["grant","Another fund or grant"],["sales","Sales"],["audience","Audience income"],["sponsor","Sponsoring"]];
+var STATUS=[["hoped","Hoped for"],["applied","Applied for"],["confirmed","Confirmed"]];
+var FUNDS={
+ project:{name:"A project fund",max:25000,min:20,cap:82.5,line:"Pays part of a project. Asks that others pay at least a fifth. Your own money doesn't count as someone else's."},
+ starter:{name:"A starter grant",max:25000,min:0,cap:82.5,line:"For makers a few years out of school. Can pay for all of it, your own hours too."}};
+function label(list,k){for(var i=0;i<list.length;i++)if(list[i][0]===k)return list[i][1];return k;}
+
+/* ---------- the profiles: invented people, invented projects, rough numbers ---------- */
+function P(part,who,name,role,h,r,pay,note,rest){return {part:part,who:who,name:name||"",role:role||"",h:h||0,r:r||0,pay:pay||"f",rest:rest||"n",note:note||""};}
+function M(cat,d,q,p,pay,vr){return {cat:cat,d:d,q:q,p:p,pay:pay||"f",vr:vr==null?0.21:vr};}
+var PEOPLE={
+ noor:{who:"Noor",kind:"Material research",line:"27, makes objects in a shared workshop. Wants to know what the ground under new houses is made of.",
+  v:{p:{me:"Noor Haddad",title:"Building-site clay",ambition:"I test clay dug up at Eindhoven building sites, with a local brickworks, to see if the ground under new houses can become their tiles.",outcome:"A library of 40 test tiles, a public kiln day, and a short publication of what I found.",months:9,days:2},
+   day1:42,vat:"yes",fund:{preset:"starter",name:"A starter grant",max:25000,min:0,cap:82.5},
+   parts:["research","field","make","expert","docu","present","publish","comms","coord","coach"],
+   people:[P("research","me","","Designer-researcher",60,55),P("field","me","","Designer-researcher",30,55),P("make","me","","Maker",160,55),
+    P("expert","free","Technician, Steenfabriek De Klei","Ceramic technician",24,75,"s0","Gives his time during working hours."),
+    P("docu","paid","A photographer who knows material work","Photographer",16,65),P("present","me","","Host of the kiln day",24,55),
+    P("publish","paid","A graphic designer, still to find","Graphic designer",24,60),P("comms","me","","Communication",16,55),
+    P("coord","me","","Coordination",20,55),P("coach","paid","A ceramicist Noor admires","Coach",10,90,"f","Her usual rate.")],
+   mat:[M("material","Glazes, test clay and slips",1,900),M("rental","Kiln firings at the brickworks",8,120,"s0"),M("travel","Trips to building sites by train",1,250,"f",0.09),
+    M("location","Kiln day: tent and chairs",1,400,"s1"),M("publicity","Posters and flyers for the kiln day",1,250,"s1"),M("material","Printing the publication, 100 copies",100,9,"s1"),
+    M("permits","Event permit for the kiln day",1,100)],
+   src:[{name:"Steenfabriek De Klei",type:"kind",status:"confirmed"},{name:"City culture fund",type:"grant",status:"applied"}]}},
+ sam:{who:"Sam",kind:"Archive into publication",line:"24, graphic designer, works at the kitchen table. Found a box of photographs nobody had looked at.",
+  v:{p:{me:"Sam de Wit",title:"The weavers' own pictures",ambition:"I bring out the photographs the workers of a closed Tilburg textile mill took of each other, as a book they help to caption.",outcome:"A book of 120 pages in 300 copies, and two reading evenings with former workers.",months:10,days:2},
+   day1:37,vat:"yes",fund:{preset:"project",name:"A project fund",max:25000,min:20,cap:82.5},
+   parts:["research","expert","people","publish","present","comms","coord"],
+   people:[P("research","me","","Researcher",120,45),P("expert","free","Archivist, the museum that keeps the photos","Archivist",16,80,"s0"),
+    P("people","paid","Former workers, 8 people","Captioning sessions",24,25,"f","A fee for each session, not a thank-you."),
+    P("publish","me","","Book designer",160,45),P("publish","paid","An editor, still to find","Editor",40,70),P("publish","paid","A proofreader","Proofreader",10,50),
+    P("present","me","","Host of the reading evenings",16,45),P("comms","none","","Communication",0,0,"n"),P("coord","me","","Coordination",20,45)],
+   mat:[M("other","Image rights",1,600),M("material","Printing the book, 300 copies",300,12,"s1"),M("location","Two reading evenings at the museum",2,200,"s0"),
+    M("travel","Train Eindhoven–Tilburg",20,12,"f",0.09),M("publicity","Invitations and posters",1,200),M("transport","Sending books",1,150,"s1")],
+   src:[{name:"The museum",type:"kind",status:"confirmed"},{name:"Book sales",type:"sales",status:"hoped"}]}},
+ femke:{who:"Femke",kind:"Social and participatory",line:"29, graduated two years ago. Works with people in their own street.",
+  v:{p:{me:"Femke Smit",title:"Cool streets",ambition:"With residents of one street in Rotterdam-Zuid, I make simple ways to keep homes cool in a heatwave, and we test them together through one summer.",outcome:"Six making sessions, ten tested home changes, and a street manual in three languages.",months:8,days:2},
+   day1:48,vat:"no",fund:{preset:"project",name:"A project fund",max:25000,min:20,cap:82.5},
+   parts:["research","people","make","expert","publish","docu","comms","coord"],
+   people:[P("research","me","","Designer",40,60),P("people","me","","Facilitator, six sessions",60,60),
+    P("people","paid","A neighbour who knows everyone","Co-facilitator",30,40),Object.assign(P("people","paid","Residents taking part, 10 people","Fees for taking part",120,15,"f","Their time is work too. No VAT on their fee."),{vr:0}),
+    P("make","me","","Designer",60,60),P("expert","free","Lecturer, a university of applied sciences","Building physicist",12,90,"s0","The school pays her hours; it receives no money from the fund."),
+    P("publish","me","","Designer of the manual",40,60),P("publish","paid","A translator, Arabic and Turkish","Translator",20,55),
+    P("docu","none","","Documentation",0,0,"n"),P("comms","me","","Communication",10,60),P("coord","me","","Coordination",40,60)],
+   mat:[M("material","Shade cloth, reflective film, plants",1,1500,"s1"),M("location","Community centre, six sessions",6,75,"s2"),M("other","Food and drinks at the sessions",6,60,"s2",0.09),
+    M("material","Printing the street manual, 200 copies",200,4),M("travel","Train Eindhoven–Rotterdam",16,30,"f",0.09),M("publicity","Flyers in three languages",1,150)],
+   src:[{name:"University of applied sciences",type:"kind",status:"confirmed"},{name:"Housing corporation",type:"partner",status:"applied"},{name:"District fund",type:"grant",status:"hoped"}]}},
+ teo:{who:"Teo",kind:"Interactive installation",line:"26, graduated last year. Works with sound, code and space.",
+  v:{p:{me:"Teo Brandt",title:"River room",ambition:"A room where visitors' movements play recorded voices of people who live along the Dommel, shown at a festival in autumn.",outcome:"An interactive installation for one room, shown for ten days, and an archive of the recordings.",months:9,days:3},
+   day1:40,vat:"yes",fund:{preset:"project",name:"A project fund",max:25000,min:20,cap:82.5},
+   parts:["research","field","make","expert","present","docu","comms","coord"],
+   people:[P("field","me","","Recording the voices",80,50),P("make","me","","Concept and build",200,50),P("make","paid","A creative coder","Creative coder",80,75),
+    P("make","paid","A sound designer","Sound designer",40,95),P("expert","free","Technical producer, the festival","Technical advice",16,60,"s0"),
+    P("present","me","","Build-up and opening",40,50),P("present","paid","A technician","Build-up",24,55),
+    P("docu","paid","A videographer","Videographer",12,70),P("comms","none","","Communication",0,0,"n"),P("coord","me","","Coordination",30,50),
+    P("research","me","","Reading and listening",20,50)],
+   mat:[M("rental","Projectors and speakers, ten days",1,1800),M("material","Sensors, cables and build materials",1,1200),M("transport","Van to the festival and back",2,150),
+    M("location","Festival room, ten days",1,1500,"s0"),M("travel","Travel along the river",1,200,"f",0.09),M("publicity","Festival listing and posters",1,200,"s1")],
+   src:[{name:"The festival",type:"kind",status:"confirmed"},{name:"Festival production budget",type:"partner",status:"applied"}]}},
+ own:{who:"My own",kind:"Your own project",line:"Start from your graduation work, or an idea that came out of the show.",
+  v:{p:{me:"",title:"",ambition:"",outcome:"",months:12,days:2},day1:0,vat:"yes",fund:{preset:"project",name:"A project fund",max:25000,min:20,cap:82.5},
+   parts:[],people:[],mat:[],src:[]}}
+};
+var ORDER=["noor","sam","femke","teo"];
+function copy(o){return JSON.parse(JSON.stringify(o));}
+function fresh(k){var v=copy(PEOPLE[k].v);v.custom=v.custom||[];return v;}
+
+/* ---------- state ---------- */
+var S={start:"noor",w:fresh("noor"),step:0};
+function get(path){return path.split(".").reduce(function(o,k){return o==null?undefined:o[k];},S.w);}
+function set(path,val){var ks=path.split("."),o=S.w;for(var i=0;i<ks.length-1;i++){o=o[ks[i]];if(o==null)return;}o[ks[ks.length-1]]=val;}
+function partLabel(k){if(k.charAt(0)==="x"){var c=S.w.custom[+k.slice(1)];return c||"Something else";}return label(PARTS,k);}
+function allParts(){return PART_KEYS.concat(S.w.custom.map(function(_,i){return "x"+i;}));}
+function isOn(k){return S.w.parts.indexOf(k)>=0;}
+
+/* ---------- the link carries everything, deflated where the browser can ---------- */
+function b64u(bytes){var bin="";for(var i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);return btoa(bin).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");}
+function unb64u(str){var b=str.replace(/-/g,"+").replace(/_/g,"/");while(b.length%4)b+="=";var bin=atob(b),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return u;}
+function snapshot(){return {v:1,s:S.start,t:S.step,w:S.w};}
+function encodeSync(){return "j"+b64u(new TextEncoder().encode(JSON.stringify(snapshot())));}
+function canZip(){return typeof CompressionStream==="function"&&typeof DecompressionStream==="function"&&typeof Response==="function";}
+function encodeZip(){
+  var stream=new Blob([new TextEncoder().encode(JSON.stringify(snapshot()))]).stream().pipeThrough(new CompressionStream("deflate-raw"));
+  return new Response(stream).arrayBuffer().then(function(buf){return "z"+b64u(new Uint8Array(buf));});
+}
+function decode(str){
+  if(str.charAt(0)==="z"){
+    var stream=new Blob([unb64u(str.slice(1))]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+    return new Response(stream).text().then(function(t){restore(JSON.parse(t));});
+  }
+  if(str.charAt(0)==="j"){restore(JSON.parse(new TextDecoder().decode(unb64u(str.slice(1)))));return Promise.resolve();}
+  return Promise.reject(new Error("unknown"));
+}
+function num(x,max){var n=Number(x);return isFinite(n)&&n>=0?Math.min(n,max||1e7):0;}
+function str(x,n){return x==null?"":String(x).slice(0,n||300);}
+function payOk(p,nsrc){return p==="f"||p==="m"||p==="n"||(/^s\d+$/.test(p)&&+p.slice(1)<nsrc);}
+function restore(o){
+  var start=PEOPLE[o.s]?o.s:"noor", w=o.w||{}, base=fresh(start);
+  base.custom=Array.isArray(w.custom)?w.custom.slice(0,3).map(function(c){return str(c,80);}):[];
+  var keys=PART_KEYS.concat(base.custom.map(function(_,i){return "x"+i;}));
+  if(w.p){["me","title"].forEach(function(k){base.p[k]=str(w.p[k],120);});["ambition","outcome"].forEach(function(k){base.p[k]=str(w.p[k],400);});
+    base.p.months=Math.min(36,Math.max(1,Math.round(num(w.p.months))||1));base.p.days=Math.min(5,num(w.p.days));}
+  base.day1=num(w.day1,1000); base.vat=w.vat==="no"?"no":"yes";
+  if(w.fund){base.fund.preset=FUNDS[w.fund.preset]?w.fund.preset:"project";base.fund.name=str(w.fund.name,80);base.fund.max=num(w.fund.max);base.fund.min=Math.min(100,num(w.fund.min));base.fund.cap=num(w.fund.cap,1000);}
+  base.src=(Array.isArray(w.src)?w.src:[]).slice(0,8).map(function(s){return {name:str(s.name,80),type:label(TYPES,s.type)!==s.type?s.type:"grant",status:label(STATUS,s.status)!==s.status?s.status:"hoped"};});
+  var ns=base.src.length;
+  base.parts=(Array.isArray(w.parts)?w.parts:[]).filter(function(k){return keys.indexOf(k)>=0;});
+  base.people=(Array.isArray(w.people)?w.people:[]).slice(0,40).filter(function(l){return l&&keys.indexOf(l.part)>=0;}).map(function(l){
+    return {part:l.part,who:["me","paid","free","none"].indexOf(l.who)>=0?l.who:"none",name:str(l.name,80),role:str(l.role,80),h:num(l.h,10000),r:num(l.r,1000),
+      pay:payOk(l.pay,ns)?l.pay:"n",rest:payOk(l.rest,ns)?l.rest:"n",note:str(l.note,160),vr:[0,0.09,0.21].indexOf(l.vr)>=0?l.vr:0.21};});
+  base.mat=(Array.isArray(w.mat)?w.mat:[]).slice(0,30).map(function(m){
+    return {cat:label(CATS,m.cat)!==m.cat?m.cat:"other",d:str(m.d,120),q:num(m.q,100000),p:num(m.p,1000000),pay:payOk(m.pay,ns)?m.pay:"n",vr:[0,0.09,0.21].indexOf(m.vr)>=0?m.vr:0.21};});
+  S.start=start;S.w=base;S.step=Math.min(LAST,Math.max(0,+o.t||0));
+}
+var saveTimer=null,CODE="",codeFor="";
+function persist(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(function(){
+    var key=JSON.stringify(snapshot());
+    if(key===codeFor&&CODE) return;
+    var store=function(code){
+      if(key!==JSON.stringify(snapshot())) return;
+      CODE=code;codeFor=key;
+      try{history.replaceState(null,"","#s="+code);}catch(e){}
+      try{localStorage.setItem(STORE,code);}catch(e){}
+      refreshLink();
+    };
+    if(canZip()) encodeZip().then(store,function(){store(encodeSync());}); else store(encodeSync());
+  },300);
+}
+function load(){
+  var h="";try{h=location.hash||"";}catch(e){}
+  var tryCode=function(c){try{return decode(c);}catch(e){return Promise.reject(e);}};
+  var fromStore=function(){try{var c=localStorage.getItem(STORE);if(c)return tryCode(c).catch(function(){});}catch(e){}return Promise.resolve();};
+  if(h.indexOf("#s=")===0) return tryCode(h.slice(3)).catch(fromStore);
+  return fromStore();
+}
+
+/* ---------- money: whole euros, like the fund's model budget ---------- */
+function eur(n){return (n<0?"−€":"€")+Math.abs(Math.round(n||0)).toLocaleString("en-GB");}
+function rate(n){return "€"+Number(n||0).toLocaleString("en-GB",{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2});}
+function inclVat(){return S.w.vat==="no";}
+function personVat(l){return inclVat()&&l.who==="paid"?(l.vr==null?0.21:l.vr):0;}
+function matVat(m){return inclVat()?m.vr:0;}
+function personBase(l){return l.who==="none"?0:Math.round(l.h*l.r);}
+function personAmt(l){return Math.round(personBase(l)*(1+personVat(l)));}
+function matBase(m){return Math.round(m.q*m.p);}
+function matAmt(m){return Math.round(matBase(m)*(1+matVat(m)));}
+function payerName(p){
+  if(p==="f") return S.w.fund.name||"The fund";
+  if(p==="m") return "Me, own contribution";
+  if(p==="n") return "Nobody yet";
+  var s=S.w.src[+p.slice(1)]; return s?(s.name||"Unnamed"):"Nobody yet";
+}
+/* The heart of it: every line has a payer. The fund pays a person at most its hourly cap; the rest needs another payer. */
+function overCap(l){return l.pay==="f"&&l.who!=="free"&&l.who!=="none"&&S.w.fund.cap>0&&l.r>S.w.fund.cap;}
+function calc(){
+  var w=S.w,c={people:0,mine:0,mineH:0,others:0,othersH:0,mat:0,total:0,by:{f:0,m:0,n:0},rows:[]};
+  w.src.forEach(function(_,i){c.by["s"+i]=0;});
+  var add=function(p,a){if(c.by[p]===undefined)p="n";c.by[p]+=a;};
+  w.people.forEach(function(l){
+    var a=personAmt(l); c.people+=a;
+    if(l.who==="me"){c.mine+=a;c.mineH+=l.h;}
+    else if(l.who==="paid"||l.who==="free"){c.others+=a;c.othersH+=l.h;}
+    if(l.who==="none") return;
+    if(overCap(l)){var fa=Math.round(Math.round(l.h*w.fund.cap)*(1+personVat(l)));add("f",fa);add(l.rest,a-fa);}
+    else add(l.pay,a);
+  });
+  w.mat.forEach(function(m){var a=matAmt(m);c.mat+=a;add(m.pay,a);});
+  c.total=c.people+c.mat;
+  c.cof=0; w.src.forEach(function(_,i){c.cof+=c.by["s"+i];});
+  c.own=c.by.m; c.fund=c.by.f; c.open=c.by.n;
+  c.need=c.total-c.cof-c.own;
+  c.pct=c.total?c.cof/c.total*100:0;
+  c.commitH=Math.round(w.p.months*WEEKS_PER_MONTH*w.p.days*HOURS_PER_DAY);
+  c.myRate=c.mineH?c.mine/c.mineH:0;
+  var paidH=0,paidA=0;w.people.forEach(function(l){if(l.who==="paid"||l.who==="free"){paidH+=l.h;paidA+=personBase(l);}});
+  c.otherRate=paidH?paidA/paidH:0;
+  return c;
+}
+
+/* ---------- helpers ---------- */
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch];});}
+function heading(eyebrow,title){return '<div class="eyebrow">'+eyebrow+'</div><div class="over"><div class="ghost" aria-hidden="true">'+title+'</div><h1 tabindex="-1">'+title+'</h1></div>';}
+function txt(path,lbl,hint,type,area,max){
+  var v=get(path),id="f-"+path.replace(/\./g,"-");
+  var input=area?'<textarea id="'+id+'" data-p="'+path+'" maxlength="'+(max||400)+'">'+esc(v)+'</textarea>'
+    :'<input id="'+id+'" data-p="'+path+'" '+(type==="number"?'type="number" data-n="1" inputmode="decimal" min="0" step="any"':'type="text" maxlength="'+(max||120)+'"')+' value="'+esc(v)+'">';
+  return '<div class="f"><label for="'+id+'">'+lbl+'</label>'+input+(hint?'<span class="hint">'+hint+'</span>':'')+'</div>';
+}
+function cell(path,lbl,type,extra){
+  var v=get(path);
+  return '<span><span class="mini">'+lbl+'</span><input '+(type==="number"?'type="number" data-n="1" inputmode="decimal" min="0" step="any"':'type="text" maxlength="120"')+' aria-label="'+esc(lbl)+'" data-p="'+path+'" value="'+esc(v)+'"'+(extra||"")+'></span>';
+}
+function sel(path,opts,lbl){
+  var v=get(path);
+  return '<span><span class="mini">'+lbl+'</span><select data-p="'+path+'" aria-label="'+esc(lbl)+'">'+opts.map(function(o){return '<option value="'+esc(o[0])+'"'+(String(v)===String(o[0])?" selected":"")+'>'+esc(o[1])+'</option>';}).join("")+'</select></span>';
+}
+function fair(tag,t){return '<p class="fair"><b>Fair practice · '+tag+'</b>'+t+'</p>';}
+function tip(tag,t){return '<p class="tip"><b>'+tag+'</b>'+t+'</p>';}
+function pause(t){return '<span class="pause">'+t+'</span>';}
+function out(name){return '<span data-o="'+name+'"></span>';}
+function personName(l){return l.who==="me"?(S.w.p.me||"Me"):(l.name||(l.who==="none"?"Nobody yet":"Someone, still to find"));}
+function payerOpts(){var o=[["f",S.w.fund.name||"The fund"],["m","Me, own contribution"]];S.w.src.forEach(function(s,i){o.push(["s"+i,(s.name||"Unnamed")+" · "+label(TYPES,s.type)]);});o.push(["n","Nobody yet"]);return o;}
+function linesOfPart(k){var r=[];S.w.people.forEach(function(l,i){if(l.part===k)r.push(i);});return r;}
+
+/* ---------- steps ---------- */
+var STEPS=[
+ {t:"Start",r:function(){
+   return heading("Economic Cultures · Day 2","My project budget")+
+   '<p class="lead">An invoice fits your work into someone else\'s budget. A project starts the other way round: first the ambition, then what it really takes, then who will pay for it.</p>'+
+   '<p>A project budget names every part of the work, who does it, and who pays for it. When every euro has someone who pays it, the budget is balanced.</p>'+
+   '<p class="note">Everything you type stays on this phone. We don\'t collect anything.</p>'+
+   '<div class="panel"><h2>Start from someone else\'s</h2><p>Pick the project closest to yours, then change it into yours as you go. Or start empty.</p><div class="choose">'+
+   ORDER.concat(["own"]).map(function(k){var p=PEOPLE[k];return '<button class="pick" data-start="'+k+'" aria-pressed="'+(S.start===k)+'"><strong>'+(k==="own"?"My own project":p.who)+'</strong><em>'+p.kind+'</em>'+(k==="own"?p.line:esc(p.v.p.title)+'. '+p.line)+'</button>';}).join("")+
+   '</div><p class="note">Every example has a few things missing or too low on purpose. You will find them on the way.</p></div>';
+ }},
+ {t:"The ambition",r:function(){
+   return heading("Step 1","The ambition")+
+   '<p class="lead">What do you want this project to become, if it gets the time and money it needs?</p>'+
+   '<div class="panel">'+txt("p.me","Your name")+txt("p.title","A working title")+
+   txt("p.ambition","The project in one or two sentences","What you do, with whom, and where.",null,true)+
+   txt("p.outcome","What exists when it is done","Things people can see, use, read or visit.",null,true)+'</div>'+
+   '<div class="panel"><h2>Your commitment</h2><p>How long does it run, and how much of your week does it really ask?</p>'+
+   '<div class="two">'+txt("p.months","Months","","number")+txt("p.days","Days a week","Half days are fine: 2.5","number")+'</div>'+
+   '<table class="sum"><tr class="t"><td>Your time in this project<small>months × weeks × days × 8 hours</small></td><td>'+out("commitH")+'</td></tr></table></div>'+
+   pause("Sit with others who picked the same kind of project. Tell each other the ambition. Is it ambitious enough? Is the time honest?");
+ }},
+ {t:"The parts",r:function(){
+   var h=heading("Step 2","The parts")+
+   '<p class="lead">Which parts does your project have? For each one: who does it?</p>'+
+   '<p>Tick the parts. Then pick who: you, someone you pay, someone who gives their time, or nobody yet. If you don\'t know the name, describe the person.</p>'+
+   '<div class="panel">';
+   allParts().forEach(function(k){
+     var on=isOn(k);
+     h+='<div class="part"><button class="tick" data-part="'+k+'" aria-pressed="'+on+'"><span class="box">'+(on?"✓":"")+'</span><span>'+esc(partLabel(k))+'</span></button>';
+     if(k.charAt(0)==="x") h+=cell("custom."+k.slice(1),"Name of this part");
+     if(on){
+       linesOfPart(k).forEach(function(i){
+         var l=S.w.people[i],b="people."+i;
+         h+='<div class="ln'+(l.who==="none"?" gap":"")+'"><div class="who" role="group" aria-label="Who does it">'+
+           [["me","Me"],["paid","Someone I pay"],["free","Someone gives time"],["none","Nobody yet"]].map(function(o){return '<button class="'+(o[0]==="none"?"none":"")+'" data-who="'+i+'.'+o[0]+'" aria-pressed="'+(l.who===o[0])+'">'+o[1]+'</button>';}).join("")+'</div>'+
+           (l.who==="paid"||l.who==="free"?cell(b+".name","Name, or who you are looking for"):"")+
+           (l.who!=="none"?cell(b+".role","What they do"):'<p class="flag">A part without a person is a part that won\'t happen, or that you will do for free without noticing.</p>')+
+           '<div class="row"><button class="btn small" data-del="people.'+i+'">Remove</button></div></div>';
+       });
+       h+='<div class="row"><button class="btn small" data-addp="'+k+'">Add a person to this part</button></div>';
+     }
+     h+='</div>';
+   });
+   h+=(S.w.custom.length<3?'<div class="row" style="margin-top:12px"><button class="btn" data-act="addpart">Add a part of your own</button></div>':'')+'</div>'+
+   tip("Easy to forget","Coordination and admin. Someone writes the emails, keeps the money and makes the planning. Usually you.");
+   return h;
+ }},
+ {t:"The people",r:function(){
+   var h=heading("Step 3","The people")+
+   '<p class="lead">How many hours does each person put in, and at what rate?</p>'+
+   '<p>One line per person, per part. Someone who gives their time still gets a rate: what their work would normally cost.</p>'+
+   '<div class="panel"><div class="f"><label for="f-day1">Your hourly rate from Day 1</label><input id="f-day1" type="number" data-n="1" data-p="day1" inputmode="decimal" min="0" step="any" value="'+esc(S.w.day1)+'">'+
+   '<span class="hint">A reference. In a funded project you can, and often should, ask more. Many funds pay up to €82.50 an hour.</span></div></div>';
+   var any=false;
+   S.w.parts.forEach(function(k){
+     var idx=linesOfPart(k).filter(function(i){return S.w.people[i].who!=="none";});
+     if(!idx.length) return; any=true;
+     h+='<h3>'+esc(partLabel(k))+'</h3>';
+     idx.forEach(function(i){
+       var l=S.w.people[i],b="people."+i;
+       h+='<div class="ln"><div class="top2"><span><b>'+esc(personName(l))+'</b>'+(l.role?' · '+esc(l.role):'')+'</span><span>'+(l.who==="me"?"You":l.who==="free"?"Gives time":"Paid")+'</span></div>'+
+         '<div class="two">'+cell(b+".h","Hours","number")+cell(b+".r","Rate per hour €","number")+'</div>'+
+         cell(b+".note","Note (optional)")+
+         '<div class="amt"><span>Total '+out("pa"+i)+'</span></div>'+(l.who==="me"&&S.w.day1&&l.r<S.w.day1?'<p class="flag">Lower than your Day 1 rate.</p>':'')+'</div>';
+     });
+   });
+   if(!any) h+='<p class="note">No people yet. Go back a step and tick the parts.</p>';
+   h+='<table class="sum" style="margin-top:14px"><tr><td>Your own hours</td><td>'+out("mine")+'</td></tr><tr><td>Everyone else</td><td>'+out("others")+'</td></tr><tr class="t"><td>All people</td><td>'+out("people")+'</td></tr></table>'+
+   fair("Fair pay","Write down what the work is worth, also when someone gives it for free. A fund wants to see the real cost of a project.");
+   return h;
+ }},
+ {t:"Your commitment",r:function(){
+   return heading("Step 4","Your commitment")+
+   '<p class="lead">Your ambition asked for your time. Is that time in the budget?</p>'+
+   '<div class="panel"><div class="two">'+txt("p.months","Months","","number")+txt("p.days","Days a week","","number")+'</div>'+
+   '<div class="bars"><span class="mini">Your time in this project</span><div class="bar"><span style="width:100%"></span></div><span class="mini" data-o="commitH"></span>'+
+   '<span class="mini">Your hours in the budget</span><div class="bar"><span data-o="mineBar"></span></div><span class="mini" data-o="mineH"></span></div>'+
+   '<table class="sum"><tr class="gapr"><td>Hours you give away<small>at the rate you gave yourself</small></td><td>'+out("giveaway")+'</td></tr></table></div>'+
+   '<div class="panel"><h2>You and the others</h2><table class="sum"><tr><td>Your rate, on average</td><td>'+out("myRate")+'</td></tr><tr><td>The others\' rate, on average</td><td>'+out("otherRate")+'</td></tr><tr><td>Your share of the people costs</td><td>'+out("myShare")+'</td></tr></table>'+
+   '<p class="note" style="margin-top:10px">The printer, the venue and the freelancer send a bill. Nobody sends a bill for your hours, so they are the first to shrink.</p></div>'+
+   '<p>Change your hours in step 3, or change the days a week here. Both are honest answers.</p>'+
+   pause("Is the budget too big now? What would you cut: the ambition, or yourself?");
+ }},
+ {t:"Material costs",r:function(){
+   var h=heading("Step 5","Material costs")+
+   '<p class="lead">Everything that isn\'t somebody\'s hours. Name each thing; no lumps.</p><div class="panel">';
+   S.w.mat.forEach(function(m,i){
+     var b="mat."+i;
+     h+='<div class="ln">'+sel(b+".cat",CATS,"Kind")+cell(b+".d","What is it?")+
+       '<div class="two">'+cell(b+".q","How many","number")+cell(b+".p","Price each €","number")+'</div>'+
+       '<div class="amt"><span>Total '+out("ma"+i)+'</span><button class="btn small" data-del="mat.'+i+'">Remove</button></div></div>';
+   });
+   h+='<div class="row"><button class="btn" data-act="addmat">Add a cost</button></div>'+
+   '<table class="sum" style="margin-top:14px"><tr class="t"><td>All material costs</td><td>'+out("mat")+'</td></tr></table></div>'+
+   tip("What most funds won't pay","Unforeseen costs: a fund wants to know what it pays for. Things that keep their value after the project, like a laptop or software: rent or borrow instead. Your studio rent: only a space you need for this project counts.")+
+   tip("Ask around","Prices you know beat prices you guess. One email to a printer or a rental shop is worth it.");
+   return h;
+ }},
+ {t:"VAT",r:function(){
+   return heading("Step 6","VAT")+
+   '<p class="lead">Can you get back the VAT you pay on your costs?</p>'+
+   '<div class="choose">'+
+   '<button class="pick" data-vat="yes" aria-pressed="'+(S.w.vat==="yes")+'"><strong>Yes</strong>I charge VAT and file it every quarter. My budget is without VAT, because I get the VAT on my costs back.</button>'+
+   '<button class="pick" data-vat="no" aria-pressed="'+(S.w.vat==="no")+'"><strong>No</strong>I use the KOR, or I am not registered for VAT. The VAT I pay is a real cost, so my budget includes it.</button></div>'+
+   (S.w.vat==="no"?'<div class="panel"><h2>VAT on your costs</h2><p>Freelancers you pay usually charge 21%. Someone without a business, like a resident who gets a fee, charges none. Your own hours and time given for free carry none.</p>'+
+     S.w.people.map(function(l,i){return l.who!=="paid"?"":'<div class="ln"><div class="top2"><span>'+esc(personName(l))+'</span><span>'+out("pa"+i)+'</span></div>'+sel("people."+i+".vr",[[0.21,"21%"],[0,"No VAT"]],"VAT rate")+'</div>';}).join("")+
+     S.w.mat.map(function(m,i){return '<div class="ln"><div class="top2"><span>'+esc(m.d||"A cost")+'</span><span>'+out("ma"+i)+'</span></div>'+sel("mat."+i+".vr",[[0.21,"21%"],[0.09,"9%: train tickets, food, books"],[0,"No VAT"]],"VAT rate")+'</div>';}).join("")+'</div>':'')+
+   '<table class="sum"><tr class="t"><td>Total project costs <small>'+(inclVat()?"with VAT":"without VAT")+'</small></td><td>'+out("total")+'</td></tr></table>'+
+   '<p class="note" style="margin-top:12px">Not sure? Ask the Belastingdienst or your bookkeeper before you send a budget anywhere.</p>';
+ }},
+ {t:"Who could pay",r:function(){
+   var f=S.w.fund;
+   var h=heading("Step 7","Who could pay")+
+   '<p class="lead">One fund rarely pays for everything. Who else wants this project to exist?</p>'+
+   '<div class="panel"><h2>Your main fund</h2><p>Every fund has its own rules. Pick the kind closest to the one you have in mind; the real ones are on the slides.</p><div class="choose">'+
+   Object.keys(FUNDS).map(function(k){return '<button class="pick" data-fund="'+k+'" aria-pressed="'+(f.preset===k)+'"><strong style="font-size:22px">'+FUNDS[k].name+'</strong>'+FUNDS[k].line+'</button>';}).join("")+'</div>'+
+   txt("fund.name","Its name")+
+   '<div class="three">'+cell("fund.max","Pays at most €","number")+cell("fund.min","Others pay at least %","number")+cell("fund.cap","Hourly rate at most €","number")+'</div></div>'+
+   '<div class="panel"><h2>Everyone else</h2><p>Partners, other funds, sales, a space or time given for free.</p>';
+   S.w.src.forEach(function(s,i){
+     h+='<div class="ln">'+cell("src."+i+".name","Who")+'<div class="two">'+sel("src."+i+".type",TYPES,"How")+sel("src."+i+".status",STATUS,"Status")+'</div>'+
+       '<div class="row"><button class="btn small" data-del="src.'+i+'">Remove</button></div></div>';
+   });
+   h+=(S.w.src.length<8?'<div class="row"><button class="btn" data-act="addsrc">Add someone</button></div>':'')+'</div>'+
+   tip("Cofinancing is not a hurdle","Other money means other people believe in it. It can also be what makes the ambition possible at all.")+
+   tip("A school or a university","Can be a partner, but usually doesn\'t receive money from a fund. It shows what it gives instead: a lecturer\'s hours, a lab, a room.")+
+   tip("Your own money","Many funds don\'t count it as cofinancing. You can still put it in, to balance the budget.");
+   return h;
+ }},
+ {t:"Who pays for what",r:function(){
+   var opts=payerOpts(),h=heading("Step 8","Who pays for what")+
+   '<p class="lead">Give every line someone who pays it. When nobody-yet reaches zero, your budget is balanced.</p>'+
+   '<div class="panel"><h2>People</h2>';
+   var any=false;
+   S.w.people.forEach(function(l,i){
+     if(l.who==="none") return; any=true;
+     h+='<div class="ln"><div class="top2"><span><b>'+esc(personName(l))+'</b> · '+esc(partLabel(l.part))+'</span><span>'+out("pa"+i)+'</span></div>'+
+       sel("people."+i+".pay",opts,"Paid by")+
+       (overCap(l)?'<p class="flag">'+esc(S.w.fund.name||"The fund")+' pays at most '+rate(S.w.fund.cap)+' an hour. Who pays the rest, '+out("rest"+i)+'?</p>'+sel("people."+i+".rest",opts.filter(function(o){return o[0]!=="f";}),"The rest paid by"):'')+
+       (l.who==="free"&&l.pay==="f"?'<p class="flag">Someone gives this time, so the fund doesn\'t pay it. Who gives it? Add them in step 7.</p>':'')+'</div>';
+   });
+   if(!any) h+='<p class="note">No people yet.</p>';
+   h+='</div><div class="panel"><h2>Material costs</h2>';
+   S.w.mat.forEach(function(m,i){
+     h+='<div class="ln"><div class="top2"><span>'+esc(m.d||"A cost")+'</span><span>'+out("ma"+i)+'</span></div>'+sel("mat."+i+".pay",opts,"Paid by")+'</div>';
+   });
+   if(!S.w.mat.length) h+='<p class="note">No material costs yet.</p>';
+   h+='</div><div class="panel"><h2>Your coverage plan</h2>'+out("cover")+'</div>'+
+   pause("Look at your cofinancing. Who did you ask yet? Who would you ask first, and why would they say yes?");
+   return h;
+ }},
+ {t:"Check and take it with you",r:function(){
+   return heading("Step 9","Check and take it with you")+
+   '<div class="panel"><h2>Is it complete and balanced?</h2>'+out("checks")+'</div>'+
+   '<div class="docs">'+out("doc")+'</div>'+
+   '<div class="panel"><h2>Keep it</h2><p class="pause" style="background:var(--accent-text)">Before you close this page, save the PDF or the link. We don\'t keep anything, so without them it is gone.</p>'+
+   '<div class="row"><button class="btn primary" data-act="print">Save as a PDF</button></div>'+
+   '<p class="note" style="margin-top:12px">Two pages: the budget and the coverage plan, laid out like the model budget many Dutch funds ask for. When you apply for real, use the fund\'s own template.</p>'+
+   '<h3>Reopen it later</h3><p>This link and QR code reopen the tool as you left it. Everything lives in the link, not with us.</p>'+
+   '<div class="qr" data-o="qr"></div><a class="linkbox" data-o="link" target="_blank" rel="noopener"></a>'+
+   '<div class="row" style="margin-top:10px"><button class="btn" data-act="copy">Copy link</button><span class="note" data-o="copyMsg"></span></div></div>'+
+   '<p class="note">More to read: <a href="https://fairpracticecode.nl/" target="_blank" rel="noopener">Fair Practice Code</a> · <a href="https://www.stimuleringsfonds.nl/" target="_blank" rel="noopener">Stimuleringsfonds</a> · <a href="https://www.mondriaanfonds.nl/" target="_blank" rel="noopener">Mondriaan Fonds</a></p>';
+ }}
+];
+
+/* ---------- checks ---------- */
+function checks(c){
+  var w=S.w,f=w.fund,list=[];
+  var none=w.people.filter(function(l){return l.who==="none";}).map(function(l){return partLabel(l.part);});
+  var emptyParts=w.parts.filter(function(k){return !linesOfPart(k).length;}).map(partLabel);
+  list.push(["Every part has someone who does it",!none.length&&!emptyParts.length,none.concat(emptyParts).join(", ")]);
+  var noHours=w.people.filter(function(l){return l.who!=="none"&&!(l.h>0&&l.r>0);});
+  list.push(["Every person has hours and a rate",!noHours.length,noHours.map(personName).join(", ")]);
+  list.push(["Your own hours are in it",c.mineH>0]);
+  list.push(["Your hours match your commitment",c.commitH>0&&c.mineH>=c.commitH*0.9,c.commitH>c.mineH?Math.round(c.commitH-c.mineH)+" hours given away":"","soft"]);
+  var vague=w.mat.filter(function(m){return !m.d||/unforeseen|onvoorzien|misc|various|diverse/i.test(m.d);});
+  list.push(["Every cost is named, no lumps",!vague.length]);
+  list.push(["Every euro has a payer",c.open===0&&(c.total>0),c.open?eur(c.open)+" not covered yet":""]);
+  list.push(["The fund stays under its maximum",!f.max||c.fund<=f.max,c.fund>f.max?eur(c.fund-f.max)+" too much":""]);
+  if(f.min>0) list.push(["Others pay at least "+f.min+"%",c.pct>=f.min,Math.round(c.pct)+"% now"]);
+  var hoped=w.src.filter(function(s,i){return s.status==="hoped"&&c.by["s"+i]>0;}).map(function(s){return s.name;});
+  list.push(["No cofinancing only hoped for",!hoped.length,hoped.join(", ")+(hoped.length?": ask them":""),"soft"]);
+  return list;
+}
+function checkList(list){return '<ul class="checks">'+list.map(function(x){var ok=!!x[1],cls=ok?"":(x[3]==="soft"?"soft":"no");return '<li class="'+cls+'"><span class="m">'+(ok?"✓":x[3]==="soft"?"?":"–")+'</span><span>'+x[0]+(!ok&&x[2]?' <i>('+esc(x[2])+')</i>':'')+'</span></li>';}).join("")+'</ul>';}
+
+/* ---------- coverage table ---------- */
+function coverHtml(c){
+  var w=S.w,rows='';
+  w.src.forEach(function(s,i){rows+='<tr><td>'+esc(s.name||"Unnamed")+'<small>'+label(TYPES,s.type)+' · '+label(STATUS,s.status)+'</small></td><td>'+eur(c.by["s"+i])+'</td></tr>';});
+  return '<table class="sum">'+(rows||'<tr><td colspan="2"><span class="note">Nobody else yet.</span></td></tr>')+
+   '<tr class="t"><td>Cofinancing<small>'+Math.round(c.pct)+'% of the total'+(w.fund.min?', the fund asks at least '+w.fund.min+'%':'')+'</small></td><td>'+eur(c.cof)+'</td></tr>'+
+   '<tr><td>Me, own contribution</td><td>'+eur(c.own)+'</td></tr>'+
+   '<tr><td>'+esc(w.fund.name||"The fund")+'<small>pays at most '+eur(w.fund.max)+'</small></td><td>'+eur(c.fund)+'</td></tr>'+
+   (c.open?'<tr class="gapr"><td>Nobody yet</td><td>'+eur(c.open)+'</td></tr>':'')+
+   '<tr class="t"><td>Total project costs</td><td>'+eur(c.total)+'</td></tr></table>'+
+   '<div class="totals" style="margin-top:12px"><div class="total'+(c.open?" warn":"")+'"><div class="k">'+(c.open?"Not covered yet":"Balanced")+'</div><div class="v">'+(c.open?eur(c.open):"✓")+'</div></div>'+
+   '<div class="total"><div class="k">You ask the fund</div><div class="v">'+eur(c.need)+'</div></div></div>'+
+   '<p class="note" style="margin-top:8px">What you ask the fund is the total, minus cofinancing, minus your own contribution.</p>';
+}
+
+/* ---------- the document ---------- */
+function v(s,fb){return s?esc(s):'<span class="empty">'+fb+'</span>';}
+function docHtml(c){
+  var w=S.w,inc=inclVat(),basis=inc?"with VAT":"without VAT";
+  var head='<div class="head"><div class="kind">%K%<small>'+v(w.p.title,"working title")+'</small></div><div class="meta">'+v(w.p.me,"your name")+'<br>'+w.p.months+' months · '+w.p.days+' days a week<br>Amounts '+basis+', in whole euros</div></div>';
+  var ppl=w.people.filter(function(l){return l.who!=="none";});
+  var p1='<div class="doc">'+head.replace("%K%","Budget")+
+   (w.p.ambition?'<p>'+esc(w.p.ambition)+'</p>':'')+
+   '<h4>People</h4><table><thead><tr><th class="l">Activity</th><th>Hours</th><th>Rate</th><th>Total</th><th class="l">Who, role</th><th class="l">Paid by</th></tr></thead><tbody>'+
+   (ppl.length?ppl.map(function(l){
+     var pb=payerName(l.pay)+(overCap(l)?" (up to "+rate(w.fund.cap)+"/h), rest "+payerName(l.rest):"");
+     return '<tr><td>'+esc(partLabel(l.part))+(l.note?'<span class="n">'+esc(l.note)+'</span>':'')+'</td><td>'+l.h+'</td><td>'+rate(l.r)+'</td><td>'+eur(personAmt(l))+'</td><td class="l">'+esc(personName(l))+(l.role?', '+esc(l.role):'')+'</td><td class="l">'+esc(pb)+'</td></tr>';}).join(""):'<tr><td colspan="6"><span class="empty">No people yet</span></td></tr>')+
+   '<tr class="t"><td>All people</td><td></td><td></td><td>'+eur(c.people)+'</td><td></td><td></td></tr></tbody></table>'+
+   (w.people.some(function(l){return l.who==="none";})?'<p class="k2">Still without a person: '+esc(w.people.filter(function(l){return l.who==="none";}).map(function(l){return partLabel(l.part);}).join(", "))+'.</p>':'')+
+   '<h4>Material costs</h4><table><thead><tr><th class="l">Kind</th><th class="l">What</th><th>Number</th><th>Each</th><th>Total</th><th class="l">Paid by</th></tr></thead><tbody>'+
+   (w.mat.length?w.mat.map(function(m){return '<tr><td>'+esc(label(CATS,m.cat))+'</td><td class="l">'+v(m.d,"description")+'</td><td>'+m.q+'</td><td>'+eur(m.p)+'</td><td>'+eur(matAmt(m))+'</td><td class="l">'+esc(payerName(m.pay))+'</td></tr>';}).join(""):'<tr><td colspan="6"><span class="empty">No material costs yet</span></td></tr>')+
+   '<tr class="t"><td>All material costs</td><td></td><td></td><td></td><td>'+eur(c.mat)+'</td><td></td></tr></tbody></table>'+
+   '<table style="margin-top:10px"><tr class="t"><td>Total project costs, '+basis+'</td><td>'+eur(c.total)+'</td></tr></table>'+
+   '<p class="foot">A practice budget from the Economic Cultures workshop. '+(inc?"VAT is included because it can't be reclaimed.":"Without VAT, because the VAT on costs is reclaimed.")+'</p></div>';
+  var rows=w.src.map(function(s,i){
+    var what=[];w.people.forEach(function(l){if(l.who!=="none"&&(l.pay==="s"+i||(overCap(l)&&l.rest==="s"+i)))what.push(partLabel(l.part)+" ("+personName(l)+")");});
+    w.mat.forEach(function(m){if(m.pay==="s"+i)what.push(m.d||"a cost");});
+    return '<tr><td>'+esc(label(TYPES,s.type))+'</td><td class="l">'+v(s.name,"name")+'<span class="n">'+esc(what.join("; "))+'</span></td><td>'+eur(c.by["s"+i])+'</td><td class="l">'+label(STATUS,s.status)+'</td></tr>';}).join("");
+  var p2='<div class="doc">'+head.replace("%K%","Coverage plan")+
+   '<h4>Cofinancing</h4><table><thead><tr><th class="l">Kind</th><th class="l">From, and for what</th><th>Amount</th><th class="l">Status</th></tr></thead><tbody>'+
+   (rows||'<tr><td colspan="4"><span class="empty">No cofinancing yet</span></td></tr>')+
+   '<tr class="t"><td colspan="2">Total cofinancing, '+Math.round(c.pct)+'% of the total</td><td>'+eur(c.cof)+'</td><td></td></tr></tbody></table>'+
+   '<table style="margin-top:10px"><tbody><tr><td>Own contribution</td><td>'+eur(c.own)+'</td></tr><tr><td>Total project costs</td><td>'+eur(c.total)+'</td></tr>'+
+   '<tr class="t"><td>Asked from the fund: '+esc(w.fund.name||"unnamed")+'<span class="n">total − cofinancing − own contribution</span></td><td>'+eur(c.need)+'</td></tr>'+
+   (c.open?'<tr class="g"><td>of which nobody pays yet</td><td>'+eur(c.open)+'</td></tr>':'')+'</tbody></table>'+
+   '<p class="foot">Fund rules used: pays at most '+eur(w.fund.max)+(w.fund.min?', others pay at least '+w.fund.min+'%':', no cofinancing asked')+', hourly rate at most '+rate(w.fund.cap)+'. '+(w.p.outcome?'When it is done: '+esc(w.p.outcome):'')+'</p></div>';
+  return p1+p2;
+}
+
+/* ---------- outputs ---------- */
+function update(){
+  var c=calc(),w=S.w,vals={
+    commitH:c.commitH.toLocaleString("en-GB")+" hours",mineH:c.mineH.toLocaleString("en-GB")+" hours",
+    mine:eur(c.mine),others:eur(c.others),people:eur(c.people),mat:eur(c.mat),total:eur(c.total),
+    giveaway:c.commitH>c.mineH?Math.round(c.commitH-c.mineH).toLocaleString("en-GB")+" h · "+eur((c.commitH-c.mineH)*(c.myRate||w.day1)):"None",
+    myRate:c.myRate?rate(Math.round(c.myRate*100)/100):"—",otherRate:c.otherRate?rate(Math.round(c.otherRate*100)/100):"—",
+    myShare:c.people?Math.round(c.mine/c.people*100)+"%":"—"};
+  w.people.forEach(function(l,i){vals["pa"+i]=eur(personAmt(l));if(overCap(l)){var fa=Math.round(Math.round(l.h*w.fund.cap)*(1+personVat(l)));vals["rest"+i]=eur(personAmt(l)-fa);}});
+  w.mat.forEach(function(m,i){vals["ma"+i]=eur(matAmt(m));});
+  document.querySelectorAll("[data-o]").forEach(function(el){
+    var k=el.getAttribute("data-o");
+    if(vals[k]!==undefined) el.textContent=vals[k];
+    else if(k==="mineBar"){el.style.width=(c.commitH?Math.min(100,c.mineH/c.commitH*100):0)+"%";}
+    else if(k==="cover") el.innerHTML=coverHtml(c);
+    else if(k==="checks") el.innerHTML=checkList(checks(c));
+    else if(k==="doc") el.innerHTML=docHtml(c);
+  });
+  var live=document.getElementById("live");
+  if(S.step===0) live.innerHTML="";
+  else if(S.step<=2) live.innerHTML='Your time<b>'+c.commitH.toLocaleString("en-GB")+' h</b>';
+  else if(S.step<=6) live.innerHTML='Project costs<b>'+eur(c.total)+'</b>';
+  else live.innerHTML=c.open?'Not covered yet<b class="warn">'+eur(c.open)+'</b>':'Balanced<b>'+eur(c.total)+'</b>';
+  persist();
+}
+function shareUrl(){var base="";try{base=location.href.split("#")[0];}catch(e){}return base+"#s="+(CODE&&codeFor===JSON.stringify(snapshot())?CODE:encodeSync());}
+function refreshLink(){
+  var u=shareUrl();
+  document.querySelectorAll('[data-o="link"]').forEach(function(el){el.textContent=u;el.setAttribute("href",u);});
+  document.querySelectorAll('[data-o="qr"]').forEach(function(el){el.innerHTML=qrSvg(u);});
+}
+function qrSvg(text){
+  try{ if(typeof qrcode!=="function") return '<p class="note">The QR code needs a connection to load. The link below works the same.</p>';
+    var q=qrcode(0,"L");q.addData(text);q.make();var svg=q.createSvgTag({cellSize:2,margin:4,scalable:true});
+    return q.getModuleCount()>97?svg+'<p class="note">This code is dense. If your camera can\'t read it, use the link.</p>':svg;
+  }catch(e){return '<p class="note">The link is too long for a QR code. Copy the link instead.</p>';}
+}
+
+/* ---------- render & events ---------- */
+var stage=document.getElementById("stage");
+function render(focus){
+  var y=window.scrollY;
+  stage.innerHTML=STEPS[S.step].r();
+  document.getElementById("progress").innerHTML='<span>'+(S.step?"Step "+S.step+" of 9 · "+STEPS[S.step].t:"Start")+'</span><span>'+(S.step?"Started from "+(S.start==="own"?"my own project":PEOPLE[S.start].who):"")+'</span>';
+  document.getElementById("back").disabled=S.step===0;
+  var n=document.getElementById("next");n.textContent=S.step===0?"Begin":"Next";n.disabled=S.step===LAST;
+  update();refreshLink();
+  if(focus){var h=stage.querySelector("h1");if(h)h.focus({preventScroll:true});window.scrollTo(0,0);}else window.scrollTo(0,y);
+}
+function go(d){S.step=Math.min(LAST,Math.max(0,S.step+d));render(true);}
+document.getElementById("next").onclick=function(){if(S.step<LAST)go(1);};
+document.getElementById("back").onclick=function(){if(S.step>0)go(-1);};
+function onEdit(e){
+  var t=e.target,p=t.getAttribute("data-p");if(!p)return;
+  var val;
+  if(t.getAttribute("data-n")){var n=parseFloat(String(t.value).replace(",","."));val=isFinite(n)&&n>=0?n:0;
+    if(p==="p.months")val=Math.min(36,Math.max(0,Math.round(val)));if(p==="p.days")val=Math.min(5,val);if(p==="fund.min")val=Math.min(100,val);}
+  else if(t.tagName==="SELECT"){val=t.value;if(/\.vr$/.test(p))val=Number(val);}
+  else val=String(t.value).slice(0,400);
+  set(p,val);
+  if(p==="fund.name"||p==="fund.max"||p==="fund.min"||p==="fund.cap")S.w.fund.preset="";
+  if(t.tagName==="SELECT"&&e.type==="change"&&(/\.pay$|\.rest$|\.type$/.test(p))){render(false);return;}
+  update();
+}
+stage.addEventListener("input",function(e){if(e.target.tagName!=="SELECT")onEdit(e);});
+stage.addEventListener("change",function(e){if(e.target.tagName==="SELECT")onEdit(e);});
+function newPerson(k){return P(k,"me","","",0,S.w.day1||0,"f");}
+function removeSource(i){
+  S.w.src.splice(i,1);
+  var fix=function(p){if(p==="s"+i)return "n";if(/^s\d+$/.test(p)&&+p.slice(1)>i)return "s"+(+p.slice(1)-1);return p;};
+  S.w.people.forEach(function(l){l.pay=fix(l.pay);l.rest=fix(l.rest);});S.w.mat.forEach(function(m){m.pay=fix(m.pay);});
+}
+stage.addEventListener("click",function(e){
+  var b=e.target.closest("button");if(!b)return;
+  var a;
+  if((a=b.getAttribute("data-start"))){S.start=a;S.w=fresh(a);render(false);return;}
+  if((a=b.getAttribute("data-part"))){
+    var i=S.w.parts.indexOf(a);
+    if(i>=0){S.w.parts.splice(i,1);S.w.people=S.w.people.filter(function(l){return l.part!==a;});}
+    else{S.w.parts.push(a);if(!linesOfPart(a).length)S.w.people.push(P(a,"none","",partLabel(a),0,0,"n"));}
+    render(false);return;}
+  if((a=b.getAttribute("data-who"))){
+    var pr=a.split("."),l=S.w.people[+pr[0]],was=l.who;l.who=pr[1];
+    if(l.who==="me"){if(!l.r)l.r=S.w.day1||0;if(l.pay==="n")l.pay="f";}
+    if(l.who==="paid"&&l.pay==="n")l.pay="f";
+    if(l.who==="free"){var k=-1;S.w.src.forEach(function(s,j){if(k<0&&s.type==="kind")k=j;});l.pay=k>=0?"s"+k:"n";}
+    if(l.who==="none")l.pay="n";
+    if(was==="none"&&l.role===partLabel(l.part))l.role="";
+    render(false);return;}
+  if((a=b.getAttribute("data-addp"))){if(S.w.people.length<40)S.w.people.push(newPerson(a));render(false);return;}
+  if((a=b.getAttribute("data-del"))){var d=a.split(".");if(d[0]==="src")removeSource(+d[1]);else S.w[d[0]].splice(+d[1],1);render(false);return;}
+  if((a=b.getAttribute("data-vat"))){S.w.vat=a;render(false);return;}
+  if((a=b.getAttribute("data-fund"))){var f=FUNDS[a];S.w.fund={preset:a,name:f.name,max:f.max,min:f.min,cap:f.cap};render(false);return;}
+  a=b.getAttribute("data-act");
+  if(a==="addpart"){if(S.w.custom.length<3){S.w.custom.push("");}render(false);return;}
+  if(a==="addmat"){if(S.w.mat.length<30)S.w.mat.push(M("material","",1,0,"f"));render(false);return;}
+  if(a==="addsrc"){if(S.w.src.length<8)S.w.src.push({name:"",type:"partner",status:"hoped"});render(false);return;}
+  if(a==="print"){printDoc();return;}
+  if(a==="copy"){var url=shareUrl(),m=stage.querySelector('[data-o="copyMsg"]');
+    var fallback=function(){var box=stage.querySelector('[data-o="link"]');var r=document.createRange();r.selectNodeContents(box);var s=window.getSelection();s.removeAllRanges();s.addRange(r);m.textContent="Selected. Copy it from your phone's menu.";};
+    try{navigator.clipboard.writeText(url).then(function(){m.textContent="Copied.";},fallback);}catch(err){fallback();}}
+});
+function printDoc(){
+  var u=shareUrl();
+  document.getElementById("printarea").innerHTML=docHtml(calc())+
+    '<div class="reopen"><p><b>Reopen this in the tool.</b> Scan the code with your camera, or tap the link. Everything lives in the link, not with us.</p><div class="qr">'+qrSvg(u)+'</div><p class="linkbox"><a href="'+esc(u)+'">'+esc(u)+'</a></p></div>';
+  var prev=document.title;
+  try{document.title="Project budget "+(S.w.p.title||"")+" "+(S.w.p.me||"");}catch(e){}
+  var done=function(){document.title=prev;window.removeEventListener("afterprint",done);};
+  window.addEventListener("afterprint",done);
+  try{window.print();}catch(err){}
+}
+var rb=document.getElementById("readable");
+try{if(localStorage.getItem("ec-readable")==="1"){document.body.classList.add("readable");rb.setAttribute("aria-pressed","true");}}catch(e){}
+rb.onclick=function(){var on=document.body.classList.toggle("readable");rb.setAttribute("aria-pressed",String(on));try{localStorage.setItem("ec-readable",on?"1":"0");}catch(e){}};
+
+window.__budget={S:S,calc:calc,checks:checks,fresh:fresh,PEOPLE:PEOPLE};
+load().then(function(){},function(){}).then(function(){render(false);refreshLink();});
+})();
+</script>
+</body>
+</html>
