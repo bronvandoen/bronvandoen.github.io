@@ -224,7 +224,7 @@ function persist(){
   clearTimeout(saveTimer);
   saveTimer=setTimeout(function(){
     var code=encode();
-    try{history.replaceState(null,"","#s="+code);}catch(e){}
+    try{history.replaceState(null,"",location.pathname+"#s="+code);}catch(e){}
     try{localStorage.setItem("ec-hourly-rate",code);}catch(e){}
   },300);
 }
@@ -457,7 +457,7 @@ function update(){
   live.innerHTML=S.step>=6?'Rate now<b>'+(c.rate?eur2(c.rate):"—")+'</b>':'Step '+S.step+' of 9';
   persist();
 }
-function shareUrl(){var base="";try{base=location.href.split("#")[0];}catch(e){}return base+"#s="+encode();}
+function shareUrl(){var base="";try{base=location.origin+location.pathname+"?open";}catch(e){}return base+"#s="+encode();}
 
 /* ---------- render & events ---------- */
 var stage=document.getElementById("stage");

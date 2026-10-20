@@ -318,7 +318,7 @@ function persist(){
     var store=function(code){
       if(key!==JSON.stringify(snapshot())) return;
       CODE=code;codeFor=key;
-      try{history.replaceState(null,"","#s="+code);}catch(e){}
+      try{history.replaceState(null,"",location.pathname+"#s="+code);}catch(e){}
       try{localStorage.setItem(STORE,code);}catch(e){}
       refreshLink();
     };
@@ -663,7 +663,7 @@ function update(){
   else live.innerHTML=c.open?'Not covered yet<b class="warn">'+eur(c.open)+'</b>':'Balanced<b>'+eur(c.total)+'</b>';
   persist();
 }
-function shareUrl(){var base="";try{base=location.href.split("#")[0];}catch(e){}return base+"#s="+(CODE&&codeFor===JSON.stringify(snapshot())?CODE:encodeSync());}
+function shareUrl(){var base="";try{base=location.origin+location.pathname+"?open";}catch(e){}return base+"#s="+(CODE&&codeFor===JSON.stringify(snapshot())?CODE:encodeSync());}
 function refreshLink(){
   var u=shareUrl();
   document.querySelectorAll('[data-o="link"]').forEach(function(el){el.textContent=u;el.setAttribute("href",u);});

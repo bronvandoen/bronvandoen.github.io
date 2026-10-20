@@ -303,7 +303,7 @@ function persist(){
     var store=function(code){
       if(key!==JSON.stringify(compact())) return;
       CODE=code; codeFor=key;
-      try{history.replaceState(null,"","#s="+code);}catch(e){}
+      try{history.replaceState(null,"",location.pathname+"#s="+code);}catch(e){}
       try{localStorage.setItem("ec-quote-invoice",code);}catch(e){}
       refreshLink();
     };
@@ -580,7 +580,7 @@ function update(){
   live.innerHTML=S.step===0?"":S.step<=6?'Quote total<b>'+eur2(qs.tot)+'</b>':'Invoice total<b>'+eur2(is.tot)+'</b>';
   persist();
 }
-function shareUrl(){var base="";try{base=location.href.split("#")[0];}catch(e){}return base+"#s="+(CODE&&codeFor===JSON.stringify(compact())?CODE:encodeSync());}
+function shareUrl(){var base="";try{base=location.origin+location.pathname+"?open";}catch(e){}return base+"#s="+(CODE&&codeFor===JSON.stringify(compact())?CODE:encodeSync());}
 function refreshLink(){
   var u=shareUrl();
   document.querySelectorAll('[data-o="link"]').forEach(function(el){el.textContent=u;el.setAttribute("href",u);});
