@@ -52,9 +52,9 @@ p{margin:0 0 14px}
 .f:last-child{border-bottom:0}
 .f label,.f .lbl{display:block;font-family:var(--readable);font-weight:600;font-size:16px;line-height:1.3;margin-bottom:6px}
 .f .hint{display:block;font-family:var(--readable);font-size:14px;color:var(--ink-soft);line-height:1.4;margin-top:4px}
-.f input,.f textarea,.f select,.ln input,.ln select{width:100%;min-height:44px;font-family:var(--readable);font-size:17px;padding:8px 10px;border:var(--rule) solid var(--ink);background:var(--paper);color:var(--ink);-webkit-text-fill-color:var(--ink);border-radius:0}
+.f input,.f textarea,.f select,.ln input,.ln select,.row.item input{width:100%;min-height:44px;font-family:var(--readable);font-size:17px;padding:8px 10px;border:var(--rule) solid var(--ink);background:var(--paper);color:var(--ink);-webkit-text-fill-color:var(--ink);border-radius:0}
 .f textarea{min-height:88px;resize:vertical;line-height:1.4}
-.f input.ex,.f textarea.ex,.ln input.ex{color:#6A655B;-webkit-text-fill-color:#6A655B;border-style:dashed}
+.f input.ex,.f textarea.ex,.ln input.ex,.row.item input.ex{color:#6A655B;-webkit-text-fill-color:#6A655B;border-style:dashed}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 input,button,select,textarea{color-scheme:light}
 
@@ -145,6 +145,10 @@ nav.bar .live b{display:block;font-family:var(--display);font-weight:900;font-si
 footer{padding:28px 0 0;font-family:var(--label);font-size:12px;color:var(--ink-soft)}
 
 #printarea{display:none}
+.fromb{font-family:var(--readable);font-weight:600;margin:4px 0 8px}
+.row.item input{flex:1 1 180px;width:auto}
+.lab{font-family:var(--readable);font-weight:600}
+#printarea .qs h2{font-family:var(--display);font-weight:900;font-size:22px;text-transform:uppercase;margin:0 0 6px}
 @media print{
   @page{margin:14mm}
   body{padding:0;background:#fff}
@@ -186,26 +190,29 @@ function addDays(iso,n){if(!iso)return "";var p=iso.split("-"),d=new Date(+p[0],
 
 /* ---------- the two examples: invented people, invented numbers ---------- */
 var PEOPLE={
- sam:{who:"Sam",line:"Graphic designer, works at the kitchen table. Charges by the hour.",
+ sam:{who:"Sam",line:"Designer and researcher. Does a research assignment for a museum, by the hour.",
   v:{mode:"hours",
    me:{name:"Studio Keukentafel",person:"Sam de Wit",street:"Voorbeeldstraat 1",city:"5600 AA Eindhoven",email:"sam@example.com",kvk:PRACTICE.kvk,vat:PRACTICE.vat,iban:PRACTICE.iban},
-   cl:{name:"Ilse Bakker",org:"Koffiebar De Hoek",street:"Hoekstraat 8",city:"5611 AB Eindhoven",email:"ilse@example.org",ref:""},
-   br:{what:"A poster for the café's first birthday and a new menu card.",deadline:"In three weeks",incl:"Two rounds of changes. Print-ready files.",excl:"Printing and photography."},
+   cl:{name:"Ilse Bakker",org:"Museum De Werf",street:"Werfstraat 20",city:"5611 EF Eindhoven",email:"ilse@example.org",ref:"PO 2026-118"},
+   br:{what:"Research into how visitors use the museum's new learning space, with a short report and a presentation for the team.",deadline:"In six weeks",incl:"Two days of visitor interviews, one workshop with staff, a report of about 15 pages, one presentation.",excl:"Printing the report, translation, extra workshops.",
+     items:[{id:1,d:"Desk research and visitor interviews"},{id:2,d:"Workshop with staff: preparation and facilitation"},{id:3,d:"Report and presentation"},{id:4,d:"Workshop materials"}]},
    q:{no:"Q2026-001",valid:30,term:30,terms:"My general terms and conditions apply.",lines:[
-     {d:"Design: birthday poster and menu card",q:20,u:"hours",p:45},
-     {d:"Changes: two rounds",q:4,u:"hours",p:45},
-     {d:"Test prints",q:1,u:"item",p:35}]},
+     {d:"Desk research and visitor interviews",q:24,u:"hours",p:45,b:1},
+     {d:"Workshop with staff: preparation and facilitation",q:8,u:"hours",p:45,b:2},
+     {d:"Report and presentation",q:16,u:"hours",p:45,b:3},
+     {d:"Workshop materials",q:1,u:"item",p:60,b:4}]},
    ok:{how:"email"},
    inv:{no:"2026-001"}}},
  noor:{who:"Noor",line:"Makes objects in a shared workshop. Works on commission for a fixed fee.",
   v:{mode:"fee",
    me:{name:"Noor Haddad Objects",person:"Noor Haddad",street:"Werkplaatslaan 12",city:"5611 XX Eindhoven",email:"noor@example.com",kvk:PRACTICE.kvk,vat:PRACTICE.vat,iban:PRACTICE.iban},
    cl:{name:"Mark Jansen",org:"Hotel Het Veld",street:"Veldweg 3",city:"5612 CD Eindhoven",email:"mark@example.org",ref:"PO 4471"},
-   br:{what:"Twelve ceramic wall lamps for the hotel lobby.",deadline:"Before the reopening, in two months",incl:"Design, making, and delivery in Eindhoven.",excl:"Installation and electrical work."},
+   br:{what:"Twelve ceramic wall lamps for the hotel lobby.",deadline:"Before the reopening, in two months",incl:"Design, making, and delivery in Eindhoven.",excl:"Installation and electrical work.",
+     items:[{id:1,d:"Commission: twelve ceramic wall lamps"},{id:2,d:"Materials: clay, glaze, fittings"},{id:3,d:"Transport and delivery"}]},
    q:{no:"Q2026-001",valid:30,term:30,terms:"My general terms and conditions apply.",lines:[
-     {d:"Commission: twelve ceramic wall lamps",q:1,u:"item",p:2400},
-     {d:"Materials: clay, glaze, fittings",q:1,u:"item",p:480},
-     {d:"Transport and delivery",q:1,u:"item",p:90}]},
+     {d:"Commission: twelve ceramic wall lamps",q:1,u:"item",p:2400,b:1},
+     {d:"Materials: clay, glaze, fittings",q:1,u:"item",p:480,b:2},
+     {d:"Transport and delivery",q:1,u:"item",p:90,b:3}]},
    ok:{how:"signed"},
    inv:{no:"2026-001"}}}
 };
@@ -238,7 +245,8 @@ function compact(){
     [m.name,m.person,m.street,m.city,m.email,pr("kvk"),pr("vat"),pr("iban")],
     [c.name,c.org,c.street,c.city,c.email,c.ref],[b.what,b.deadline,b.incl,b.excl],
     [q.no,d8(q.date),q.valid,q.term,q.terms,packLines(q.lines)],
-    [HOW.indexOf(w.ok.how),d8(w.ok.date)],[w.inv.no,d8(w.inv.date),d8(w.inv.done),packLines(w.inv.lines)]];
+    [HOW.indexOf(w.ok.how),d8(w.ok.date)],[w.inv.no,d8(w.inv.date),d8(w.inv.done),packLines(w.inv.lines)],
+    (b.items||[]).map(function(it){return [it.id,it.d];}),(q.lines||[]).map(function(l){return l.b||0;})];
 }
 function uncompact(a){
   var start=a[1]===1?"noor":"sam",base=fresh(start),m=a[4]||[],c=a[5]||[],b=a[6]||[],q=a[7]||[],ok=a[8]||[],inv=a[9]||[];
@@ -250,6 +258,9 @@ function uncompact(a){
   base.mode=a[3]===1?"fee":"hours";
   base.q.no=str(q[0]);base.q.date=un8(q[1]);base.q.valid=+q[2]||0;base.q.term=+q[3]||0;base.q.terms=str(q[4]);
   base.q.lines=cleanLines(unpackLines(q[5]))||[];
+  if(Array.isArray(a[10])){base.br.items=a[10].slice(0,20).map(function(x){return {id:+x[0]||0,d:str(x[1]).slice(0,120)};}).filter(function(x){return x.id>0;});}
+  else base.br.items=[];
+  if(Array.isArray(a[11])) base.q.lines.forEach(function(l,i){if(+a[11][i]>0)l.b=+a[11][i];});
   base.ok.how=HOW[ok[0]]||"";base.ok.date=un8(ok[1]);
   base.inv.no=str(inv[0]);base.inv.date=un8(inv[1]);base.inv.done=un8(inv[2]);base.inv.lines=cleanLines(unpackLines(inv[3]));
   S.start=start;S.w=base;S.step=Math.min(LAST,Math.max(0,+a[2]||0));
@@ -276,11 +287,12 @@ function decodeOld(str){
   if(w.mode==="hours"||w.mode==="fee") base.mode=w.mode;
   base.q.lines=cleanLines(base.q.lines)||[];
   base.inv.lines=cleanLines(base.inv.lines);
+  if(!Array.isArray(base.br.items)) base.br.items=[];
   S.start=o.s===1?"noor":"sam"; S.w=base; S.step=Math.min(LAST,Math.max(0,+o.t||0));
 }
 function cleanLines(a){
   if(!Array.isArray(a)) return null;
-  return a.slice(0,20).map(function(l){return {d:String(l.d||"").slice(0,120),q:Math.max(0,Number(l.q)||0),u:["hours","days","item"].indexOf(l.u)>=0?l.u:"item",p:Math.max(0,Number(l.p)||0)};});
+  return a.slice(0,20).map(function(l){var o={d:String(l.d||"").slice(0,120),q:Math.max(0,Number(l.q)||0),u:["hours","days","item"].indexOf(l.u)>=0?l.u:"item",p:Math.max(0,Number(l.p)||0)};if(+l.b>0)o.b=+l.b;return o;});
 }
 var saveTimer=null, CODE="", codeFor="";
 function persist(){
@@ -304,6 +316,26 @@ function load(){
   var fromStore=function(){try{var c=localStorage.getItem("ec-quote-invoice");if(c)return tryCode(c).catch(function(){});}catch(e){}return Promise.resolve();};
   if(h.indexOf("#s=")===0) return tryCode(h.slice(3)).catch(fromStore);
   return fromStore();
+}
+
+/* ---------- the brief feeds the price lines ---------- */
+function syncLines(){
+  var items=S.w.br.items||[], ls=S.w.q.lines, ids={};
+  items.forEach(function(it){ids[it.id]=1;});
+  var linked=items.map(function(it){
+    var l=ls.filter(function(x){return x.b===it.id;})[0];
+    if(!l) l={d:it.d,q:1,u:S.w.mode==="hours"?"hours":"item",p:0,b:it.id};
+    l.d=it.d; return l;
+  });
+  var free=ls.filter(function(x){return !x.b||!ids[x.b];}).map(function(x){delete x.b;return x;});
+  S.w.q.lines=linked.concat(free);
+}
+function nextId(){var m=0;(S.w.br.items||[]).forEach(function(it){if(it.id>m)m=it.id;});S.w.q.lines.forEach(function(l){if(l.b>m)m=l.b;});return m+1;}
+function itemsEditor(){
+  var items=S.w.br.items||[];
+  return '<div class="f"><span class="lab">What you will do and deliver</span><span class="hint">One item per part of the work, and one per cost. Each item becomes a line in your price.</span></div>'+
+    items.map(function(it,i){var e=(PEOPLE[S.start].v.br.items||[])[i];return '<div class="row item"><input type="text" maxlength="120" aria-label="Item '+(i+1)+'" data-bi="'+i+'" class="'+(e&&e.d===it.d?"ex":"")+'" value="'+esc(it.d)+'" placeholder="For example: interviews, a report, materials"><button class="btn small" data-bdel="'+i+'">Remove</button></div>';}).join("")+
+    '<div class="row"><button class="btn" data-badd="1">Add an item</button></div>';
 }
 
 /* ---------- money ---------- */
@@ -340,12 +372,13 @@ function linesEditor(which){
   return arr.map(function(l,i){
     var base=which+"L."+i;
     var ex=function(k){if(which!=="q")return "";var e=PEOPLE[S.start].v.q.lines[i];return e&&String(e[k])===String(l[k])?"ex":"";};
-    return '<div class="ln"><span class="mini">Line '+(i+1)+'</span>'+
-      '<input type="text" maxlength="120" aria-label="Line '+(i+1)+' description" data-l="'+base+'.d" class="'+ex("d")+'" value="'+esc(l.d)+'" placeholder="What is it?">'+
+    var fromBrief=which==="q"&&l.b;
+    return '<div class="ln"><span class="mini">Line '+(i+1)+(fromBrief?' · from your brief':'')+'</span>'+
+      (fromBrief?'<p class="fromb">'+esc(l.d)+'</p>':'<input type="text" maxlength="120" aria-label="Line '+(i+1)+' description" data-l="'+base+'.d" class="'+ex("d")+'" value="'+esc(l.d)+'" placeholder="What is it?">')+
       '<div class="row3"><span><span class="mini">Quantity</span><input type="number" inputmode="decimal" min="0" step="any" aria-label="Line '+(i+1)+' quantity" data-l="'+base+'.q" class="'+ex("q")+'" value="'+l.q+'"></span>'+
       '<span><span class="mini">Unit</span><select aria-label="Line '+(i+1)+' unit" data-l="'+base+'.u">'+[["hours","hours"],["days","days"],["item","items"]].map(function(o){return '<option value="'+o[0]+'"'+(l.u===o[0]?" selected":"")+'>'+o[1]+'</option>';}).join("")+'</select></span>'+
       '<span><span class="mini">Price €</span><input type="number" inputmode="decimal" min="0" step="any" aria-label="Line '+(i+1)+' price per unit" data-l="'+base+'.p" class="'+ex("p")+'" value="'+l.p+'"></span></div>'+
-      '<div class="amt"><span>Amount '+out(which+"amt"+i)+'</span><button class="btn small" data-del="'+which+'.'+i+'">Remove</button></div></div>';
+      '<div class="amt"><span>Amount '+out(which+"amt"+i)+'</span>'+(fromBrief?'<span class="mini">Change or remove it in step 3</span>':'<button class="btn small" data-del="'+which+'.'+i+'">Remove</button>')+'</div></div>';
   }).join("")+'<div class="row"><button class="btn" data-add="'+which+'">Add a line</button></div>';
 }
 function totalsBox(which){
@@ -447,7 +480,7 @@ var STEPS=[
  {t:"The brief",r:function(){
    return heading("Step 3","The brief")+
    '<p class="lead">What did your client ask for? Write it in a way you would both sign.</p>'+
-   '<div class="panel">'+txt("br.what","What they asked for","",null,true)+txt("br.deadline","When")+
+   '<div class="panel">'+txt("br.what","What they asked for","",null,true)+itemsEditor()+txt("br.deadline","When")+
    txt("br.incl","What is included","Rounds of changes, files, delivery.",null,true)+txt("br.excl","What is not included","Saying it now saves an argument later.",null,true)+'</div>'+
    fair("Transparency","Ask what the budget is. Openness about money works both ways.")+
    pause("What did you forget to ask? Go back to your client and ask it now.");
@@ -458,13 +491,14 @@ var STEPS=[
    '<div class="choose">'+
    '<button class="pick" data-mode="hours" aria-pressed="'+(S.w.mode==="hours")+'"><strong>By the hour</strong>The client pays for the time you spend. Good when the work is open, or keeps changing.</button>'+
    '<button class="pick" data-mode="fee" aria-pressed="'+(S.w.mode==="fee")+'"><strong>A fixed fee</strong>The client pays for the result. Your hours are inside the price, and so is the risk.</button></div>'+
-   otherLine(S.start==="sam"?"Noor charges a fixed fee for twelve lamps. Her client knows the price up front; she carries the risk if the glaze fails.":"Sam charges by the hour. His client pays for every change, so Sam writes down how many rounds are included.")+
+   otherLine(S.start==="sam"?"Noor charges a fixed fee for twelve lamps. Her client knows the price up front; she carries the risk if the glaze fails.":"Sam charges by the hour for research. The museum pays for the time it takes, so Sam writes down how many interview days are included.")+
    '<p class="note">Your choice sets the first line in the next step. You can still mix: a fee plus hours for extra changes.</p>';
  }},
  {t:"Your price",r:function(){
+   syncLines();
    return heading("Step 5","Your price")+
-   '<p class="lead">'+(S.w.mode==="hours"?"How many hours, at what rate? Add your costs as their own lines.":"What is the finished work worth? Add your costs as their own lines.")+'</p>'+
-   '<p>Your hourly rate from Day 1 is a floor, not a price tag. Round it, raise it, or build a fee from it.</p>'+
+   '<p class="lead">'+(S.w.mode==="hours"?"The items from your brief are here. How many hours each, at what rate?":"The items from your brief are here. What is each one worth?")+'</p>'+
+   '<p>Your normal hourly rate is a floor, not a price tag. Round it, raise it, or build a fee from it.</p>'+
    '<div class="panel">'+linesEditor("q")+totalsBox("q")+'</div>'+
    fair("Fair pay","Does this price cover your hours, including the ones nobody sees?");
  }},
@@ -513,6 +547,7 @@ var STEPS=[
    out("docI")+
    pause("Swap phones. Client: does this invoice match what you agreed? Ask about anything that surprises you.")+
    '<div class="panel"><h2>Quote and invoice compared</h2>'+out("diff")+'</div>'+
+   '<div class="panel"><h2>Questions to take home</h2><p>What did your client not tell you, and when and how could you have asked?</p><p>Did you lower your price before anyone asked you to?</p><p>What would you rather have put in your quote than done for free?</p><p>Has a client ever asked you to do something for free before giving you a proper assignment?</p></div>'+
    '<div class="panel"><h2>Keep it</h2><p class="pause" style="background:var(--accent-text)">Before you close this page, save the PDFs or the link. We don\'t keep anything, so without them it is gone.</p>'+
    '<div class="row"><button class="btn primary" data-act="print" data-what="invoice">Save the invoice as a PDF</button><button class="btn" data-act="print" data-what="quote">Save the quote as a PDF</button></div>'+
    '<p class="note" style="margin-top:12px">Keep the PDF as a template. Put in your real numbers once you have them, and the PRACTICE stamp goes.</p>'+
@@ -566,7 +601,8 @@ function go(d){S.step=Math.min(LAST,Math.max(0,S.step+d));render(true);}
 document.getElementById("next").onclick=function(){if(S.step<LAST)go(1);else printDoc("invoice");};
 document.getElementById("back").onclick=function(){if(S.step>0)go(-1);};
 function onEdit(e){
-  var t=e.target,p=t.getAttribute("data-p"),l=t.getAttribute("data-l");
+  var t=e.target,p=t.getAttribute("data-p"),l=t.getAttribute("data-l"),bi=t.getAttribute("data-bi");
+  if(bi!==null){var it=S.w.br.items[+bi];if(it){it.d=String(t.value).slice(0,120);var e3=(PEOPLE[S.start].v.br.items||[])[+bi];t.classList.toggle("ex",!!(e3&&e3.d===it.d));update();}return;}
   if(p){
     var val=t.type==="number"?Math.max(0,Math.round(parseFloat(t.value)||0)):String(t.value).slice(0,300);
     set(p,val); if(t.classList) t.classList.toggle("ex",isEx(p)); update(); return;
@@ -587,12 +623,15 @@ stage.addEventListener("click",function(e){
   var b=e.target.closest("button"); if(!b) return;
   if(b.hasAttribute("data-start")){var p=b.getAttribute("data-start");S.start=p;S.w=fresh(p);render(false);return;}
   if(b.hasAttribute("data-mode")){var md=b.getAttribute("data-mode");S.w.mode=md;
-    var first=S.w.q.lines[0];
-    if(!first) S.w.q.lines.push(md==="hours"?{d:"Design work",q:10,u:"hours",p:0}:{d:"Fee",q:1,u:"item",p:0});
-    else if(md==="hours"&&first.was&&first.u==="item"&&first.q===1&&first.p===r2(first.was.q*first.was.p)){first.u="hours";first.q=first.was.q;first.p=first.was.p;delete first.was;}
-    else if(md==="fee"&&first.u==="hours"){first.was={q:first.q,p:first.p};first.u="item";first.p=r2(first.q*first.p);first.q=1;}
+    if(!S.w.q.lines.length&&!(S.w.br.items||[]).length) S.w.q.lines.push(md==="hours"?{d:"Design work",q:10,u:"hours",p:0}:{d:"Fee",q:1,u:"item",p:0});
+    S.w.q.lines.forEach(function(l){
+      if(md==="hours"&&l.was&&l.u==="item"&&l.q===1&&l.p===r2(l.was.q*l.was.p)){l.u="hours";l.q=l.was.q;l.p=l.was.p;delete l.was;}
+      else if(md==="fee"&&l.u==="hours"){l.was={q:l.q,p:l.p};l.u="item";l.p=r2(l.q*l.p);l.q=1;}
+    });
     render(false);return;}
   if(b.hasAttribute("data-ok")){S.w.ok.how=b.getAttribute("data-ok");if(!S.w.ok.date)S.w.ok.date=today();render(false);return;}
+  if(b.hasAttribute("data-badd")){if(!S.w.br.items)S.w.br.items=[];if(S.w.br.items.length<20)S.w.br.items.push({id:nextId(),d:""});render(false);var ins=stage.querySelectorAll("[data-bi]");if(ins.length)ins[ins.length-1].focus();return;}
+  if(b.hasAttribute("data-bdel")){S.w.br.items.splice(+b.getAttribute("data-bdel"),1);render(false);return;}
   if(b.hasAttribute("data-add")){var w=b.getAttribute("data-add"),arr=w==="q"?S.w.q.lines:S.w.inv.lines;if(arr.length<20)arr.push({d:"",q:1,u:S.w.mode==="hours"?"hours":"item",p:0});render(false);return;}
   if(b.hasAttribute("data-del")){var pr=b.getAttribute("data-del").split("."),a2=pr[0]==="q"?S.w.q.lines:S.w.inv.lines;a2.splice(+pr[1],1);render(false);return;}
   var a=b.getAttribute("data-act");
@@ -605,7 +644,7 @@ stage.addEventListener("click",function(e){
 function printDoc(what){
   var u=shareUrl();
   document.getElementById("printarea").innerHTML=docHtml(what)+
-    '<div class="reopen"><p><b>Reopen this in the tool.</b> Tap the link below. Everything lives in the link, not with us.</p><p><a href="'+esc(u)+'">Open it in the tool, as you left it</a></p></div>';
+    '<div class="reopen"><div class="qs"><h2>Questions to take home</h2><p>What did your client not tell you, and when and how could you have asked?</p><p>Did you lower your price before anyone asked you to?</p><p>What would you rather have put in your quote than done for free?</p><p>Has a client ever asked you to do something for free before giving you a proper assignment?</p></div><p><b>Reopen this in the tool.</b> Tap the link below. Everything lives in the link, not with us.</p><p><a href="'+esc(u)+'">Open it in the tool, as you left it</a></p></div>';
   var prev=document.title;
   try{document.title=(what==="quote"?"Quote "+S.w.q.no:"Invoice "+S.w.inv.no)+" "+(S.w.me.name||"");}catch(e){}
   var done=function(){document.title=prev;window.removeEventListener("afterprint",done);};

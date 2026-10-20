@@ -105,6 +105,8 @@ input,button{color-scheme:light}
 .card{display:block;width:100%;text-align:left;background:var(--paper-raised);border:var(--rule) solid var(--ink);padding:12px 14px;cursor:pointer;font:inherit;color:var(--ink);border-radius:0;min-height:44px}
 .card b{font-family:var(--label);font-size:14px;text-transform:uppercase;letter-spacing:.03em;display:block}
 .card .q{font-style:italic;color:var(--accent-text)}
+.cardgroup{font-family:var(--label);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin:18px 0 8px}
+.named{padding:4px 0 6px}
 .card[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
 .card[aria-pressed="true"] .q{color:var(--paper)}
 .card .chg{font-family:var(--label);font-size:12px;display:block;margin-top:4px}
@@ -125,13 +127,16 @@ nav.bar .in{max-width:560px;margin:0 auto;display:flex;gap:10px;align-items:cent
 nav.bar .live{flex:1;text-align:center;font-family:var(--label);font-size:13px;line-height:1.2}
 nav.bar .live b{display:block;font-family:var(--display);font-weight:900;font-size:24px}
 
-.printlink{display:none}
+[hidden]{display:none!important}
+.printlink{display:none;border:3px solid var(--ink);padding:14px 16px;margin-top:18px;break-inside:avoid}
+.printlink h2{font-family:var(--display);font-weight:900;font-size:24px;text-transform:uppercase;margin:0 0 6px}
+.printlink a{font-family:var(--readable);font-weight:600;font-size:18px}
 .linkbox{font-family:var(--label);font-size:12px;word-break:break-all;background:var(--paper);border:1px solid var(--ink);padding:8px;max-height:5.5em;overflow:auto}
 footer{padding:28px 0 0;font-family:var(--label);font-size:12px;color:var(--ink-soft)}
 
 @media print{
   nav.bar,header.top,.progress,.noprint,.linkbox{display:none!important}
-  .printlink{display:inline!important}
+  .printlink{display:block!important}
   body{padding:0;font-size:12pt}
   .panel{break-inside:avoid}
 }
@@ -163,24 +168,24 @@ footer{padding:28px 0 0;font-family:var(--label);font-size:12px;color:var(--ink-
 /* ---------- model ---------- */
 var KEYS=["rent","food","health","move","joy","other","side","holiday","pension","buffer","cover",
   "space","tools","materials","travel","accountant","insure","costother","tax",
-  "weeksOff","daysWeek","hoursDay","holidays","sick","paid","shareMask","shareN","extra"];
+  "weeksOff","daysWeek","hoursDay","holidays","sick","paid","shareMask","shareN","extra","named"];
 var COSTS=["space","tools","materials","travel","accountant","insure","costother","extra"];
 var PEOPLE={
   sam:{who:"Sam",line:"24, graduated this summer. Shares a house in Eindhoven and works at the kitchen table.",
     v:{rent:650,food:300,health:160,move:90,joy:120,other:80,side:0,holiday:1,pension:0,buffer:50,cover:0,
       space:0,tools:900,materials:600,travel:400,accountant:300,insure:400,costother:300,tax:20,
-      weeksOff:5,daysWeek:4,hoursDay:8,holidays:6,sick:6,paid:50,shareMask:0,shareN:2,extra:0}},
+      weeksOff:5,daysWeek:4,hoursDay:8,holidays:6,sick:6,paid:50,shareMask:0,shareN:2,extra:0,named:0}},
   noor:{who:"Noor",line:"27, came to the Netherlands to study. Rents a small studio flat and a desk in a shared workshop.",
     v:{rent:850,food:320,health:160,move:110,joy:120,other:140,side:0,holiday:1,pension:100,buffer:100,cover:0,
       space:2400,tools:1200,materials:1500,travel:800,accountant:500,insure:500,costother:300,tax:25,
-      weeksOff:6,daysWeek:5,hoursDay:8,holidays:7,sick:6,paid:55,shareMask:0,shareN:2,extra:0}}
+      weeksOff:6,daysWeek:5,hoursDay:8,holidays:7,sick:6,paid:55,shareMask:0,shareN:2,extra:0,named:0}}
 };
 function copy(o){return JSON.parse(JSON.stringify(o));}
 function calc(v){
   var lifeM=v.rent+v.food+v.health+v.move+v.joy+v.other;
   var life=lifeM*12, side=v.side*12;
   var hol=v.holiday?0.08*life:0;
-  var emp=hol+(v.pension+v.buffer+v.cover)*12;
+  var emp=hol+(v.pension+v.buffer+v.cover+(v.named||0))*12;
   var need=Math.max(0,life+emp-side);
   var t=Math.min(0.9,Math.max(0,v.tax/100));
   var beforeTax=need/(1-t), stateShare=beforeTax-need;
@@ -200,10 +205,10 @@ function calc(v){
     budgetDays:day>0?10000/day:0};
 }
 /* ---------- state ---------- */
-var S={start:"sam",w:copy(PEOPLE.sam.v),vs:[],step:0,extraName:""};
+var S={start:"sam",w:copy(PEOPLE.sam.v),vs:[],step:0,extraName:"",namedName:"",namedAmt:100};
 function encode(){
   var pack=function(v){return KEYS.map(function(k){return v[k];});};
-  var o={s:S.start==="noor"?1:0,n:S.extraName,w:pack(S.w),vs:S.vs.map(function(x){return [x.name].concat(pack(x.v));})};
+  var o={s:S.start==="noor"?1:0,n:S.extraName,nn:S.namedName,na:S.namedAmt,w:pack(S.w),vs:S.vs.map(function(x){return [x.name].concat(pack(x.v));})};
   var b=btoa(unescape(encodeURIComponent(JSON.stringify(o))));
   return b.replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
 }
@@ -211,7 +216,7 @@ function decode(str){
   var b=str.replace(/-/g,"+").replace(/_/g,"/"); while(b.length%4)b+="=";
   var o=JSON.parse(decodeURIComponent(escape(atob(b))));
   var un=function(a){var v={};KEYS.forEach(function(k,i){v[k]=Number(a[i])||0;});return v;};
-  S.start=o.s===1?"noor":"sam"; S.extraName=String(o.n||"").slice(0,40); S.w=un(o.w);
+  S.start=o.s===1?"noor":"sam"; S.extraName=String(o.n||"").slice(0,40); S.namedName=String(o.nn||"").slice(0,40); if(isFinite(o.na)&&o.na>=0)S.namedAmt=Number(o.na); S.w=un(o.w);
   S.vs=(o.vs||[]).map(function(a){return {name:String(a[0]).slice(0,40),v:un(a.slice(1))};});
 }
 var saveTimer=null;
@@ -320,11 +325,11 @@ var STEPS=[
    field("holidays","Public holidays on my work days","","days")+
    field("sick","Days I\'m ill","Everybody is ill sometimes. Plan for it.","days")+'</div>'+
    '<div class="panel"><h2>Unpaid hours</h2><p>Unpaid hours are work nobody asked for and nobody pays for: emails, admin, applications, your portfolio, research, your own projects, learning. They are part of your practice, and your paid hours have to cover them.</p>'+
-   '<label for="f-paid" class="note">Of the hours I work, the share a client pays for</label><div class="total"><div class="v">'+out("paidPct")+'</div></div>'+
-   '<input type="range" class="slider" id="f-paid" data-k="paid" min="10" max="100" step="5" value="'+S.w.paid+'"></div>'+
+   '<label for="f-unpaid" class="note">Of the hours I work, the share nobody pays for</label><div class="total"><div class="v">'+out("unpaidPct")+'</div></div>'+
+   '<input type="range" class="slider" id="f-unpaid" min="0" max="90" step="5" value="'+(100-S.w.paid)+'"></div>'+
    '<div class="panel year"><h2>My year in hours</h2><div data-o="yearSvg"></div>'+
    '<div class="legend"><span><i class="sw" style="background:var(--ink-1)"></i>paid hours</span><span><i class="sw" data-pat="d50"></i>unpaid hours</span><span><i class="sw" data-pat="hatch"></i>not working</span></div></div>'+
-   otherLine(S.start==="sam"?"Noor works five days a week, and a client pays for 55% of her hours.":"Sam works four days a week, and a client pays for half of his hours.")+
+   otherLine(S.start==="sam"?"Noor works five days a week, and 45% of her hours are unpaid.":"Sam works four days a week, and half of his hours are unpaid.")+
    pause("Look at the last line. How does it feel?");
  }},
  {t:"My rate",r:function(){
@@ -342,9 +347,9 @@ var STEPS=[
    return heading("Step 7","Versions of me")+
    '<p class="lead">Your rate is not fixed. As your life changes, so do your standards. Try on a different life.</p>'+
    '<p>Tap what might change. The numbers start from your current version.</p>'+
-   '<div class="cards">'+LIFE.map(function(c,i){return '<button class="card" data-card="'+i+'" aria-pressed="'+(picked.indexOf(i)>=0)+'"><b>'+c.t+'</b>'+c.s+'<span class="q"> '+c.q+'</span></button>';}).join("")+'</div>'+
+   ["Life","Taking care","Joy","Practice"].map(function(g){return '<h3 class="cardgroup">'+g+'</h3><div class="cards">'+LIFE.map(function(c,i){if(c.g!==g)return "";return '<button class="card" data-card="'+i+'" aria-pressed="'+(picked.indexOf(i)>=0)+'"><b>'+c.t+'</b>'+c.s+'<span class="q"> '+c.q+'</span></button>'+(c.e==="named"?'<div class="named"'+(picked.indexOf(i)>=0?"":" hidden")+' data-named><div class="row"><input type="text" id="nname" maxlength="40" placeholder="For example: a year in Seoul" value="'+esc(S.namedName)+'" aria-label="What the savings are for"><span class="money">€<input type="number" inputmode="decimal" min="0" step="any" id="namt" value="'+S.namedAmt+'" aria-label="Amount per month">/month</span></div></div>':"");}).join("")+'</div>';}).join("")+
    '<div class="panel"><h2>This life</h2><ul class="diff" data-o="diff"></ul><table class="sum"><tr><td>My rate now</td><td>'+out("rate2")+'</td></tr><tr class="t"><td>My rate in this life</td><td>'+out("tryRate")+'</td></tr></table>'+
-   '<div class="row noprint" style="margin-top:12px"><input type="text" id="tname" maxlength="40" value="Me in ten years" aria-label="Name of this life"><button class="btn primary" data-act="savelife">Save as a version</button></div><p class="note" data-o="lifeMsg"></p></div>'+
+   '<div class="row noprint" style="margin-top:12px"><input type="text" id="tname" maxlength="40" value="Changes in life" aria-label="Name of this life"><button class="btn primary" data-act="savelife">Save as a version</button></div><p class="note" data-o="lifeMsg"></p></div>'+
    '<div class="panel"><h2>My versions side by side</h2><div data-o="cmp"></div></div>';
  }},
  {t:"What could be shared",r:function(){
@@ -363,25 +368,32 @@ var STEPS=[
  }},
  {t:"Take it with you",r:function(){
    return heading("Step 9","Take it with you")+
-   '<p class="pause" style="background:var(--accent-text)">Before you close this page, save your link or the PDF. We don\'t keep your numbers, so without it they are gone.</p>'+
+   '<p class="pause noprint" style="background:var(--accent-text)">Before you close this page, save your link or the PDF. We don\'t keep your numbers, so without it they are gone.</p>'+
    '<div class="panel"><h2>My versions</h2><div data-o="cmp"></div></div>'+
-   '<div class="panel"><h2>Questions to take home</h2><p>Which version feels like the practice you want?</p><p>What would you have to change to get there?</p><p>Who could you share something with?</p></div>'+
+   '<div class="panel"><h2>Questions to take home</h2><p>What is your money for? Give three things a name.</p><p>Which version feels most like the life you want? What is a first step towards it?</p><p>Which of your unpaid hours would you like someone to pay for, and who?</p><p>Who could you share something with?</p></div>'+
    '<div class="panel noprint"><h2>Save it</h2><p>Save this page as a PDF: tap the button, then choose “Save as PDF”.</p><div class="row"><button class="btn primary" data-act="print">Save as PDF</button></div></div>'+
-   '<div class="panel"><h2>Bring it back on Day 3</h2><p>This link reopens the tool with your numbers. The numbers live in the link, not with us. In the PDF, tap the link.</p>'+
-   '<a class="printlink" data-o="plink">Reopen my numbers in the tool</a><a class="linkbox" style="display:block" data-o="link" target="_blank" rel="noopener"></a><div class="row noprint" style="margin-top:10px"><button class="btn" data-act="copy">Copy link</button><span class="note" data-o="copyMsg"></span></div></div>'+
-   '<p class="note">More to read: <a href="https://fairpracticecode.nl/" target="_blank" rel="noopener">Fair Practice Code</a> · <a href="https://www.kvk.nl/en/" target="_blank" rel="noopener">KVK</a> · <a href="https://www.belastingdienst.nl/" target="_blank" rel="noopener">Belastingdienst</a></p>';
+   '<div class="panel noprint"><h2>Bring it back on Day 3</h2><p>This link reopens the tool with your numbers. The numbers live in the link, not with us. In the PDF, tap the link.</p>'+
+   '<a class="linkbox" style="display:block" data-o="link" target="_blank" rel="noopener"></a><div class="row noprint" style="margin-top:10px"><button class="btn" data-act="copy">Copy link</button><span class="note" data-o="copyMsg"></span></div></div>'+
+   '<p class="note">More to read: <a href="https://fairpracticecode.nl/" target="_blank" rel="noopener">Fair Practice Code</a> · <a href="https://www.kvk.nl/en/" target="_blank" rel="noopener">KVK</a> · <a href="https://www.belastingdienst.nl/" target="_blank" rel="noopener">Belastingdienst</a></p>'+
+   '<div class="printlink"><h2>Bring it back on Day 3</h2><p>Tap the link to reopen the tool with your numbers. They live in the link, not with us.</p><p><a data-o="plink">Open my numbers in the tool</a></p></div>';
  }}
 ];
 var COSTNAMES={space:"Workspace",tools:"Tools and software",materials:"Materials",travel:"Travel for work",accountant:"Help with books and tax",insure:"Insurance and memberships",costother:"Everything else"};
 var LIFE=[
- {t:"Living together",s:"You share a home with a partner or friends. Rent drops by 40%.",q:"Who would you share with?",f:function(v){v.rent=Math.round(v.rent*0.6/10)*10;}},
- {t:"A child",s:"Childcare, more food, and days when your child is ill.",q:"Who would carry this with you?",f:function(v){v.food+=150;v.other+=500;v.sick+=5;}},
- {t:"A studio of your own",s:"More room for your work: €300 a month.",q:"What would a studio change?",f:function(v){v.space+=3600;}},
- {t:"Looking after my health",s:"Insurance for a long illness, and more honest sick days.",q:"What if you were ill for a month?",f:function(v){v.cover=Math.max(v.cover,120);v.sick=Math.max(v.sick,10);}},
- {t:"A pension",s:"€200 a month for later.",q:"When do you want to start?",f:function(v){v.pension=Math.max(v.pension,200);}},
- {t:"A real buffer",s:"€250 a month until three slow months are covered.",q:"What does a slow month do to you now?",f:function(v){v.buffer=Math.max(v.buffer,250);}},
- {t:"Teaching one day a week",s:"€800 a month after tax, and one day less for your practice.",q:"Does it feed your practice or eat it?",f:function(v){v.side+=800;v.daysWeek=Math.max(1,v.daysWeek-1);}},
- {t:"More rest",s:"Two more weeks off a year.",q:"What would you do with them?",f:function(v){v.weeksOff+=2;}}
+ {g:"Life",t:"Sharing a home",s:"You share a home with a partner or friends. Your rent drops by 40%.",e:"rent 40% lower",q:"Who would you share with?",f:function(v){v.rent=Math.round(v.rent*0.6/10)*10;}},
+ {g:"Life",t:"A child",s:"Childcare and more food, €650 a month, and five more days when your child is ill.",e:"+€650 a month, +5 sick days",q:"Who would carry this with you?",f:function(v){v.food+=150;v.other+=500;v.sick+=5;}},
+ {g:"Life",t:"A pet",s:"A cat or a dog, cared for well: food, the vet and insurance. €125 a month.",e:"+€125 a month",q:"Who looks after it when you travel?",f:function(v){v.other+=125;}},
+ {g:"Taking care",t:"Looking after my health",s:"Insurance for a long illness and better health insurance: €200 a month on top of what you have now.",e:"+€200 a month",q:"What if you were ill for a month?",f:function(v){v.cover+=160;v.health+=40;}},
+ {g:"Taking care",t:"Saving for later",s:"€300 a month more for your pension. The advice for freelancers is about a fifth of your income.",e:"+€300 a month",q:"When do you want to start?",f:function(v){v.pension+=300;}},
+ {g:"Taking care",t:"A real buffer",s:"€250 a month more, until three months of income are set aside.",e:"+€250 a month",q:"What does a slow month do to you now?",f:function(v){v.buffer+=250;}},
+ {g:"Taking care",t:"Savings with a name",s:"Money set aside for a reason that is only yours. Give it a name below.",e:"named",q:"What would you save for?",f:function(v){v.named=(v.named||0)+S.namedAmt;}},
+ {g:"Taking care",t:"More rest",s:"Two more weeks off a year.",e:"+2 weeks off",q:"What would you do with them?",f:function(v){v.weeksOff+=2;}},
+ {g:"Joy",t:"A special holiday",s:"A trip you save up for: €1,800 a year, €150 a month.",e:"+€150 a month",q:"Where would you go?",f:function(v){v.other+=150;}},
+ {g:"Joy",t:"A new hobby",s:"Something new that costs money: lessons, gear, a club. €100 a month.",e:"+€100 a month",q:"What have you always wanted to learn?",f:function(v){v.joy+=100;}},
+ {g:"Practice",t:"A studio of your own",s:"A space of your own to work in: €500 a month on top of your workspace now.",e:"+€6,000 a year",q:"What would a studio change?",f:function(v){v.space+=6000;}},
+ {g:"Practice",t:"A business investment",s:"A machine or tool to grow your practice: €6,000, spread over three years.",e:"+€2,000 a year",q:"What would let your practice grow?",f:function(v){v.tools+=2000;}},
+ {g:"Practice",t:"Training or a certification",s:"A course or a certificate: €250 a month.",e:"+€3,000 a year",q:"What would you like to get better at?",f:function(v){v.costother+=3000;}},
+ {g:"Practice",t:"A part-time job",s:"One day a week as an employee: €800 a month after tax, and one day less for your practice.",e:"+€800 a month income, 1 day less",q:"Does it feed your practice or eat it?",f:function(v){v.side+=800;v.daysWeek=Math.max(1,v.daysWeek-1);}}
 ];
 var picked=[];
 function tried(){var v=copy(S.w);picked.slice().sort().forEach(function(i){LIFE[i].f(v);});return v;}
@@ -423,7 +435,7 @@ function cmpTable(){
 function update(){
   var c=calc(S.w);
   var vals={lifeM:eur(c.lifeM),life:eur(c.life),holAmt:eur(0.08*c.life),emp:eur(c.emp),need:eur(c.need),costs:eur(c.costs),costsFull:eur(c.costsFull),
-    taxPct:S.w.tax+"%",stateShare:eur(c.stateShare),beforeTax:eur(c.beforeTax),paidPct:S.w.paid+"%",
+    taxPct:S.w.tax+"%",stateShare:eur(c.stateShare),beforeTax:eur(c.beforeTax),unpaidPct:(100-S.w.paid)+"%",
     rate:c.rate?eur2(c.rate):"—",rate2:c.rate?eur2(c.rate):"—",rate3:c.rate?eur2(c.rate):"—",rateVat:c.rate?eur2(c.rateVat):"—",day:eur(c.day),budgetDays:(c.budgetDays?c.budgetDays.toFixed(1):"0")+" days",
     turnover:eur(c.turnover),paidH:num(c.paidH)+" h"};
   document.querySelectorAll("[data-o]").forEach(function(el){
@@ -432,7 +444,7 @@ function update(){
     else if(k==="yearSvg") el.innerHTML=yearSvg(c);
     else if(k==="cmp") el.innerHTML=cmpTable();
     else if(k==="tryRate"){var t=calc(tried());el.textContent=t.rate?eur2(t.rate):"—";}
-    else if(k==="diff"){var t2=tried(),items=[];Object.keys(LABELS).forEach(function(key){if(t2[key]!==S.w[key])items.push('<li>'+LABELS[key]+': '+S.w[key]+' → '+t2[key]+'</li>');});
+    else if(k==="diff"){var items=picked.slice().sort(function(a,b){return a-b;}).map(function(i){var c=LIFE[i],e=c.e==="named"?"+"+eur(S.namedAmt)+" a month"+(S.namedName?" for "+esc(S.namedName):""):c.e;return '<li>'+c.t+': '+e+'</li>';});
       el.innerHTML=items.length?items.join(""):'<li>Tap a card above to try it.</li>';}
     else if(k==="link"){var u=shareUrl();el.textContent=u;el.setAttribute("href",u);}
     else if(k==="plink"){el.setAttribute("href",shareUrl());}
@@ -468,6 +480,9 @@ stage.addEventListener("input",function(e){
     if(t.classList) t.classList.toggle("ex",ex(k));
     update(); return;
   }
+  if(t.id==="f-unpaid"){var u=parseFloat(t.value);S.w.paid=100-(isFinite(u)?u:50);update();return;}
+  if(t.id==="nname"){S.namedName=t.value.slice(0,40);update();return;}
+  if(t.id==="namt"){var na=parseFloat(String(t.value).replace(",","."));S.namedAmt=isFinite(na)&&na>=0?na:0;update();return;}
   if(t.id==="xname"){S.extraName=t.value.slice(0,40);update();return;}
   var sh=t.getAttribute("data-share");
   if(sh!==null){var i=+sh; S.w.shareMask=t.checked?(S.w.shareMask|(1<<i)):(S.w.shareMask&~(1<<i)); update();}
@@ -475,7 +490,7 @@ stage.addEventListener("input",function(e){
 stage.addEventListener("click",function(e){
   var b=e.target.closest("button"); if(!b) return;
   if(b.hasAttribute("data-start")){var p=b.getAttribute("data-start");S.start=p;S.w=copy(PEOPLE[p].v);S.extraName="";render(false);return;}
-  if(b.hasAttribute("data-card")){var i=+b.getAttribute("data-card"),at=picked.indexOf(i);if(at>=0)picked.splice(at,1);else picked.push(i);b.setAttribute("aria-pressed",at<0);update();return;}
+  if(b.hasAttribute("data-card")){var i=+b.getAttribute("data-card"),at=picked.indexOf(i);if(at>=0)picked.splice(at,1);else picked.push(i);b.setAttribute("aria-pressed",at<0);if(LIFE[i].e==="named"){var nb=stage.querySelector("[data-named]");if(nb)nb.hidden=at>=0;}update();return;}
   if(b.hasAttribute("data-n")){S.w.shareN=+b.getAttribute("data-n");stage.querySelectorAll("[data-n]").forEach(function(x){x.setAttribute("aria-pressed",x===b);});update();return;}
   if(b.hasAttribute("data-del")){S.vs.splice(+b.getAttribute("data-del"),1);update();return;}
   var a=b.getAttribute("data-act"),msg;
