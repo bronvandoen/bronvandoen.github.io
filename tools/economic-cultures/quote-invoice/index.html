@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:wght@400;600&family=Big+Shoulders+Display:wght@800;900&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <style>
 /* Same sheet as the hourly-rate tool: riso on paper, baseline Blue + Bright Red and black. */
 :root{
@@ -137,8 +136,6 @@ input,button,select,textarea{color-scheme:light}
 .doc .stamp{position:absolute;right:14px;bottom:30px;transform:rotate(-8deg);font-family:var(--display);font-weight:900;font-size:22px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);border:3px solid var(--ink-2);padding:2px 10px;opacity:.85;pointer-events:none;mix-blend-mode:multiply}
 .doc .empty{color:#9a958b;font-style:italic}
 
-.qr svg{width:min(100%,300px);height:auto;aspect-ratio:1;display:block;background:#fff}
-#printarea .qr svg{width:70mm}
 .linkbox{font-family:var(--label);font-size:12px;word-break:break-all;background:var(--paper);border:1px solid var(--ink);padding:8px;max-height:5.5em;overflow:auto;display:block}
 nav.bar{position:fixed;left:0;right:0;bottom:0;background:var(--paper);border-top:var(--rule-heavy) solid var(--ink);
   padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));z-index:5}
@@ -226,7 +223,7 @@ function set(path,val){var ks=path.split("."),o=S.w;for(var i=0;i<ks.length-1;i+
 function exVal(path){return path.split(".").reduce(function(o,k){return o==null?undefined:o[k];},PEOPLE[S.start].v);}
 function isEx(path){var e=exVal(path);return e!==undefined&&String(e)===String(get(path));}
 
-/* The link carries everything. Short form: a compact array, deflated where the browser can, so the QR code stays scannable. */
+/* The link carries everything. Short form: a compact array, deflated where the browser can, so the link stays short. */
 var U3=["hours","days","item"], HOW=["signed","email","spoken"];
 function b64u(bytes){var bin="";for(var i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);return btoa(bin).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");}
 function unb64u(str){var b=str.replace(/-/g,"+").replace(/_/g,"/");while(b.length%4)b+="=";var bin=atob(b),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return u;}
@@ -519,8 +516,8 @@ var STEPS=[
    '<div class="panel"><h2>Keep it</h2><p class="pause" style="background:var(--accent-text)">Before you close this page, save the PDFs or the link. We don\'t keep anything, so without them it is gone.</p>'+
    '<div class="row"><button class="btn primary" data-act="print" data-what="invoice">Save the invoice as a PDF</button><button class="btn" data-act="print" data-what="quote">Save the quote as a PDF</button></div>'+
    '<p class="note" style="margin-top:12px">Keep the PDF as a template. Put in your real numbers once you have them, and the PRACTICE stamp goes.</p>'+
-   '<h3 style="margin-top:16px">Reopen it later</h3><p>This link and QR code reopen the tool as you left it. Everything lives in the link, not with us.</p>'+
-   '<div class="qr" data-o="qr"></div><a class="linkbox" data-o="link" target="_blank" rel="noopener"></a>'+
+   '<h3 style="margin-top:16px">Reopen it later</h3><p>This link reopens the tool as you left it. Everything lives in the link, not with us.</p>'+
+   '<a class="linkbox" data-o="link" target="_blank" rel="noopener"></a>'+
    '<div class="row" style="margin-top:10px"><button class="btn" data-act="copy">Copy link</button><span class="note" data-o="copyMsg"></span></div></div>'+
    '<p class="note">More to read: <a href="https://fairpracticecode.nl/" target="_blank" rel="noopener">Fair Practice Code</a> · <a href="https://www.kvk.nl/en/" target="_blank" rel="noopener">KVK</a> · <a href="https://www.belastingdienst.nl/" target="_blank" rel="noopener">Belastingdienst</a></p>';
  }}
@@ -552,13 +549,6 @@ function shareUrl(){var base="";try{base=location.href.split("#")[0];}catch(e){}
 function refreshLink(){
   var u=shareUrl();
   document.querySelectorAll('[data-o="link"]').forEach(function(el){el.textContent=u;el.setAttribute("href",u);});
-  document.querySelectorAll('[data-o="qr"]').forEach(function(el){el.innerHTML=qrSvg(u);});
-}
-function qrSvg(text){
-  try{ if(typeof qrcode!=="function") return '<p class="note">The QR code needs a connection to load. The link below works the same.</p>';
-    var q=qrcode(0,"L"); q.addData(text); q.make(); var svg=q.createSvgTag({cellSize:2,margin:4,scalable:true});
-    return q.getModuleCount()>97?svg+'<p class="note">This code is dense. If your camera can\'t read it, use the link.</p>':svg;
-  }catch(e){return '<p class="note">The link is too long for a QR code. Copy the link instead.</p>';}
 }
 
 /* ---------- render & events ---------- */
@@ -566,14 +556,14 @@ var stage=document.getElementById("stage");
 function render(focus){
   stage.innerHTML=STEPS[S.step].r();
   document.getElementById("progress").innerHTML='<span>'+(S.step?(S.step<=6?"Round 1":"Round 2")+" · Step "+S.step+" of 9 · "+STEPS[S.step].t:"Start")+'</span><span>'+(S.step?"Started from "+PEOPLE[S.start].who:"")+'</span>';
-  document.getElementById("back").disabled=S.step===0;
-  var n=document.getElementById("next"); n.textContent=S.step===0?"Begin":S.step===6?"Round 2":"Next"; n.disabled=S.step===LAST;
+  document.getElementById("back").style.visibility=S.step===0?"hidden":"";
+  var n=document.getElementById("next"); n.textContent=S.step===0?"Begin":S.step===6?"Round 2":S.step===LAST?"Save as PDF":"Next";
   update();
   refreshLink();
   if(focus){var h=stage.querySelector("h1");if(h)h.focus({preventScroll:true});window.scrollTo(0,0);}
 }
 function go(d){S.step=Math.min(LAST,Math.max(0,S.step+d));render(true);}
-document.getElementById("next").onclick=function(){if(S.step<LAST)go(1);};
+document.getElementById("next").onclick=function(){if(S.step<LAST)go(1);else printDoc("invoice");};
 document.getElementById("back").onclick=function(){if(S.step>0)go(-1);};
 function onEdit(e){
   var t=e.target,p=t.getAttribute("data-p"),l=t.getAttribute("data-l");
@@ -599,8 +589,8 @@ stage.addEventListener("click",function(e){
   if(b.hasAttribute("data-mode")){var md=b.getAttribute("data-mode");S.w.mode=md;
     var first=S.w.q.lines[0];
     if(!first) S.w.q.lines.push(md==="hours"?{d:"Design work",q:10,u:"hours",p:0}:{d:"Fee",q:1,u:"item",p:0});
-    else if(md==="hours"&&first.u==="item"&&first.q===1){first.u="hours";}
-    else if(md==="fee"&&first.u==="hours"){first.u="item";first.p=r2(first.q*first.p);first.q=1;}
+    else if(md==="hours"&&first.was&&first.u==="item"&&first.q===1&&first.p===r2(first.was.q*first.was.p)){first.u="hours";first.q=first.was.q;first.p=first.was.p;delete first.was;}
+    else if(md==="fee"&&first.u==="hours"){first.was={q:first.q,p:first.p};first.u="item";first.p=r2(first.q*first.p);first.q=1;}
     render(false);return;}
   if(b.hasAttribute("data-ok")){S.w.ok.how=b.getAttribute("data-ok");if(!S.w.ok.date)S.w.ok.date=today();render(false);return;}
   if(b.hasAttribute("data-add")){var w=b.getAttribute("data-add"),arr=w==="q"?S.w.q.lines:S.w.inv.lines;if(arr.length<20)arr.push({d:"",q:1,u:S.w.mode==="hours"?"hours":"item",p:0});render(false);return;}
@@ -615,7 +605,7 @@ stage.addEventListener("click",function(e){
 function printDoc(what){
   var u=shareUrl();
   document.getElementById("printarea").innerHTML=docHtml(what)+
-    '<div class="reopen"><p><b>Reopen this in the tool.</b> Scan the code with your camera, or tap the link. Everything lives in the link, not with us.</p><div class="qr">'+qrSvg(u)+'</div><p class="linkbox"><a href="'+esc(u)+'">'+esc(u)+'</a></p></div>';
+    '<div class="reopen"><p><b>Reopen this in the tool.</b> Tap the link below. Everything lives in the link, not with us.</p><p><a href="'+esc(u)+'">Open it in the tool, as you left it</a></p></div>';
   var prev=document.title;
   try{document.title=(what==="quote"?"Quote "+S.w.q.no:"Invoice "+S.w.inv.no)+" "+(S.w.me.name||"");}catch(e){}
   var done=function(){document.title=prev;window.removeEventListener("afterprint",done);};

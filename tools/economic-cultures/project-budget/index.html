@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:wght@400;600&family=Big+Shoulders+Display:wght@800;900&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <style>
 /* Same sheet as the hourly-rate and quote-to-invoice tools: riso on paper, baseline Blue + Bright Red and black. */
 :root{
@@ -140,8 +139,6 @@ input[type=number]{text-align:right;font-variant-numeric:tabular-nums}
 .doc .empty{color:#9a958b;font-style:italic}
 .doc .foot{margin-top:12px;font-size:10px;color:#555}
 
-.qr svg{width:min(100%,300px);height:auto;aspect-ratio:1;display:block;background:#fff}
-#printarea .qr svg{width:70mm}
 .linkbox{font-family:var(--label);font-size:12px;word-break:break-all;background:var(--paper);border:1px solid var(--ink);padding:8px;max-height:5.5em;overflow:auto;display:block}
 nav.bar{position:fixed;left:0;right:0;bottom:0;background:var(--paper);border-top:var(--rule-heavy) solid var(--ink);
   padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));z-index:5}
@@ -301,7 +298,7 @@ function restore(o){
   if(w.p){["me","title"].forEach(function(k){base.p[k]=str(w.p[k],120);});["ambition","outcome"].forEach(function(k){base.p[k]=str(w.p[k],400);});
     base.p.months=Math.min(36,Math.max(1,Math.round(num(w.p.months))||1));base.p.days=Math.min(5,num(w.p.days));}
   base.day1=num(w.day1,1000); base.vat=w.vat==="no"?"no":"yes";
-  if(w.fund){base.fund.preset=FUNDS[w.fund.preset]?w.fund.preset:"project";base.fund.name=str(w.fund.name,80);base.fund.max=num(w.fund.max);base.fund.min=Math.min(100,num(w.fund.min));base.fund.cap=num(w.fund.cap,1000);}
+  if(w.fund){base.fund.preset=FUNDS[w.fund.preset]?w.fund.preset:(w.fund.preset===""?"":"project");base.fund.name=str(w.fund.name,80);base.fund.max=num(w.fund.max);base.fund.min=Math.min(100,num(w.fund.min));base.fund.cap=num(w.fund.cap,1000);}
   base.src=(Array.isArray(w.src)?w.src:[]).slice(0,8).map(function(s){return {name:str(s.name,80),type:label(TYPES,s.type)!==s.type?s.type:"grant",status:label(STATUS,s.status)!==s.status?s.status:"hoped"};});
   var ns=base.src.length;
   base.parts=(Array.isArray(w.parts)?w.parts:[]).filter(function(k){return keys.indexOf(k)>=0;});
@@ -564,8 +561,8 @@ var STEPS=[
    '<div class="panel"><h2>Keep it</h2><p class="pause" style="background:var(--accent-text)">Before you close this page, save the PDF or the link. We don\'t keep anything, so without them it is gone.</p>'+
    '<div class="row"><button class="btn primary" data-act="print">Save as a PDF</button></div>'+
    '<p class="note" style="margin-top:12px">Two pages: the budget and the coverage plan, laid out like the model budget many Dutch funds ask for. When you apply for real, use the fund\'s own template.</p>'+
-   '<h3>Reopen it later</h3><p>This link and QR code reopen the tool as you left it. Everything lives in the link, not with us.</p>'+
-   '<div class="qr" data-o="qr"></div><a class="linkbox" data-o="link" target="_blank" rel="noopener"></a>'+
+   '<h3>Reopen it later</h3><p>This link reopens the tool as you left it. Everything lives in the link, not with us.</p>'+
+   '<a class="linkbox" data-o="link" target="_blank" rel="noopener"></a>'+
    '<div class="row" style="margin-top:10px"><button class="btn" data-act="copy">Copy link</button><span class="note" data-o="copyMsg"></span></div></div>'+
    '<p class="note">More to read: <a href="https://fairpracticecode.nl/" target="_blank" rel="noopener">Fair Practice Code</a> · <a href="https://www.stimuleringsfonds.nl/" target="_blank" rel="noopener">Stimuleringsfonds</a> · <a href="https://www.mondriaanfonds.nl/" target="_blank" rel="noopener">Mondriaan Fonds</a></p>';
  }}
@@ -670,13 +667,6 @@ function shareUrl(){var base="";try{base=location.href.split("#")[0];}catch(e){}
 function refreshLink(){
   var u=shareUrl();
   document.querySelectorAll('[data-o="link"]').forEach(function(el){el.textContent=u;el.setAttribute("href",u);});
-  document.querySelectorAll('[data-o="qr"]').forEach(function(el){el.innerHTML=qrSvg(u);});
-}
-function qrSvg(text){
-  try{ if(typeof qrcode!=="function") return '<p class="note">The QR code needs a connection to load. The link below works the same.</p>';
-    var q=qrcode(0,"L");q.addData(text);q.make();var svg=q.createSvgTag({cellSize:2,margin:4,scalable:true});
-    return q.getModuleCount()>97?svg+'<p class="note">This code is dense. If your camera can\'t read it, use the link.</p>':svg;
-  }catch(e){return '<p class="note">The link is too long for a QR code. Copy the link instead.</p>';}
 }
 
 /* ---------- render & events ---------- */
@@ -685,13 +675,13 @@ function render(focus){
   var y=window.scrollY;
   stage.innerHTML=STEPS[S.step].r();
   document.getElementById("progress").innerHTML='<span>'+(S.step?"Step "+S.step+" of 9 · "+STEPS[S.step].t:"Start")+'</span><span>'+(S.step?"Started from "+(S.start==="own"?"my own project":PEOPLE[S.start].who):"")+'</span>';
-  document.getElementById("back").disabled=S.step===0;
-  var n=document.getElementById("next");n.textContent=S.step===0?"Begin":"Next";n.disabled=S.step===LAST;
+  document.getElementById("back").style.visibility=S.step===0?"hidden":"";
+  var n=document.getElementById("next");n.textContent=S.step===0?"Begin":S.step===LAST?"Save as PDF":"Next";
   update();refreshLink();
   if(focus){var h=stage.querySelector("h1");if(h)h.focus({preventScroll:true});window.scrollTo(0,0);}else window.scrollTo(0,y);
 }
 function go(d){S.step=Math.min(LAST,Math.max(0,S.step+d));render(true);}
-document.getElementById("next").onclick=function(){if(S.step<LAST)go(1);};
+document.getElementById("next").onclick=function(){if(S.step<LAST)go(1);else printDoc();};
 document.getElementById("back").onclick=function(){if(S.step>0)go(-1);};
 function onEdit(e){
   var t=e.target,p=t.getAttribute("data-p");if(!p)return;
@@ -746,7 +736,7 @@ stage.addEventListener("click",function(e){
 function printDoc(){
   var u=shareUrl();
   document.getElementById("printarea").innerHTML=docHtml(calc())+
-    '<div class="reopen"><p><b>Reopen this in the tool.</b> Scan the code with your camera, or tap the link. Everything lives in the link, not with us.</p><div class="qr">'+qrSvg(u)+'</div><p class="linkbox"><a href="'+esc(u)+'">'+esc(u)+'</a></p></div>';
+    '<div class="reopen"><p><b>Reopen this in the tool.</b> Tap the link below. Everything lives in the link, not with us.</p><p><a href="'+esc(u)+'">Open it in the tool, as you left it</a></p></div>';
   var prev=document.title;
   try{document.title="Project budget "+(S.w.p.title||"")+" "+(S.w.p.me||"");}catch(e){}
   var done=function(){document.title=prev;window.removeEventListener("afterprint",done);};
