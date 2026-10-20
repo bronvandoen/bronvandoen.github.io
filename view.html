@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Devlog · Bron van Doen</title>
-<!-- Temporary reader. Reads posts/posts.json and posts/<slug>/index.md. Delete when the real devlog front end exists; the posts stay as they are. -->
+<title>Working notes · Bron van Doen</title>
+<!-- Temporary reader. Reads posts/posts.json and posts/<slug>/index.md. Delete when the real working-notes front end exists; the posts stay as they are. -->
 <style>
   :root { --bg:#F7F3EA; --ink:#111111; --muted:#5E5A52; --accent:#3D5588; }
   @media (prefers-color-scheme: dark) { :root { --bg:#1C1D20; --ink:#F1EFEA; --muted:#A3A19B; --accent:#9DB6E6; } }
@@ -25,7 +25,7 @@
 </head>
 <body>
 <main>
-  <p class="site"><a href="view.html">Bron van Doen · devlog</a></p>
+  <p class="site"><a href="view.html">Bron van Doen · working notes</a></p>
   <div id="out">Loading…</div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
@@ -49,7 +49,7 @@
     get('posts/' + slug + '/index.md').then(function (r) { return r.text(); }).then(function (t) {
       var p = parse(t);
       document.title = (p.meta.title || slug) + ' · Bron van Doen';
-      out.innerHTML = '<h1>' + esc(p.meta.title || slug) + '</h1><p class="meta">' + esc(p.meta.date || '') + (p.meta.project ? ' · ' + esc(p.meta.project) : '') + '</p><div id="body"></div>';
+      out.innerHTML = '<h1>' + esc(p.meta.title || slug) + '</h1><p class="meta">' + esc(p.meta.date || '') + (p.meta.project ? ' · ' + esc(p.meta.project) : '') + (p.meta.voices ? ' · ' + esc(p.meta.voices) : '') + '</p><div id="body"></div>';
       var body = document.getElementById('body');
       body.innerHTML = marked.parse(p.body);
       body.querySelectorAll('img').forEach(function (im) {
