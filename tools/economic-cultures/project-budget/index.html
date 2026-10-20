@@ -83,9 +83,9 @@ input[type=number]{text-align:right;font-variant-numeric:tabular-nums}
 .total.warn .v{color:var(--accent-text)}
 
 .bars{margin:10px 0}
-.bar{height:22px;background:#E6DFD0;position:relative;border:1px solid var(--ink)}
-.bar span{position:absolute;left:0;top:0;bottom:0;background:var(--ink-1)}
-.bar + .mini{margin:4px 0 10px}
+.meter{height:22px;background:#E6DFD0;position:relative;border:1px solid var(--ink)}
+.meter span{position:absolute;left:0;top:0;bottom:0;background:var(--ink-1)}
+.meter + .mini{margin:4px 0 10px}
 
 .fair{border:var(--rule) solid var(--ink-1);padding:10px 12px;margin:16px 0;font-size:16px;background:var(--paper-raised)}
 .fair b{font-family:var(--label);font-size:13px;display:block;color:var(--eyebrow-ink);text-transform:uppercase;letter-spacing:.04em}
@@ -480,8 +480,8 @@ var STEPS=[
    return heading("Step 4","Your commitment")+
    '<p class="lead">Your ambition asked for your time. Is that time in the budget?</p>'+
    '<div class="panel"><div class="two">'+txt("p.months","Months","","number")+txt("p.days","Days a week","","number")+'</div>'+
-   '<div class="bars"><span class="mini">Your time in this project</span><div class="bar"><span style="width:100%"></span></div><span class="mini" data-o="commitH"></span>'+
-   '<span class="mini">Your hours in the budget</span><div class="bar"><span data-o="mineBar"></span></div><span class="mini" data-o="mineH"></span></div>'+
+   '<div class="bars"><span class="mini">Your time in this project</span><div class="meter"><span style="width:100%"></span></div><span class="mini" data-o="commitH"></span>'+
+   '<span class="mini">Your hours in the budget</span><div class="meter"><span data-o="mineBar"></span></div><span class="mini" data-o="mineH"></span></div>'+
    '<table class="sum"><tr class="gapr"><td>Hours you give away<small>at the rate you gave yourself</small></td><td>'+out("giveaway")+'</td></tr></table></div>'+
    '<div class="panel"><h2>You and the others</h2><table class="sum"><tr><td>Your rate, on average</td><td>'+out("myRate")+'</td></tr><tr><td>The others\' rate, on average</td><td>'+out("otherRate")+'</td></tr><tr><td>Your share of the people costs</td><td>'+out("myShare")+'</td></tr></table>'+
    '<p class="note" style="margin-top:10px">The printer, the venue and the freelancer send a bill. Nobody sends a bill for your hours, so they are the first to shrink.</p></div>'+
@@ -499,7 +499,7 @@ var STEPS=[
    });
    h+='<div class="row"><button class="btn" data-act="addmat">Add a cost</button></div>'+
    '<table class="sum" style="margin-top:14px"><tr class="t"><td>All material costs</td><td>'+out("mat")+'</td></tr></table></div>'+
-   tip("What many funds won't pay","A fund wants to know what it pays for. A buffer for the unexpected, the few percent at the bottom of many budgets: the Stimuleringsfonds doesn't pay it, so check your fund. Things that keep their value after the project, like a laptop or software: rent or borrow instead. Running your studio, its rent, insurance or bookkeeping: the fund pays for the project, not for your business.")+
+   tip("What many funds won't pay","A fund wants to know what it pays for. Funds like the Stimuleringsfonds don't pay for a buffer for the unexpected, while others might, so check your fund. Things that keep their value after the project, like a laptop or software: rent or borrow instead. Running your studio, its rent, insurance or bookkeeping: the fund pays for the project, not for your business.")+
    tip("Ask around","Prices you know beat prices you guess. One email to a printer or a rental shop is worth it.");
    return h;
  }},
@@ -531,7 +531,7 @@ var STEPS=[
    h+=(S.w.src.length<8?'<div class="row"><button class="btn" data-act="addsrc">Add someone</button></div>':'')+'</div>'+
    tip("Cofinancing is not a hurdle","Other money means other people believe in it. It can also be what makes the ambition possible at all.")+
    tip("Institutions that already get public money","Schools, universities, municipalities and many museums can be partners. Public funds usually won\'t pay them from your grant, because they are already paid with public money. They show what they give instead: a lecturer\'s hours, a lab, a room.")+
-   tip("Your own money","Money from your own pocket or savings. It balances the budget, but many funds don\'t count it towards the share others must pay. Your unpaid hours are something else: if you mark your own hours as paid by you, you work them for free, and the budget shows it.")+
+   tip("Your own money","Money from your own pocket or savings. It balances the budget and can pay for specific lines, but many funds don\'t count it as cofinancing. Your unpaid hours are something else: if you mark your own hours as paid by you, you work them for free, and the budget shows it.")+
    pause("Look at your cofinancing. Who have you asked yet? Who would you ask first, and why would they say yes?");
    return h;
  }},
@@ -554,7 +554,7 @@ var STEPS=[
    });
    if(!S.w.mat.length) h+='<p class="note">No material costs yet.</p>';
    h+='</div><div class="panel"><h2>Your coverage plan</h2>'+out("cover")+'</div>'+
-   pause("Like Lego: the costs on one side, the money on the other. Where doesn\'t it fit? Go back a step and change a part, a payer or the ambition. Ask each other why it didn\'t fit.");
+   pause("Like a puzzle: the costs on one side, the money on the other. Are you missing a piece? Ask each other why something doesn\'t fit, and go back to earlier steps to tweak the budget.");
    return h;
  }},
  {t:"Check and take it with you",r:function(){
