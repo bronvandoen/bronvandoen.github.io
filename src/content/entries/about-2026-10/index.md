@@ -21,6 +21,8 @@ A situation is more than its people. It holds the buildings and the land, the pl
 
 Nowadays, much of life is fragmented. People live side by side without meeting, and the places where they could meet are disappearing. A lot of our work asks how to recover what holds life together: how to give people occasions to gather, to live convivially, and to care for one another and for where they live.
 
+![A long table on the pavement in front of a brick building, with people of all ages eating and talking together](./wise-city-summer-school.jpg "wide: The Wise City summer school on Jan van Riebeecklaan. Photo: Bron van Doen.")
+
 ## Care and the commons
 
 Care is the word we keep coming back to. We look for the people already acting out of care, and we trace the threads of care that run between them. Most of it is hidden: under the logic of progress, under the mantra of growth, and under the noise of social media. We explore, pay attention, and connect.
@@ -30,6 +32,8 @@ We use our talents as artists, designers and researchers to build structures of 
 Care is also how we understand the commons. Where people dwell, what counts as common, and who looks after it? Much of what was shared has been enclosed, sold or simply lost.
 
 Commoning, to us, is interdependence in action: people looking after something together, and after each other while they do, exercising their resilience every step of the way. What is often described today as a lack or limitation to abolish, we see as something to rediscover, to cherish and to practise. We shift commoning from an idea to something done together, and build care and interdependence around what people share.
+
+![A small group stands in a wild garden among young fruit trees, listening to a man who explains something with his hands](./bloemfontein-garden.jpg "Axel Coumans in the garden of De Bloemfontein. Photo: Bron van Doen.")
 
 ## How we work
 
@@ -46,6 +50,8 @@ We work with educators, researchers, cultural institutions, social organisations
 We diligently produce and refine our knowledge through conversation, writing, and intervention, so we publish as we go. This archive holds our research in progress: working notes and audio recordings, often from a conversation between the two of us; the tools and exercises we use in workshops; and prints such as flyers and posters. Not polished, yet presentable.
 
 Entries stay as they were written, with their date. Some are working thoughts and some are settled; each says which. Tags connect entries across projects, and later we want to follow threads by similarity too. When our view changes, we write a new entry and keep the old one. This page is one of them.
+
+![A room with tall wooden racks of numbered archive cards, red and white, and long tables where visitors sit and talk](./museum-of-arte-util-archive-room.jpg "The archive room of the Museum of Arte Útil at the Van Abbemuseum. Photo: Van Abbemuseum.")
 
 The archive is not a portfolio of finished projects, and the tools are not services. We make them as part of our practice of sharing knowledge, so others can learn from them.
 
