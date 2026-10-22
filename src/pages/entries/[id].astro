@@ -1,22 +1,42 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import Overprint from '../../components/Overprint.astro';
 import EntryMeta from '../../components/EntryMeta.astro';
+import Tags from '../../components/Tags.astro';
+import { allEntries, currentAbout, supersededBy, kinds, entryUrl, fmtDate } from '../../lib/entries';
 
 export async function getStaticPaths() {
-  const entries = await getCollection('entries');
+  const entries = await allEntries();
   return entries.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
 }
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 const d = entry.data;
+const entries = await allEntries();
+const newer = supersededBy(entry, entries);
+const older = d.supersedes ? entries.find((e) => e.id === d.supersedes) : undefined;
+const isAbout = (await currentAbout())?.id === entry.id;
 const open = { tool: 'Open the tool', print: 'Open the print' }[d.kind];
 ---
 <Base title={d.title} description={d.summary}>
-  <p><a href="/">Bron van Doen research archive</a></p>
-  <h1>{d.title}</h1>
-  <EntryMeta entry={entry} />
-  <p><strong>{d.summary}</strong></p>
-  <Content />
-  {d.href && <p><a href={d.href}>{open}</a></p>}
+  <article>
+    <p class="eyebrow">{kinds[d.kind]}{d.project && <> · {d.project}</>}</p>
+    <Overprint text={d.title} size="l" asIs={d.kind === 'statement'} />
+    <EntryMeta entry={entry} />
+    {newer && <p class="statement-note" style="margin-top:0">Superseded by <a href={entryUrl(newer)}>{newer.data.title}</a> ({fmtDate(newer.data.date)}). This version stays as it was written.</p>}
+    {isAbout && <p class="meta">This is our current statement, shown on the <a href="/about/">About page</a>.</p>}
+    <p class="lede">{d.summary}</p>
+    {d.image && (
+      <figure class="figure">
+        <a href={d.href ?? d.image}><img src={d.image} alt={d.imageAlt} loading="eager" /></a>
+      </figure>
+    )}
+    {d.href && <p><a class="button" href={d.href}>{open}</a></p>}
+    <div class="prose">
+      <Content />
+    </div>
+    {older && <p class="statement-note">Replaces <a href={entryUrl(older)}>{older.data.title}</a> ({fmtDate(older.data.date)}).</p>}
+    <div style="margin-top:var(--space-4)"><Tags tags={d.tags} /></div>
+  </article>
 </Base>

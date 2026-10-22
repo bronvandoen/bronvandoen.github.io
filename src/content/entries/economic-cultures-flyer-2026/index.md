@@ -6,4 +6,6 @@ kind: print
 tags: [economic-cultures]
 project: Economic Cultures
 href: /prints/economic-cultures/blueprints-2026/
+image: /prints/economic-cultures/blueprints-2026/economic-cultures-2026.png
+imageAlt: The Economic Cultures flyer for DAE Blueprints 2026, printed in two inks, with the three session dates.
 ---

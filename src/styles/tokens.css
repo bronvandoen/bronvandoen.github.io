@@ -1,0 +1,45 @@
+/* a Situated Studio: the reading subset of the design system, as CSS custom properties.
+   Values from the design system's tokens.json (baseline pairing: Blue + Bright Red).
+   One file, so the main website can reuse it. Build with the role tokens, never a pairing's hex. */
+
+:root {
+  /* Grounds and text */
+  --paper: #F7F3EA;          /* the sheet */
+  --paper-raised: #FBF8F1;   /* a second sheet laid on the first, with a rule-heavy edge */
+  --ink: #111111;            /* all body text, rules, nodes; 17:1 on paper */
+  --ink-soft: #4A463F;       /* meta lines and captions; 8.5:1 on paper */
+
+  /* Ink roles (baseline pairing) */
+  --ink-1: #0078BF;          /* first drum: fields, tints, underlines. Not for text below 24px */
+  --ink-2: #F15060;          /* second drum: shifted heading layer, shapes. Never text */
+  --display-ink: #0078BF;    /* readable layer of display type 24px and up */
+  --stamp-ink: #F15060;      /* the logo as a stamp */
+  --eyebrow-ink: #3D5588;    /* small capitals above headings; 6.7:1 on paper */
+  --accent-text: #B8293A;    /* one italic line per block; 5.6:1 on paper */
+
+  /* Type families (self-hosted, SIL Open Font Licence) */
+  --font-display: "Big Shoulders Display", "Oswald", "Arial Narrow", sans-serif;
+  --font-text: "Source Serif 4", Georgia, serif;
+  --font-readable: "Atkinson Hyperlegible Next", Verdana, sans-serif;
+  --font-label: "Atkinson Hyperlegible Mono", "Courier New", monospace;
+
+  /* Spacing */
+  --space-1: 8px;
+  --space-2: 16px;   /* minimum phone gutter */
+  --space-3: 24px;
+  --space-4: 48px;
+  --space-5: 56px;
+
+  /* Strokes and print */
+  --rule: 2px;
+  --rule-heavy: 3px;
+  --misregister: 4px;
+  --measure: 38rem;  /* about 65 characters of body text */
+}
+
+/* Alternate pairings: one per piece, set on the root (<html data-theme="…">). */
+:root[data-theme="teal-pink"] { --ink-1:#00838A; --ink-2:#FF48B0; --display-ink:#00838A; --stamp-ink:#FF48B0; --eyebrow-ink:#111111; --accent-text:#111111; }
+:root[data-theme="federal-sunflower"] { --ink-1:#3D5588; --ink-2:#FFB511; --display-ink:#3D5588; --stamp-ink:#3D5588; --eyebrow-ink:#3D5588; --accent-text:#3D5588; }
+:root[data-theme="green-orange"] { --ink-1:#00A95C; --ink-2:#FF6C2F; --display-ink:#407060; --stamp-ink:#FF6C2F; --eyebrow-ink:#407060; --accent-text:#407060; }
+:root[data-theme="purple-yellow"] { --ink-1:#765BA7; --ink-2:#FFE800; --display-ink:#765BA7; --stamp-ink:#765BA7; --eyebrow-ink:#765BA7; --accent-text:#765BA7; }
+:root[data-theme="burgundy-mint"] { --ink-1:#914E72; --ink-2:#82D8D5; --display-ink:#914E72; --stamp-ink:#914E72; --eyebrow-ink:#914E72; --accent-text:#914E72; }

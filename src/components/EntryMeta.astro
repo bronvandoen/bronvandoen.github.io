@@ -1,15 +1,11 @@
 ---
-import tags from '../data/tags.json';
-const { entry } = Astro.props;
-const d = entry.data;
-const kinds = { note: 'Working note', tool: 'Workshop tool', print: 'Print', statement: 'Statement' };
-const fmt = (date) => date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+import { fmtDate, isoDate, type Entry } from '../lib/entries';
+interface Props { entry: Entry }
+const d = Astro.props.entry.data;
 ---
 <p class="meta">
-  {kinds[d.kind]} · <time datetime={d.date.toISOString().slice(0, 10)}>{fmt(d.date)}</time>
-  {d.status && <> · {d.status}</>}
-  {d.voices && <> · Voices: {d.voices.join(' and ')}</>}
+  <span><time datetime={isoDate(d.date)}>{fmtDate(d.date)}</time></span>
+  {d.updated && <span>updated <time datetime={isoDate(d.updated)}>{fmtDate(d.updated)}</time></span>}
+  {d.voices && <span>Voices: {d.voices.join(' and ')}</span>}
+  {d.status && <span>{d.status === 'working' ? 'A working thought' : 'Settled'}</span>}
 </p>
-<ul class="tags" aria-label="Tags">
-  {d.tags.map((t) => <li>{tags[t].label}</li>)}
-</ul>

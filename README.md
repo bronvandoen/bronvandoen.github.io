@@ -8,7 +8,9 @@ The site is the Bron van Doen research archive, built with [Astro](https://astro
 
 ## Where things go
 
-- `src/pages/`: the archive's pages (home, about, entries, tags, feed). The start page is a placeholder until the templates are built.
+- `src/pages/`: the archive's pages: home, About (the newest entry of kind `statement` tagged `about`), entries, tags, the RSS feed (`/rss.xml`) and the 404 page.
+- `src/styles/tokens.css`: the design system's reading subset as CSS custom properties, in one file so the main website can reuse it. `src/styles/archive.css`: the archive's layout. Fonts are bundled from `@fontsource`, so pages load nothing from other servers.
+- Pictures in an entry: put the file next to its `index.md` and write `![What the photo shows](./photo.jpg "Caption")` on its own line. It becomes a figure with the caption beneath; start the caption with `wide:` for a picture wider than the text. The alt text describes the picture; the caption says what it is and who took it. No faces without written consent.
 - `src/content/entries/<id>/index.md`: one entry per folder, images next to it, served at `/entries/<id>/`. Keep the folder name once it is published: it is the entry's address. Fields (checked in `src/content.config.ts`): `title`, `date`, `summary`, `kind` (note, tool, print or statement), `tags`, and when they apply `updated`, `project`, `voices` (a list of names), `status` (working or settled), `supersedes` (the id of the entry it replaces), `href` (for a tool or print: the address of its page), `lang` (default `en`).
 - `src/data/tags.json`: the list of tags. A tag must be listed here before an entry can use it.
 - `public/view.html`: forwards the old reader's links (`view.html?post=<date>-<slug>`) to the entries.

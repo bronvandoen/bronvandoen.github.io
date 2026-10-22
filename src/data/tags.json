@@ -1,6 +1,22 @@
 {
-  "economic-cultures": { "label": "Economic Cultures", "about": "Our workshop on money for recent design graduates, with DAE Blueprints." },
-  "fair-practice": { "label": "Fair practice", "about": "Fair pay and fair dealings, for those who work and those who commission." },
-  "rates-and-fees": { "label": "Rates and fees", "about": "What an hour of work costs, and how to ask for it." },
-  "budgets": { "label": "Budgets", "about": "Planning what a project takes, and who pays for each part." }
+  "economic-cultures": {
+    "label": "Economic Cultures",
+    "about": "Our workshop on money for recent design graduates, with DAE Blueprints."
+  },
+  "fair-practice": {
+    "label": "Fair practice",
+    "about": "Fair pay and fair dealings, for those who work and those who commission."
+  },
+  "rates-and-fees": {
+    "label": "Rates and fees",
+    "about": "What an hour of work costs, and how to ask for it."
+  },
+  "budgets": {
+    "label": "Budgets",
+    "about": "Planning what a project takes, and who pays for each part."
+  },
+  "about": {
+    "label": "About",
+    "about": "Statements of who we are and what we hold to. The newest is the About page."
+  }
 }

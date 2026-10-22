@@ -1,0 +1,39 @@
+---
+// The About page shows the newest statement tagged about. A rewrite is a new entry that supersedes it.
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Overprint from '../components/Overprint.astro';
+import EntryMeta from '../components/EntryMeta.astro';
+import Logo from '../components/Logo.astro';
+import { currentAbout, entryUrl, fmtDate, allEntries } from '../lib/entries';
+
+const about = await currentAbout();
+if (!about) throw new Error('No statement tagged about: the About page needs one.');
+const { Content } = await render(about);
+const earlier = (await allEntries()).filter((e) => e.data.kind === 'statement' && e.data.tags.includes('about') && e.id !== about.id);
+---
+<Base title="About" description={about.data.summary} current="about">
+  <article class="about">
+    <header class="about-head">
+      <p class="eyebrow">About</p>
+      <Overprint text={about.data.title} asIs />
+      <EntryMeta entry={about} />
+      <Logo class="stamp" label="a Situated Studio" />
+    </header>
+    <div class="prose about-body">
+      <Content />
+    </div>
+    <p class="statement-note">
+      This statement dates from {fmtDate(about.data.date)}. When our view changes we write a new one and keep this one in the archive
+      (<a href={entryUrl(about)}>this version</a>{earlier.length > 0 && <>; earlier: {earlier.map((e, i) => <>{i > 0 && ', '}<a href={entryUrl(e)}>{fmtDate(e.data.date)}</a></>)}</>}).
+    </p>
+  </article>
+</Base>
+<style>
+  .about-head { position: relative; border-bottom: var(--rule-heavy) solid var(--ink); padding-bottom: var(--space-3); margin-bottom: 96px; }
+  .about-head :global(.overprint) > :global(*) { white-space: nowrap; font-size: clamp(36px, 11vw, 112px); }
+  /* The stamp lands on the rule under the header, in the gap above the text: never over body text. */
+  .about-head :global(.stamp) { right: 0; bottom: -86px; }
+  @media (min-width: 720px) { .about-head :global(.stamp) { right: 8%; bottom: -104px; } .about-head { margin-bottom: 120px; } }
+  .about-body > :global(p:first-child) { font-size: 21px; line-height: 1.5; }
+</style>

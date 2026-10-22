@@ -1,26 +1,22 @@
 ---
-// Placeholder start page: the latest entries. The real home template comes in step 4.
-import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import EntryMeta from '../components/EntryMeta.astro';
-
-const entries = (await getCollection('entries')).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf() || a.data.title.localeCompare(b.data.title),
-);
+import Overprint from '../components/Overprint.astro';
+import EntryCard from '../components/EntryCard.astro';
+import { allEntries } from '../lib/entries';
+const entries = await allEntries();
 ---
-<Base title="Bron van Doen research archive" noindex>
-  <h1>Bron van Doen research archive</h1>
-  <p class="muted">Social and service design research in Eindhoven, with a Situated Studio. Work in progress.</p>
-  <h2>Latest</h2>
-  <ul class="entries">
-    {entries.map((e) => (
-      <li>
-        <a href={`/entries/${e.id}/`}><strong>{e.data.title}</strong></a>
-        <EntryMeta entry={e} />
-        <p>{e.data.summary}</p>
-      </li>
-    ))}
+<Base title="Bron van Doen research archive" description="Research in progress by a Situated Studio: working notes, workshop tools and prints." current="home">
+  <p class="eyebrow">Bron van Doen</p>
+  <Overprint text="Research archive" />
+  <div class="sheet">
+    <p class="lede">We are a Situated Studio, a social design research practice in Eindhoven. We work with people in the places they live, and we use art, design and research to create the conditions for care.</p>
+    <p class="prose" style="margin:0">This archive holds our research in progress: working notes, the tools we use in workshops, and prints. <a href="/about/">More about us</a>.</p>
+  </div>
+  <div class="section-head">
+    <h2>Latest</h2>
+    <p class="meta"><a href="/tags/">Browse by tag</a> · <a href="/rss.xml">RSS</a></p>
+  </div>
+  <ul class="entry-list">
+    {entries.map((e) => <EntryCard entry={e} />)}
   </ul>
-  <h2>Elsewhere</h2>
-  <p><a href="https://opgeruimdebende.github.io/">Opgeruimde Bende</a>, our game research practice</p>
 </Base>

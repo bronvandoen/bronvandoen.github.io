@@ -1,7 +1,22 @@
 ---
-// Plain layout for the skeleton and entries. The design-system look comes in step 4.
-interface Props { title: string; description?: string; noindex?: boolean }
-const { title, description, noindex = false } = Astro.props;
+// Page frame for the research archive: header, footer, fonts, tokens.
+// Fonts are bundled with the site, so a reader's browser contacts no one else.
+import '@fontsource/big-shoulders-display/800';
+import '@fontsource/big-shoulders-display/900';
+import '@fontsource/source-serif-4/400';
+import '@fontsource/source-serif-4/400-italic';
+import '@fontsource/source-serif-4/600';
+import '@fontsource/atkinson-hyperlegible-mono/400';
+import '@fontsource/atkinson-hyperlegible-mono/600';
+import '../styles/tokens.css';
+import '../styles/archive.css';
+import Logo from '../components/Logo.astro';
+
+interface Props { title: string; description?: string; noindex?: boolean; current?: 'home' | 'about' | 'tags' }
+const { title, description, noindex = false, current } = Astro.props;
+const siteName = 'Bron van Doen research archive';
+const fullTitle = title === siteName ? siteName : `${title} · ${siteName}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 <!doctype html>
 <html lang="en">
@@ -9,28 +24,50 @@ const { title, description, noindex = false } = Astro.props;
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 {noindex && <meta name="robots" content="noindex">}
-<title>{title}</title>
+<title>{fullTitle}</title>
 {description && <meta name="description" content={description}>}
-<style is:global>
-  :root { --bg:#F7F3EA; --ink:#111111; --muted:#5E5A52; --accent:#3D5588; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#1C1D20; --ink:#F1EFEA; --muted:#A3A19B; --accent:#9DB6E6; } }
-  body { margin:0; background:var(--bg); color:var(--ink); font:500 17px/1.55 system-ui, sans-serif; }
-  main { padding:2rem 16px 4rem; max-width:36rem; margin:0 auto; }
-  h1 { font-size:2rem; line-height:1.15; margin:0 0 .5rem; }
-  h2 { font-size:1.1rem; margin:2rem 0 .5rem; }
-  p { margin:.75rem 0; }
-  .muted { color:var(--muted); }
-  a { color:var(--accent); }
-  .meta { color:var(--muted); font-size:.9rem; }
-  .tags { display:flex; flex-wrap:wrap; gap:.4rem; padding:0; margin:.75rem 0; list-style:none; }
-  .tags li { border:1px solid var(--muted); border-radius:999px; padding:.1rem .6rem; font-size:.85rem; }
-  .entries { list-style:none; padding:0; }
-  .entries li { margin:0 0 1.5rem; }
-</style>
+<link rel="canonical" href={canonical}>
+<link rel="alternate" type="application/rss+xml" title={siteName} href="/rss.xml">
+<meta property="og:title" content={title}>
+{description && <meta property="og:description" content={description}>}
+<meta name="theme-color" content="#F7F3EA">
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <!-- Stamp wear by size (design system, Stamp): 200px and up coarse, 100-200px fine. -->
+  <filter id="wear-l" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="3" result="n"/>
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  4 0 0 0 -0.95" result="m"/>
+    <feComposite in="SourceGraphic" in2="m" operator="in"/>
+  </filter>
+  <filter id="wear-s" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.14" numOctaves="2" seed="3" result="n"/>
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  4 0 0 0 -0.95" result="m"/>
+    <feComposite in="SourceGraphic" in2="m" operator="in"/>
+  </filter>
+</svg>
+<header class="site-head">
+  <div class="wrap">
+    <a class="site-name" href="/" aria-current={current === 'home' ? 'page' : undefined}>{siteName}</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="/about/" aria-current={current === 'about' ? 'page' : undefined}>About</a>
+      <a href="/tags/" aria-current={current === 'tags' ? 'page' : undefined}>Tags</a>
+    </nav>
+  </div>
+</header>
 <main>
-<slot />
+  <div class="wrap">
+    <slot />
+  </div>
 </main>
+<footer class="site-foot">
+  <div class="wrap">
+    <Logo variant="ring" class="foot-mark" />
+    <div>
+      <p>Research in progress by a Situated Studio (Gemma Medina and Minsung Wang), Eindhoven.</p>
+      <p>Texts, tools and prints: <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Code: <a href="https://opensource.org/license/mit">MIT</a>. <a href="/rss.xml">RSS feed</a>.</p>
+    </div>
+  </div>
+</footer>
 </body>
 </html>

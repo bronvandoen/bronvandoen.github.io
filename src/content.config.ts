@@ -30,10 +30,14 @@ const entries = defineCollection({
       supersedes: z.string().optional(),
       // Tools and prints: where the static page lives (under public/).
       href: z.string().optional(),
+      // Optional picture for the card and the entry page (a path under public/), with its alt text.
+      image: z.string().optional(),
+      imageAlt: z.string().optional(),
     })
     .refine((e) => !['tool', 'print'].includes(e.kind) || e.href, {
       message: 'A tool or print entry needs href, the address of its page.',
-    }),
+    })
+    .refine((e) => !e.image || e.imageAlt, { message: 'An image needs imageAlt, a description of what it shows.' }),
 });
 
 export const collections = { entries };

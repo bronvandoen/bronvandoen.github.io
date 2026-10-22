@@ -1,0 +1,110 @@
+/* The research archive's pages, built from tokens.css.
+   Rules from the design system: paper, two inks, black text; square cuts, no shadows, no gradients;
+   texture never over body text; display type in capitals; text 4.5:1 on its ground. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { background: var(--paper); color: var(--ink); -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font: 400 18px/1.6 var(--font-text);
+  /* Faint paper grain under everything, never over text. */
+  background-color: var(--paper);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.32 0 0 0 0 0.27 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--ink-1); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+a:hover { text-decoration-color: var(--ink-2); }
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+.wrap { max-width: 64rem; margin: 0 auto; padding: 0 var(--space-2); }
+@media (min-width: 720px) { .wrap { padding: 0 var(--space-4); } }
+
+/* Header and footer */
+.site-head { border-bottom: var(--rule-heavy) solid var(--ink); }
+.site-head .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-1) var(--space-3); min-height: 64px; padding-top: var(--space-1); padding-bottom: var(--space-1); }
+.site-name { font: 600 14px/1.3 var(--font-label); text-decoration: none; letter-spacing: 0.02em; display: inline-flex; align-items: center; min-height: 44px; }
+.site-nav { display: flex; gap: var(--space-1); }
+.site-nav a { font: 400 14px/1 var(--font-label); text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--space-1); }
+.site-nav a[aria-current="page"] { text-decoration: underline; text-decoration-color: var(--ink-2); text-decoration-thickness: 3px; text-underline-offset: 6px; }
+
+.site-foot { margin-top: var(--space-5); border-top: var(--rule-heavy) solid var(--ink); padding: var(--space-3) 0 var(--space-4); font: 400 13px/1.6 var(--font-label); color: var(--ink-soft); }
+.site-foot .wrap { display: grid; gap: var(--space-2); }
+@media (min-width: 720px) { .site-foot .wrap { grid-template-columns: auto 1fr; align-items: start; gap: var(--space-3); } }
+.site-foot p { margin: 0; }
+.site-foot a { color: var(--ink); }
+.foot-mark { width: 40px; color: var(--ink); }
+
+main { padding: var(--space-4) 0 0; }
+
+/* Display type */
+.eyebrow { font: 800 16px/1.1 var(--font-display); letter-spacing: 0.08em; text-transform: uppercase; color: var(--eyebrow-ink); margin: 0 0 var(--space-1); }
+.eyebrow a { color: inherit; text-decoration: none; }
+
+.overprint { position: relative; margin: 0 0 var(--space-3); isolation: isolate; }
+.overprint > * { font: 900 clamp(44px, 12vw, 112px)/0.88 var(--font-display); text-transform: uppercase; margin: 0; overflow-wrap: anywhere; white-space: pre-line; }
+.overprint .copy { position: absolute; inset: 0; transform: translate(var(--misregister), var(--misregister)); color: var(--ink-2); mix-blend-mode: multiply; }
+.overprint .layer { position: relative; color: var(--display-ink); mix-blend-mode: multiply; }
+.overprint.as-is > * { text-transform: none; }
+.overprint.l > * { font-size: clamp(40px, 10vw, 64px); line-height: 0.9; }
+.overprint.l .copy { transform: translate(3px, 3px); }
+
+h2, .h2 { font: 900 clamp(30px, 7vw, 44px)/0.95 var(--font-display); text-transform: uppercase; color: var(--ink); margin: var(--space-4) 0 var(--space-2); overflow-wrap: anywhere; }
+h3 { font: 800 24px/1 var(--font-display); text-transform: uppercase; margin: var(--space-3) 0 var(--space-1); }
+
+/* Running text */
+.prose { max-width: var(--measure); }
+.prose p, .prose ul, .prose ol, .prose blockquote { margin: 0 0 1em; }
+.prose blockquote { border-left: 0; padding: 0 0 0 var(--space-2); border-left: var(--rule-heavy) solid var(--ink); font-style: italic; }
+.prose em { font-style: italic; }
+.lede { font-size: 21px; line-height: 1.5; max-width: var(--measure); margin: 0 0 var(--space-3); }
+.meta { font: 400 13px/1.6 var(--font-label); color: var(--ink-soft); margin: 0 0 var(--space-2); }
+.meta span + span::before { content: " · "; }
+
+/* Figures: an image fills its own block; the caption sits beneath on paper. */
+.prose figure, .figure { margin: var(--space-4) 0; max-width: none; }
+/* A wide figure takes the full page width (the wrap's content box), beyond the text measure. */
+@media (min-width: 720px) { .prose figure.wide { width: calc(min(100vw - 2 * var(--space-4), 64rem - 2 * var(--space-4))); } }
+figcaption { font: 400 12px/1.5 var(--font-label); color: var(--ink-soft); margin-top: var(--space-1); max-width: var(--measure); }
+
+/* Tag chips: square, label type, at least 44px to tap. */
+.tags { display: flex; flex-wrap: wrap; gap: var(--space-1); list-style: none; margin: 0; padding: 0; }
+.tag { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; border: var(--rule) solid var(--ink); font: 400 13px/1 var(--font-label); text-decoration: none; background: var(--paper-raised); }
+a.tag:hover { background: var(--paper); border-color: var(--ink-1); }
+.tag .count { color: var(--ink-soft); margin-left: 6px; }
+
+/* Entry cards */
+.entry-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+@media (min-width: 720px) { .entry-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.card { position: relative; background: var(--paper-raised); border: var(--rule-heavy) solid var(--ink); padding: var(--space-3); display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
+.card .eyebrow { margin: 0; }
+.card h3 { font: 900 clamp(28px, 6vw, 36px)/0.95 var(--font-display); text-transform: uppercase; margin: 0; overflow-wrap: anywhere; }
+.card h3 a { text-decoration: none; }
+.card h3.as-is { text-transform: none; }
+.card .thumb { margin: calc(-1 * var(--space-3)) calc(-1 * var(--space-3)) 0; border-bottom: var(--rule-heavy) solid var(--ink); }
+.card .thumb img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.card h3 a::after { content: ""; position: absolute; inset: 0; }   /* the whole card is the link */
+.card p { margin: 0; font-size: 17px; }
+.card .meta { margin: 0; }
+.card .tags { position: relative; z-index: 1; margin-top: auto; }
+.card:hover { border-color: var(--ink-1); }
+
+/* A plain button for opening a tool or a print */
+.button { display: inline-flex; align-items: center; min-height: 48px; padding: 0 var(--space-3); border: var(--rule-heavy) solid var(--ink); background: var(--ink); color: var(--paper); font: 600 14px/1 var(--font-label); text-decoration: none; letter-spacing: 0.02em; }
+.button:hover { background: var(--paper); color: var(--ink); }
+
+/* The intro on the home page: a raised sheet with the stamp on its edge */
+.sheet { position: relative; background: var(--paper-raised); border: var(--rule-heavy) solid var(--ink); padding: var(--space-3); margin: 0 0 var(--space-4); }
+@media (min-width: 720px) { .sheet { padding: var(--space-4); } }
+
+/* The stamp: logo in one ink, multiplied, rotated, worn. Never over body text. */
+.stamp { position: absolute; width: 168px; color: var(--stamp-ink); fill: var(--stamp-ink); mix-blend-mode: multiply; transform: rotate(-6deg); filter: url(#wear-s); pointer-events: none; }
+@media (min-width: 720px) { .stamp { width: 220px; filter: url(#wear-l); } }
+
+.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-2); flex-wrap: wrap; }
+.section-head h2 { margin-top: 0; }
+
+.statement-note { font: 400 13px/1.6 var(--font-label); color: var(--ink-soft); border-top: var(--rule) solid var(--ink); padding-top: var(--space-2); margin-top: var(--space-4); max-width: var(--measure); }

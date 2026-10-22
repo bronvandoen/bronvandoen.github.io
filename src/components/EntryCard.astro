@@ -1,0 +1,17 @@
+---
+import EntryMeta from './EntryMeta.astro';
+import Tags from './Tags.astro';
+import { kinds, entryUrl, type Entry } from '../lib/entries';
+interface Props { entry: Entry }
+const { entry } = Astro.props;
+const d = entry.data;
+const href = entryUrl(entry);
+---
+<li class="card">
+  {d.image && <div class="thumb"><img src={d.image} alt="" loading="lazy" /></div>}
+  <p class="eyebrow">{kinds[d.kind]}{d.project && <> · {d.project}</>}</p>
+  <h3 class:list={{ 'as-is': d.kind === 'statement' }}><a href={href}>{d.title}</a></h3>
+  <EntryMeta entry={entry} />
+  <p>{d.summary}</p>
+  <Tags tags={d.tags} />
+</li>

@@ -1,0 +1,11 @@
+---
+// OverprintHeading: the readable layer in display-ink, a copy in ink-2 shifted by misregister,
+// both multiplied. The copy is aria-hidden. size "xl" once per page, "l" for a section title.
+interface Props { text: string; tag?: string; size?: 'xl' | 'l'; asIs?: boolean }
+const { text, tag = 'h1', size = 'xl', asIs = false } = Astro.props;
+const Tag = tag;
+---
+<div class:list={['overprint', { l: size === 'l', 'as-is': asIs }]}>
+  <div class="copy" aria-hidden="true">{text}</div>
+  <Tag class="layer">{text}</Tag>
+</div>

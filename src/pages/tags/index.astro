@@ -1,0 +1,21 @@
+---
+import Base from '../../layouts/Base.astro';
+import Overprint from '../../components/Overprint.astro';
+import { allEntries, tagList } from '../../lib/entries';
+const entries = await allEntries();
+const counted = Object.entries(tagList)
+  .map(([id, t]) => ({ id, ...t, count: entries.filter((e) => e.data.tags.includes(id)).length }))
+  .filter((t) => t.count > 0);
+---
+<Base title="Tags" description="Every tag in the archive, the way into the entries." current="tags">
+  <Overprint text="Tags" size="l" />
+  <ul class="entry-list">
+    {counted.map((t) => (
+      <li class="card">
+        <h3><a href={`/tags/${t.id}/`}>{t.label}</a></h3>
+        <p>{t.about}</p>
+        <p class="meta">{t.count} {t.count === 1 ? 'entry' : 'entries'}</p>
+      </li>
+    ))}
+  </ul>
+</Base>

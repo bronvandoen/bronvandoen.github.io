@@ -1,0 +1,7 @@
+---
+import { tagLabel } from '../lib/entries';
+interface Props { tags: string[] }
+---
+<ul class="tags" aria-label="Tags">
+  {Astro.props.tags.map((t) => <li><a class="tag" href={`/tags/${t}/`}>{tagLabel(t)}</a></li>)}
+</ul>

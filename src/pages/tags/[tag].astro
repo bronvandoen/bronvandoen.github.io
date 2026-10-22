@@ -1,0 +1,23 @@
+---
+import Base from '../../layouts/Base.astro';
+import Overprint from '../../components/Overprint.astro';
+import EntryCard from '../../components/EntryCard.astro';
+import { allEntries, tagList } from '../../lib/entries';
+
+export async function getStaticPaths() {
+  const entries = await allEntries();
+  return Object.keys(tagList)
+    .map((tag) => ({ params: { tag }, props: { tag, entries: entries.filter((e) => e.data.tags.includes(tag)) } }))
+    .filter((p) => p.props.entries.length > 0);
+}
+const { tag, entries } = Astro.props;
+const t = tagList[tag];
+---
+<Base title={t.label} description={t.about} current="tags">
+  <p class="eyebrow"><a href="/tags/">Tag</a></p>
+  <Overprint text={t.label} size="l" />
+  <p class="lede">{t.about}</p>
+  <ul class="entry-list">
+    {entries.map((e) => <EntryCard entry={e} />)}
+  </ul>
+</Base>
