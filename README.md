@@ -15,3 +15,7 @@ The site is the Bron van Doen research archive, built with [Astro](https://astro
 - `public/tools/<project>/<tool>/index.html`: one workshop tool per folder, self-contained, copied to the site unchanged and served at `/tools/<project>/<tool>/`. Example: `public/tools/economic-cultures/hourly-rate/`.
 - `public/prints/<project>/<print>/`: flat single images (flyers, posters, treated photos) as a page plus its exported image, served at `/prints/<project>/<print>/`.
 - `_inbox/`: raw material. Never published.
+
+## Licence
+
+Code: MIT (`LICENSE`). Texts, images and prints: CC BY 4.0, credit a Situated Studio (`LICENSE-CONTENT.md`). Copyright holder: Bron van Doen V.O.F.
