@@ -27,9 +27,9 @@ Care is the word we keep coming back to. We look for the people already acting o
 
 We use our talents as artists, designers and researchers to build structures of care: a space and an occasion to meet, the know-how to start something together, a path to raise modest funding and support. We nudge people to take these and make them their own.
 
-Care is also how we understand the commons. In where people dwell, what counts as common, and who looks after it? Much of what was shared has been enclosed, sold or simply lost.
+Care is also how we understand the commons. Where people dwell, what counts as common, and who looks after it? Much of what was shared has been enclosed, sold or simply lost.
 
-Commoning, to us, is interdependence in action: people looking after something together, and after each other while they do, exercising their resilience every step of the way. What is often described today as a lack or limitation to abolish, we see as something to rediscover, to cherish and to practise. We shift commoning from an idea to something done together, and to build care and interdependence around what they share.
+Commoning, to us, is interdependence in action: people looking after something together, and after each other while they do, exercising their resilience every step of the way. What is often described today as a lack or limitation to abolish, we see as something to rediscover, to cherish and to practise. We shift commoning from an idea to something done together, and build care and interdependence around what people share.
 
 ## How we work
 
@@ -43,7 +43,7 @@ We work with educators, researchers, cultural institutions, social organisations
 
 ## This archive
 
-We diligently produce and refine our knowledge through conversation, writing, and intervention, so we publish as we go. This archive holds our research in progress: working notes and audio recordings, often from a conversation between the two of us; the tools and exercises we use in workshops; and prints such as flyers and posters. Not polished yet presentable.
+We diligently produce and refine our knowledge through conversation, writing, and intervention, so we publish as we go. This archive holds our research in progress: working notes and audio recordings, often from a conversation between the two of us; the tools and exercises we use in workshops; and prints such as flyers and posters. Not polished, yet presentable.
 
 Entries stay as they were written, with their date. Some are working thoughts and some are settled; each says which. Tags connect entries across projects, and later we want to follow threads by similarity too. When our view changes, we write a new entry and keep the old one. This page is one of them.
 

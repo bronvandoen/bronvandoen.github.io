@@ -46,11 +46,12 @@ main { padding: var(--space-4) 0 0; }
 
 .overprint { position: relative; margin: 0 0 var(--space-3); isolation: isolate; }
 .overprint > * { font: 900 clamp(44px, 12vw, 112px)/0.88 var(--font-display); text-transform: uppercase; margin: 0; overflow-wrap: anywhere; white-space: pre-line; }
-.overprint .copy { position: absolute; inset: 0; transform: translate(var(--misregister), var(--misregister)); color: var(--ink-2); mix-blend-mode: multiply; }
+/* The offset scales with the type: about 3px at the full display-xl size, down to 1.5px on a phone. */
+.overprint .copy { position: absolute; inset: 0; --off: clamp(1.5px, 0.025em, 3px); transform: translate(var(--off), var(--off)); color: var(--ink-2); mix-blend-mode: multiply; }
 .overprint .layer { position: relative; color: var(--display-ink); mix-blend-mode: multiply; }
 .overprint.as-is > * { text-transform: none; }
 .overprint.l > * { font-size: clamp(40px, 10vw, 64px); line-height: 0.9; }
-.overprint.l .copy { transform: translate(3px, 3px); }
+.overprint.l .copy { --off: clamp(1.5px, 0.03em, 2px); }
 
 h2, .h2 { font: 900 clamp(30px, 7vw, 44px)/0.95 var(--font-display); text-transform: uppercase; color: var(--ink); margin: var(--space-4) 0 var(--space-2); overflow-wrap: anywhere; }
 h3 { font: 800 24px/1 var(--font-display); text-transform: uppercase; margin: var(--space-3) 0 var(--space-1); }
