@@ -1,5 +1,7 @@
 # bronvandoen.github.io
 
+Agents: read `CLAUDE.md` first.
+
 Working notes, workshop tools and prototypes from Bron van Doen, the social and service design practice in Eindhoven that includes a Situated Studio. For our own groups and workshops; the pages are kept out of search engines.
 
 ## How it is built
