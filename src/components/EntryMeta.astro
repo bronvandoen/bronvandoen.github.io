@@ -1,0 +1,15 @@
+---
+import tags from '../data/tags.json';
+const { entry } = Astro.props;
+const d = entry.data;
+const kinds = { note: 'Working note', tool: 'Workshop tool', print: 'Print', statement: 'Statement' };
+const fmt = (date) => date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+---
+<p class="meta">
+  {kinds[d.kind]} · <time datetime={d.date.toISOString().slice(0, 10)}>{fmt(d.date)}</time>
+  {d.status && <> · {d.status}</>}
+  {d.voices && <> · Voices: {d.voices.join(' and ')}</>}
+</p>
+<ul class="tags" aria-label="Tags">
+  {d.tags.map((t) => <li>{tags[t].label}</li>)}
+</ul>

@@ -2,8 +2,11 @@
 title: Giving the money a name
 date: 2026-10-20
 summary: Gemma's story about a grandfather's savings accounts, and why naming every euro changes how you ask for your rate.
+kind: note
+tags: [economic-cultures, rates-and-fees]
 project: Economic Cultures
-voices: Gemma Medina and Minsung Wang
+voices: [Gemma Medina, Minsung Wang]
+status: working
 ---
 This morning Gemma and I went through the hourly-rate tool for Economic Cultures, step by step, on our own phones. It's for recent design graduates working out what an hour of their work needs to earn. At step seven, "versions of me", where you try out how your rate changes when your life does, Gemma told a story.
 

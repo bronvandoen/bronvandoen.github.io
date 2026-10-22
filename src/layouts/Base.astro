@@ -1,0 +1,36 @@
+---
+// Plain layout for the skeleton and entries. The design-system look comes in step 4.
+interface Props { title: string; description?: string; noindex?: boolean }
+const { title, description, noindex = false } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{noindex && <meta name="robots" content="noindex">}
+<title>{title}</title>
+{description && <meta name="description" content={description}>}
+<style is:global>
+  :root { --bg:#F7F3EA; --ink:#111111; --muted:#5E5A52; --accent:#3D5588; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#1C1D20; --ink:#F1EFEA; --muted:#A3A19B; --accent:#9DB6E6; } }
+  body { margin:0; background:var(--bg); color:var(--ink); font:500 17px/1.55 system-ui, sans-serif; }
+  main { padding:2rem 16px 4rem; max-width:36rem; margin:0 auto; }
+  h1 { font-size:2rem; line-height:1.15; margin:0 0 .5rem; }
+  h2 { font-size:1.1rem; margin:2rem 0 .5rem; }
+  p { margin:.75rem 0; }
+  .muted { color:var(--muted); }
+  a { color:var(--accent); }
+  .meta { color:var(--muted); font-size:.9rem; }
+  .tags { display:flex; flex-wrap:wrap; gap:.4rem; padding:0; margin:.75rem 0; list-style:none; }
+  .tags li { border:1px solid var(--muted); border-radius:999px; padding:.1rem .6rem; font-size:.85rem; }
+  .entries { list-style:none; padding:0; }
+  .entries li { margin:0 0 1.5rem; }
+</style>
+</head>
+<body>
+<main>
+<slot />
+</main>
+</body>
+</html>

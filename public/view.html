@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>Moved</title>
+<script>
+  // The old reader (view.html?post=<date>-<slug>) is retired; working notes are archive entries now.
+  (function () {
+    var post = new URLSearchParams(location.search).get('post') || '';
+    var id = post.replace(/^\d{4}-\d{2}-\d{2}-/, '');
+    location.replace(/^[a-z0-9-]+$/.test(id) ? '/entries/' + id + '/' : '/');
+  })();
+</script>
+</head>
+<body>
+<p>This page has moved. <a href="/">Go to the research archive</a>.</p>
+</body>
+</html>

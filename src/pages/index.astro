@@ -1,38 +1,26 @@
 ---
-// Placeholder start page for the skeleton. The real home template comes in step 4.
+// Placeholder start page: the latest entries. The real home template comes in step 4.
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import EntryMeta from '../components/EntryMeta.astro';
+
+const entries = (await getCollection('entries')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf() || a.data.title.localeCompare(b.data.title),
+);
 ---
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex">
-<title>Bron van Doen</title>
-<style is:global>
-  :root { --bg:#F7F3EA; --ink:#111111; --muted:#5E5A52; --accent:#3D5588; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#1C1D20; --ink:#F1EFEA; --muted:#A3A19B; --accent:#9DB6E6; } }
-  body { margin:0; min-height:100vh; display:grid; place-items:center; background:var(--bg); color:var(--ink); font:500 16px/1.5 system-ui, sans-serif; }
-  main { padding:0 16px; max-width:32rem; }
-  h1 { font-size:2rem; margin:0 0 .25rem; }
-  h2 { font-size:1rem; margin:1.5rem 0 .25rem; }
-  p { margin:.5rem 0; color:var(--muted); }
-  a { color:var(--accent); }
-</style>
-</head>
-<body>
-<main>
-  <h1>Bron van Doen</h1>
-  <p>Social and service design research in Eindhoven, with a Situated Studio.</p>
-  <p>Work in progress.</p>
-  <!-- Working notes return as entries in step 2 of the archive build. -->
-  <h2>Workshop tools</h2>
-  <p><a href="tools/economic-cultures/hourly-rate/">My hourly rate</a>, Economic Cultures (DAE Blueprints)</p>
-  <p><a href="tools/economic-cultures/quote-invoice/">From quote to invoice</a>, Economic Cultures (DAE Blueprints)</p>
-  <p><a href="tools/economic-cultures/project-budget/">My project budget</a>, Economic Cultures (DAE Blueprints)</p>
-  <h2>Prints</h2>
-  <p><a href="prints/economic-cultures/blueprints-2026/">Economic Cultures flyer</a>, DAE Blueprints 2026 (<a href="prints/economic-cultures/blueprints-2026/economic-cultures-2026.png">image</a>)</p>
+<Base title="Bron van Doen research archive" noindex>
+  <h1>Bron van Doen research archive</h1>
+  <p class="muted">Social and service design research in Eindhoven, with a Situated Studio. Work in progress.</p>
+  <h2>Latest</h2>
+  <ul class="entries">
+    {entries.map((e) => (
+      <li>
+        <a href={`/entries/${e.id}/`}><strong>{e.data.title}</strong></a>
+        <EntryMeta entry={e} />
+        <p>{e.data.summary}</p>
+      </li>
+    ))}
+  </ul>
   <h2>Elsewhere</h2>
   <p><a href="https://opgeruimdebende.github.io/">Opgeruimde Bende</a>, our game research practice</p>
-</main>
-</body>
-</html>
+</Base>

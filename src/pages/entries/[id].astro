@@ -1,0 +1,22 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import EntryMeta from '../../components/EntryMeta.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('entries');
+  return entries.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const open = { tool: 'Open the tool', print: 'Open the print' }[d.kind];
+---
+<Base title={d.title} description={d.summary}>
+  <p><a href="/">Bron van Doen research archive</a></p>
+  <h1>{d.title}</h1>
+  <EntryMeta entry={entry} />
+  <p><strong>{d.summary}</strong></p>
+  <Content />
+  {d.href && <p><a href={d.href}>{open}</a></p>}
+</Base>
