@@ -2,7 +2,7 @@
 
 This is the Bron van Doen research archive, an Astro site served at https://bronvandoen.github.io. Every push to `main` is built and deployed by `.github/workflows/deploy.yml`. Pushing to `main` is publishing: do it only after Minsung says "publish", after he has seen a preview.
 
-This file is the current layout. Where the `situated-studio-lead` skill describes `posts/`, `view.html` or `tools/` at the repository root, this file wins: that layout was retired on 22 October 2026.
+This file is the current layout. Where the `situated-studio-lead` skill and this file disagree, this file wins.
 
 ## Where things go
 
