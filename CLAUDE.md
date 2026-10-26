@@ -25,6 +25,11 @@ Checked by `src/content.config.ts`; the build stops on a mistake.
 - When they apply: `updated` (the date of a later change), `project`, `voices` (a list of names), `status` (`working` or `settled`), `supersedes` (the id of the entry it replaces), `image` and `imageAlt` (a picture under `public/` for the card), `lang` (default `en`).
 - The folder name is the entry's address. Never rename a published one.
 
+## Licence and indexing
+
+- Texts, images and prints are CC BY 4.0, crediting a Situated Studio (`LICENSE-CONTENT.md`). The code (site and tools) is MIT (`LICENSE`). Copyright holder: Bron van Doen V.O.F. Quotes and photographs credited to someone else stay theirs.
+- Home, About, entries and tags are indexable. Tools, prints and the 404 page carry `<meta name="robots" content="noindex">`: in a hand-built page under `public/` write the tag in the `<head>`; in an Astro page pass `noindex` to the `Base` layout.
+
 ## Recipes
 
 **Update a tool or print** (for example new dates on a flyer):
