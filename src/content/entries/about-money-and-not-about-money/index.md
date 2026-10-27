@@ -5,7 +5,6 @@ summary: The Commoners Fair and the Economic Cultures workshop work the same way
 kind: note
 tags: [economic-cultures, commoners-fair]
 voices: [Minsung Wang, Gemma Medina]
-status: working
 audio: /audio/about-money-and-not-about-money.mp3
 audioLength: "0:58"
 ---

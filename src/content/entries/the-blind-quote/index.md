@@ -6,7 +6,6 @@ kind: note
 tags: [economic-cultures, fair-practice, rates-and-fees]
 project: Economic Cultures
 voices: [Minsung Wang, Gemma Medina]
-status: working
 ---
 "I really like your work." And then nothing about the budget. If you're starting out as an artist or designer, you've probably heard this. You're asked for a quote, you don't know what they have in mind, and you guess. I call it a blind quote. I've had to write them my whole career.
 

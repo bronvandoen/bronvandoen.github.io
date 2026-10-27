@@ -6,7 +6,6 @@ kind: note
 tags: [economic-cultures, rates-and-fees]
 project: Economic Cultures
 voices: [Gemma Medina, Minsung Wang]
-status: working
 ---
 This morning Gemma and I went through the hourly-rate tool for Economic Cultures, step by step, on our own phones. It's for recent design graduates working out what an hour of their work needs to earn. At step seven, "versions of me", where you try out how your rate changes when your life does, Gemma told a story.
 

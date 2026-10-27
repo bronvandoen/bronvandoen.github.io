@@ -6,7 +6,6 @@ kind: note
 tags: [commons, alternative-economies]
 project: Agents of Change
 voices: [Minsung Wang, Gemma Medina]
-status: working
 audio: /audio/commons-is-a-verb.mp3
 audioLength: "1:05"
 ---

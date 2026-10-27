@@ -26,7 +26,6 @@ const entries = defineCollection({
       lang: z.string().default('en'),
       project: z.string().optional(),
       voices: z.array(z.string()).optional(),
-      status: z.enum(['working', 'settled']).optional(),
       supersedes: z.string().optional(),
       // Tools and prints: where the static page lives (under public/).
       href: z.string().optional(),

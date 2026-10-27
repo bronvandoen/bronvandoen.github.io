@@ -8,5 +8,4 @@ const d = Astro.props.entry.data;
   {d.audio && <span>Voice memo, {d.audioLength}</span>}
   {d.updated && <span>updated <time datetime={isoDate(d.updated)}>{fmtDate(d.updated)}</time></span>}
   {d.voices && <span>Voices: {d.voices.join(' and ')}</span>}
-  {d.status && <span>{d.status === 'working' ? 'A working thought' : 'Settled'}</span>}
 </p>

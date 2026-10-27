@@ -24,7 +24,7 @@ Checked by `src/content.config.ts`; the build stops on a mistake.
 
 - Always: `title`, `date`, `summary`, `kind` (`note`, `tool`, `print` or `essay`), `tags`.
 - A tool or print: `href`, the address of its page (`/tools/...` or `/prints/...`).
-- When they apply: `updated` (the date of a later change), `project`, `voices` (a list of names), `status` (`working` or `settled`), `supersedes` (the id of the entry it replaces), `image` and `imageAlt` (a picture under `public/` for the card), `audio` and `audioLength` (a voice memo under `public/audio/` and its length as `m:ss`), `lang` (default `en`).
+- When they apply: `updated` (the date of a later change), `project`, `voices` (a list of names), `supersedes` (the id of the entry it replaces), `image` and `imageAlt` (a picture under `public/` for the card), `audio` and `audioLength` (a voice memo under `public/audio/` and its length as `m:ss`), `lang` (default `en`).
 - The folder name is the entry's address. Never rename a published one.
 
 ## Licence and indexing
@@ -41,7 +41,7 @@ Checked by `src/content.config.ts`; the build stops on a mistake.
 
 **Add a new tool or print**: put its files under `public/`, then add an entry with `kind`, `href` and a one- or two-sentence `summary` in the studio's voice (skill `situated-studio-voice`). Add a tag to `src/data/tags.json` only if no existing tag fits.
 
-**Add a working note**: a new folder in `src/content/entries/`, `kind: note`, `voices` for everyone whose words are in it, `status: working`. Pictures go beside `index.md` as `![What it shows](./photo.jpg "Caption. Photo: Name.")` on their own line; start the caption with `wide:` for a wide picture.
+**Add a working note**: a new folder in `src/content/entries/`, `kind: note`, `voices` for everyone whose words are in it. Pictures go beside `index.md` as `![What it shows](./photo.jpg "Caption. Photo: Name.")` on their own line; start the caption with `wide:` for a wide picture.
 
 **Add a voice memo** (a working note that is a clip from a recorded work meeting, 30 seconds to 5 minutes):
 1. Minsung picks the stretch and exports it from the recording with a margin of about 20 seconds on each side (the full WAV is too large to pass through).

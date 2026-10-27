@@ -6,7 +6,6 @@ kind: note
 tags: [commoners-fair, alternative-economies]
 project: Agents of Change
 voices: [Gemma Medina, Minsung Wang]
-status: working
 audio: /audio/the-honest-shop.mp3
 audioLength: "3:21"
 ---

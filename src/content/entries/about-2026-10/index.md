@@ -5,7 +5,6 @@ summary: Who we are, what we hold to, and what this archive is for. Our statemen
 kind: essay
 tags: [about, statement]
 voices: [Minsung Wang, Gemma Medina]
-status: working
 ---
 We are a Situated Studio, a social design research practice in Eindhoven. We work with people in the places they live, and we use art, design and research to create the conditions for care.
 
