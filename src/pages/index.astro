@@ -2,19 +2,19 @@
 import Base from '../layouts/Base.astro';
 import Overprint from '../components/Overprint.astro';
 import EntryCard from '../components/EntryCard.astro';
-import { allEntries } from '../lib/entries';
+import { allEntries, categories } from '../lib/entries';
 const entries = await allEntries();
 ---
 <Base title="Bron van Doen research archive" description="Research in progress by a Situated Studio: working notes, workshop tools and prints." current="home">
   <p class="eyebrow">Bron van Doen</p>
   <Overprint text="Research archive" />
   <div class="sheet">
-    <p class="lede">We are a Situated Studio, a social design research practice in Eindhoven. We work with people in the places they live, and we use art, design and research to create the conditions for care.</p>
-    <p class="prose" style="margin:0">This archive holds our research in progress: working notes, the tools we use in workshops, and prints. <a href="/about/">More about us</a>.</p>
+    <p class="lede">We are a Situated Studio, a social design research practice in Eindhoven by Gemma Medina and Bron van Doen. We work with people in the places they live, and we use art, design and research to create the conditions for care.</p>
+    <p class="prose" style="margin:0">This archive holds our research in progress: {categories.map((c, i) => <>{i > 0 && (i === categories.length - 1 ? ' and ' : ', ')}<a href={`/categories/${c.slug}/`}>{c.label.toLowerCase()}</a></>)}. <a href="/about/">More about us</a>.</p>
   </div>
   <div class="section-head">
     <h2>Latest</h2>
-    <p class="meta"><a href="/tags/">Browse by tag</a> · <a href="/rss.xml">RSS</a></p>
+    <p class="meta"><a href="/categories/">Browse by category</a> · <a href="/tags/">Browse by tag</a> · <a href="/rss.xml">RSS</a></p>
   </div>
   <ul class="entry-list">
     {entries.map((e) => <EntryCard entry={e} />)}

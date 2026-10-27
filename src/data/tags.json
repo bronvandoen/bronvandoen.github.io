@@ -17,7 +17,7 @@
   },
   "about": {
     "label": "About",
-    "about": "Statements of who we are and what we hold to. The newest is the About page."
+    "about": "Our text for the About page, and every earlier version of it. The newest is the About page."
   },
   "commoners-fair": {
     "label": "Commoners Fair",
@@ -30,5 +30,9 @@
   "alternative-economies": {
     "label": "Alternative economies",
     "about": "Other ways to value each other's work: trust, trade and support."
+  },
+  "statement": {
+    "label": "Statements",
+    "about": "Where we stand: who we are, how we think, what we hold to."
   }
 }

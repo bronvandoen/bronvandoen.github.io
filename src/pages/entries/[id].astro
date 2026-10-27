@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 import Overprint from '../../components/Overprint.astro';
 import EntryMeta from '../../components/EntryMeta.astro';
 import Tags from '../../components/Tags.astro';
-import { allEntries, currentAbout, supersededBy, kinds, entryUrl, fmtDate } from '../../lib/entries';
+import { allEntries, currentAbout, supersededBy, kinds, categoryUrl, entryUrl, fmtDate } from '../../lib/entries';
 
 export async function getStaticPaths() {
   const entries = await allEntries();
@@ -21,8 +21,8 @@ const open = { tool: 'Open the tool', print: 'Open the print' }[d.kind];
 ---
 <Base title={d.title} description={d.summary}>
   <article>
-    <p class="eyebrow">{kinds[d.kind]}{d.project && <> · {d.project}</>}</p>
-    <Overprint text={d.title} size="l" asIs={d.kind === 'statement'} />
+    <p class="eyebrow"><a href={categoryUrl(d.kind)}>{kinds[d.kind]}</a>{d.project && <> · {d.project}</>}</p>
+    <Overprint text={d.title} size="l" asIs={d.tags.includes('about')} />
     <EntryMeta entry={entry} />
     {newer && <p class="statement-note" style="margin-top:0">Superseded by <a href={entryUrl(newer)}>{newer.data.title}</a> ({fmtDate(newer.data.date)}). This version stays as it was written.</p>}
     {isAbout && <p class="meta">This is our current statement, shown on the <a href="/about/">About page</a>.</p>}

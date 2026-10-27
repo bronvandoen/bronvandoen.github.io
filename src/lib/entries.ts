@@ -2,7 +2,17 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import tags from '../data/tags.json';
 
 export type Entry = CollectionEntry<'entries'>;
-export const kinds = { note: 'Working note', tool: 'Workshop tool', print: 'Print', statement: 'Statement' } as const;
+export const kinds = { note: 'Working note', tool: 'Workshop tool', print: 'Print', essay: 'Essay' } as const;
+export type Kind = keyof typeof kinds;
+
+/** Categories are the public name for kinds: one page each, in this order. */
+export const categories: { kind: Kind; slug: string; label: string; about: string }[] = [
+  { kind: 'note', slug: 'working-notes', label: 'Working notes', about: 'Short and raw: what came up in the work, often in our own words from a meeting.' },
+  { kind: 'tool', slug: 'workshop-tools', label: 'Workshop tools', about: 'The pages we use with participants in our workshops. Anyone can try them.' },
+  { kind: 'print', slug: 'prints', label: 'Prints', about: 'Flyers and posters, as they went to print.' },
+  { kind: 'essay', slug: 'essays', label: 'Essays', about: 'Writing between a working note and a finished text: worked through, still open.' },
+];
+export const categoryUrl = (kind: Kind) => `/categories/${categories.find((c) => c.kind === kind)!.slug}/`;
 export const tagLabel = (id: string) => (tags as Record<string, { label: string }>)[id]?.label ?? id;
 export const tagList = tags as Record<string, { label: string; about: string }>;
 
@@ -13,9 +23,10 @@ export async function allEntries(): Promise<Entry[]> {
   );
 }
 
-/** The About page shows the newest statement tagged about. */
+/** The About page shows the newest entry tagged about; older ones stay as earlier versions. */
+export const isAboutText = (e: Entry) => e.data.tags.includes('about');
 export async function currentAbout(): Promise<Entry | undefined> {
-  return (await allEntries()).find((e) => e.data.kind === 'statement' && e.data.tags.includes('about'));
+  return (await allEntries()).find(isAboutText);
 }
 
 /** The entry that replaces this one, if any. */

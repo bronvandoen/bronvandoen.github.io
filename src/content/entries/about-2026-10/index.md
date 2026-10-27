@@ -2,8 +2,8 @@
 title: a Situated Studio
 date: 2026-10-22
 summary: Who we are, what we hold to, and what this archive is for. Our statement at this moment, to be rewritten as the work moves.
-kind: statement
-tags: [about]
+kind: essay
+tags: [about, statement]
 voices: [Minsung Wang, Gemma Medina]
 status: working
 ---

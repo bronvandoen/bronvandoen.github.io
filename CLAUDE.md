@@ -8,10 +8,11 @@ This file is the current layout. Where the `situated-studio-lead` skill and this
 
 | What | Where | Served at |
 | --- | --- | --- |
-| An entry (working note, tool, print, statement) | `src/content/entries/<id>/index.md`, images beside it | `/entries/<id>/` |
+| An entry (working note, workshop tool, print, essay) | `src/content/entries/<id>/index.md`, images beside it | `/entries/<id>/` |
 | A workshop tool, self-contained HTML | `public/tools/<project>/<tool>/index.html` | `/tools/<project>/<tool>/` |
 | A voice memo's audio (MP3) | `public/audio/<entry id>.mp3` | `/audio/<entry id>.mp3` |
 | A print (flyer, poster) and its exported image | `public/prints/<project>/<print>/` | `/prints/<project>/<print>/` |
+| Categories (the public name for `kind`: working notes, workshop tools, prints, essays) | `categories` in `src/lib/entries.ts` | `/categories/<slug>/` |
 | Tags | `src/data/tags.json` (a tag must be listed here before an entry uses it) | `/tags/<tag>/` |
 | Tokens and styles | `src/styles/tokens.css`, `src/styles/archive.css` | |
 
@@ -21,7 +22,7 @@ Files in `public/` are copied to the site byte for byte. Anything at the reposit
 
 Checked by `src/content.config.ts`; the build stops on a mistake.
 
-- Always: `title`, `date`, `summary`, `kind` (`note`, `tool`, `print` or `statement`), `tags`.
+- Always: `title`, `date`, `summary`, `kind` (`note`, `tool`, `print` or `essay`), `tags`.
 - A tool or print: `href`, the address of its page (`/tools/...` or `/prints/...`).
 - When they apply: `updated` (the date of a later change), `project`, `voices` (a list of names), `status` (`working` or `settled`), `supersedes` (the id of the entry it replaces), `image` and `imageAlt` (a picture under `public/` for the card), `audio` and `audioLength` (a voice memo under `public/audio/` and its length as `m:ss`), `lang` (default `en`).
 - The folder name is the entry's address. Never rename a published one.
@@ -48,7 +49,9 @@ Checked by `src/content.config.ts`; the build stops on a mistake.
 3. Put the MP3 at `public/audio/<entry id>.mp3`. Write the entry as a working note with `audio` and `audioLength`: one or two lines of context in his voice (the meeting, the date, what was being discussed), then `## Transcript`, each turn starting with the speaker's first name in bold. Clean the transcript lightly (fillers, false starts); keep the words as spoken, and let Minsung check who says what.
 4. One clip is one entry: each has its own topic, tags and address.
 
-**Change the About page**: it shows the newest `statement` tagged `about`. A wording fix edits that entry and sets `updated`. A changed position is a new statement entry with `supersedes: <old id>`; the old one stays.
+**Essays and statements**: an essay is writing between a working note and a finished text. A statement (where we stand) is an essay tagged `statement`.
+
+**Change the About page**: it shows the newest entry tagged `about` (an essay tagged `about` and `statement`); older ones tagged `about` are listed as earlier versions. A wording fix edits that entry and sets `updated`. A changed position is a new essay tagged `about` and `statement`, with `supersedes: <old id>`; the old one stays.
 
 ## Build and check
 

@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import Overprint from '../../components/Overprint.astro';
+import { allEntries, categories } from '../../lib/entries';
+const entries = await allEntries();
+const counted = categories.map((c) => ({ ...c, count: entries.filter((e) => e.data.kind === c.kind).length }));
+---
+<Base title="Categories" description="The four kinds of entry in the archive: working notes, workshop tools, prints and essays." current="categories">
+  <Overprint text="Categories" size="l" />
+  <ul class="entry-list">
+    {counted.map((c) => (
+      <li class="card">
+        <h3><a href={`/categories/${c.slug}/`}>{c.label}</a></h3>
+        <p>{c.about}</p>
+        <p class="meta">{c.count} {c.count === 1 ? 'entry' : 'entries'}</p>
+      </li>
+    ))}
+  </ul>
+</Base>

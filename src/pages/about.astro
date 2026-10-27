@@ -1,16 +1,16 @@
 ---
-// The About page shows the newest statement tagged about. A rewrite is a new entry that supersedes it.
+// The About page shows the newest entry tagged about. A rewrite is a new entry that supersedes it.
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Overprint from '../components/Overprint.astro';
 import EntryMeta from '../components/EntryMeta.astro';
 import Logo from '../components/Logo.astro';
-import { currentAbout, entryUrl, fmtDate, allEntries } from '../lib/entries';
+import { currentAbout, isAboutText, entryUrl, fmtDate, allEntries } from '../lib/entries';
 
 const about = await currentAbout();
-if (!about) throw new Error('No statement tagged about: the About page needs one.');
+if (!about) throw new Error('No entry tagged about: the About page needs one.');
 const { Content } = await render(about);
-const earlier = (await allEntries()).filter((e) => e.data.kind === 'statement' && e.data.tags.includes('about') && e.id !== about.id);
+const earlier = (await allEntries()).filter((e) => isAboutText(e) && e.id !== about.id);
 ---
 <Base title="About" description={about.data.summary} current="about">
   <article class="about">

@@ -12,7 +12,7 @@ import '../styles/tokens.css';
 import '../styles/archive.css';
 import Logo from '../components/Logo.astro';
 
-interface Props { title: string; description?: string; noindex?: boolean; current?: 'home' | 'about' | 'tags' }
+interface Props { title: string; description?: string; noindex?: boolean; current?: 'home' | 'about' | 'categories' | 'tags' }
 const { title, description, noindex = false, current } = Astro.props;
 const siteName = 'Bron van Doen research archive';
 const fullTitle = title === siteName ? siteName : `${title} · ${siteName}`;
@@ -51,6 +51,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <a class="site-name" href="/" aria-current={current === 'home' ? 'page' : undefined}>{siteName}</a>
     <nav class="site-nav" aria-label="Main">
       <a href="/about/" aria-current={current === 'about' ? 'page' : undefined}>About</a>
+      <a href="/categories/" aria-current={current === 'categories' ? 'page' : undefined}>Categories</a>
       <a href="/tags/" aria-current={current === 'tags' ? 'page' : undefined}>Tags</a>
     </nav>
   </div>

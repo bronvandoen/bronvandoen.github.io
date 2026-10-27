@@ -22,7 +22,7 @@ const entries = defineCollection({
       updated: z.coerce.date().optional(),
       summary: z.string(),
       tags: z.array(z.enum(tagIds)).min(1),
-      kind: z.enum(['note', 'tool', 'print', 'statement']),
+      kind: z.enum(['note', 'tool', 'print', 'essay']),
       lang: z.string().default('en'),
       project: z.string().optional(),
       voices: z.array(z.string()).optional(),
