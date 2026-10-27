@@ -44,7 +44,7 @@ Checked by `src/content.config.ts`; the build stops on a mistake.
 
 **Add a voice memo** (a working note that is a clip from a recorded work meeting, 30 seconds to 5 minutes):
 1. Minsung picks the stretch and exports it from the recording with a margin of about 20 seconds on each side (the full WAV is too large to pass through).
-2. Cut on real pauses near his marks, using word-level timestamps; add a short fade in and out; level to about -16 LUFS with true peaks at -1.5 dBFS; export MP3, 160 kbps. A light touch only: shorten pauses over about 1.2 seconds to 0.7, and cut a strong stutter, a repeat, a noise or a private name only where it is one clean phrase. Say every cut to Minsung.
+2. His marks are a ballpark, not exact points: start at the nearest clean beginning of a sentence and end where the thought closes, moving a few seconds if a mark falls mid-sentence, and say where and why. Cut on real pauses, using word-level timestamps; add a short fade in and out; level to about -16 LUFS with true peaks at -1.5 dBFS; export MP3, 160 kbps. A light touch only: shorten pauses over about 1.2 seconds to 0.7, and cut a strong stutter, a repeat, a noise or a private name only where it is one clean phrase. Say every cut to Minsung.
 3. Put the MP3 at `public/audio/<entry id>.mp3`. Write the entry as a working note with `audio` and `audioLength`: one or two lines of context in his voice (the meeting, the date, what was being discussed), then `## Transcript`, each turn starting with the speaker's first name in bold. Clean the transcript lightly (fillers, false starts); keep the words as spoken, and let Minsung check who says what.
 4. One clip is one entry: each has its own topic, tags and address.
 
