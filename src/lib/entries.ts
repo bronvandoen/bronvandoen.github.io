@@ -7,10 +7,10 @@ export type Kind = keyof typeof kinds;
 
 /** Categories are the public name for kinds: one page each, in this order. */
 export const categories: { kind: Kind; slug: string; label: string; about: string }[] = [
-  { kind: 'note', slug: 'working-notes', label: 'Working notes', about: 'Short and raw: what came up in the work, often in our own words from a meeting.' },
-  { kind: 'tool', slug: 'workshop-tools', label: 'Workshop tools', about: 'The pages we use with participants in our workshops. Anyone can try them.' },
-  { kind: 'print', slug: 'prints', label: 'Prints', about: 'Flyers and posters, as they went to print.' },
-  { kind: 'essay', slug: 'essays', label: 'Essays', about: 'Writing between a working note and a finished text: worked through, still open.' },
+  { kind: 'note', slug: 'working-notes', label: 'Working notes', about: 'Short and raw: our voices and recollections from our work meetings.' },
+  { kind: 'tool', slug: 'workshop-tools', label: 'Workshop tools', about: 'The tools we use with participants in our workshops. Anyone can try them.' },
+  { kind: 'print', slug: 'prints', label: 'Prints', about: 'Flyers, posters and other printed material.' },
+  { kind: 'essay', slug: 'essays', label: 'Essays', about: 'Writing between our raw notes and our published work.' },
 ];
 export const categoryUrl = (kind: Kind) => `/categories/${categories.find((c) => c.kind === kind)!.slug}/`;
 export const tagLabel = (id: string) => (tags as Record<string, { label: string }>)[id]?.label ?? id;
