@@ -22,11 +22,7 @@ From the same meeting with Gemma on 27 October. She had just found David Bollier
 
 **Gemma:** Yeah, exactly.
 
-**Minsung:** And the outcome of that is basically the exercise of interdependence. Just doing that makes us stronger.
-
-**Gemma:** On the idea of interdependence as well. Not as a concept, but also as an exercise.
-
-**Minsung:** You get better at it, you get stronger at it.
+**Minsung:** And the outcome of that is basically the exercise of interdependence. Just doing that makes us stronger. On the idea of interdependence as well. Not as a concept, but also as an exercise. You get better at it, you get stronger at it.
 
 **Gemma:** Exactly. And you experience, you know, the taste of it.
 
