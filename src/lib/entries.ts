@@ -10,7 +10,7 @@ export const categories: { kind: Kind; slug: string; label: string; about: strin
   { kind: 'note', slug: 'working-notes', label: 'Working notes', about: 'Short and raw: voices and recollections from our work meetings.' },
   { kind: 'tool', slug: 'workshop-tools', label: 'Workshop tools', about: 'Tools we developed for participants in our workshops. Anyone can try them.' },
   { kind: 'print', slug: 'prints', label: 'Prints', about: 'Flyers, posters and other printed material.' },
-  { kind: 'essay', slug: 'essays', label: 'Essays', about: 'Writing between our raw notes and our published work.' },
+  { kind: 'essay', slug: 'essays', label: 'Essays', about: 'Writing between our raw notes and published work.' },
 ];
 export const categoryUrl = (kind: Kind) => `/categories/${categories.find((c) => c.kind === kind)!.slug}/`;
 export const tagLabel = (id: string) => (tags as Record<string, { label: string }>)[id]?.label ?? id;

@@ -49,7 +49,7 @@ Checked by `src/content.config.ts`; the build stops on a mistake.
 3. Put the MP3 at `public/audio/<entry id>.mp3`. Write the entry as a working note with `audio` and `audioLength`: one or two lines of context in his voice (the meeting, the date, what was being discussed), then `## Transcript`, each turn starting with the speaker's first name in bold. Clean the transcript lightly (fillers, false starts); keep the words as spoken, and let Minsung check who says what.
 4. One clip is one entry: each has its own topic, tags and address.
 
-**Essays and statements**: an essay is writing between our raw notes (working notes) and our published work. A statement (where we stand) is an essay tagged `statement`.
+**Essays and statements**: an essay is writing between our raw notes (working notes) and published work. A statement (where we stand) is an essay tagged `statement`.
 
 **Change the About page**: it shows the newest entry tagged `about` (an essay tagged `about` and `statement`); older ones tagged `about` are listed as earlier versions. A wording fix edits that entry and sets `updated`. A changed position is a new essay tagged `about` and `statement`, with `supersedes: <old id>`; the old one stays.
 
