@@ -77,6 +77,9 @@ figcaption { font: 400 12px/1.5 var(--font-label); color: var(--ink-soft); margi
 a.tag:hover { background: var(--paper); border-color: var(--ink-1); }
 .tag .count { color: var(--ink-soft); margin-left: 6px; }
 
+/* A voice memo on its entry page */
+.figure.audio audio { display: block; width: 100%; max-width: var(--measure); min-height: 48px; }
+
 /* Entry cards */
 .entry-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
 @media (min-width: 720px) { .entry-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

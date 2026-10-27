@@ -33,11 +33,15 @@ const entries = defineCollection({
       // Optional picture for the card and the entry page (a path under public/), with its alt text.
       image: z.string().optional(),
       imageAlt: z.string().optional(),
+      // Voice memo: the audio file (a path under public/audio/) and its length as m:ss.
+      audio: z.string().optional(),
+      audioLength: z.string().regex(/^\d+:\d\d$/).optional(),
     })
     .refine((e) => !['tool', 'print'].includes(e.kind) || e.href, {
       message: 'A tool or print entry needs href, the address of its page.',
     })
-    .refine((e) => !e.image || e.imageAlt, { message: 'An image needs imageAlt, a description of what it shows.' }),
+    .refine((e) => !e.image || e.imageAlt, { message: 'An image needs imageAlt, a description of what it shows.' })
+    .refine((e) => !e.audio || e.audioLength, { message: 'An audio entry needs audioLength, as m:ss.' }),
 });
 
 export const collections = { entries };

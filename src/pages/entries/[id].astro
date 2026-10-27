@@ -32,6 +32,14 @@ const open = { tool: 'Open the tool', print: 'Open the print' }[d.kind];
         <a href={d.href ?? d.image}><img src={d.image} alt={d.imageAlt} loading="eager" /></a>
       </figure>
     )}
+    {d.audio && (
+      <figure class="figure audio">
+        <audio controls preload="metadata" src={d.audio}>
+          <a href={d.audio}>Listen to the voice memo (MP3)</a>
+        </audio>
+        <figcaption>The transcript is below. <a href={d.audio} download>Download the MP3</a></figcaption>
+      </figure>
+    )}
     {d.href && <p><a class="button" href={d.href}>{open}</a></p>}
     <div class="prose">
       <Content />
