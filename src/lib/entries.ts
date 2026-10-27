@@ -7,8 +7,8 @@ export type Kind = keyof typeof kinds;
 
 /** Categories are the public name for kinds: one page each, in this order. */
 export const categories: { kind: Kind; slug: string; label: string; about: string }[] = [
-  { kind: 'note', slug: 'working-notes', label: 'Working notes', about: 'Short and raw: our voices and recollections from our work meetings.' },
-  { kind: 'tool', slug: 'workshop-tools', label: 'Workshop tools', about: 'The tools we use with participants in our workshops. Anyone can try them.' },
+  { kind: 'note', slug: 'working-notes', label: 'Working notes', about: 'Short and raw: voices and recollections from our work meetings.' },
+  { kind: 'tool', slug: 'workshop-tools', label: 'Workshop tools', about: 'Tools we developed for participants in our workshops. Anyone can try them.' },
   { kind: 'print', slug: 'prints', label: 'Prints', about: 'Flyers, posters and other printed material.' },
   { kind: 'essay', slug: 'essays', label: 'Essays', about: 'Writing between our raw notes and our published work.' },
 ];
