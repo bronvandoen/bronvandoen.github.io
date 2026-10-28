@@ -55,7 +55,7 @@ Checked by `src/content.config.ts`; the build stops on a mistake.
 
 ## Build and check
 
-- Node 22.23.4 or newer: `npm ci`, then `npm run build`. The build must pass.
+- Node 22.23.4 or newer: `npm ci`, then `npm run build`. The build must pass. In a workspace with an older Node, run it through `npx -y node@24`.
 - Look at the changed pages at phone width (375px): no sideways scroll, text readable.
 - Before publishing, confirm: no Dutch text that Ron has not read; nothing that belongs to a client, is sensitive, or that we want to keep private (everything here is CC BY 4.0, so publishing it licenses it); images, sound and fonts in entries, tools and prints are ours or free to use, with credit.
 - After pushing to `main`, wait for the Action to finish, open the live page and send Minsung the link. Roll back with `git revert`, never a force push.
