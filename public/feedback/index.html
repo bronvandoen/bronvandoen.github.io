@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Leave Us a Message</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:wght@400;600&family=Big+Shoulders+Display:wght@800;900&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* Workshop feedback: one phone screen, riso on paper, same tokens as the workshop tools. */
+:root{
+  --paper:#F7F3EA; --paper-raised:#FBF8F1; --ink:#111111; --ink-soft:#4A463F;
+  --ink-1:#0078BF; --ink-2:#F15060; --display-ink:#0078BF; --eyebrow-ink:#3D5588; --accent-text:#B8293A;
+  --display:"Big Shoulders Display","Oswald","Arial Narrow",sans-serif;
+  --text:"Source Serif 4",Georgia,serif;
+  --readable:"Atkinson Hyperlegible Next",Verdana,sans-serif;
+  --label:"Atkinson Hyperlegible Mono","Courier New",monospace;
+  --rule:2px; --rule-heavy:3px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--text);font-size:17px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:560px;margin:0 auto}
+a{color:var(--ink);text-decoration-thickness:2px;text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+
+header.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:16px 8px;border-bottom:var(--rule) solid var(--ink)}
+.studio{font-family:var(--display);font-weight:900;font-size:20px;white-space:nowrap;letter-spacing:.01em}
+.from{font-family:var(--label);font-size:12px;color:var(--ink-soft);text-align:right;overflow-wrap:anywhere}
+
+.over{position:relative;margin:24px 0 16px}
+.over h1,.over .ghost{font-family:var(--display);font-weight:900;font-size:clamp(40px,12vw,60px);line-height:.9;text-transform:uppercase;margin:0;text-wrap:balance;mix-blend-mode:multiply}
+.over h1{position:relative;color:var(--display-ink)}
+.over .ghost{position:absolute;left:3px;top:3px;color:var(--ink-2)}
+p{margin:0 0 14px}
+.lead{font-size:19px}
+.note{font-family:var(--label);font-size:13px;color:var(--ink-soft)}
+
+.panel{background:var(--paper-raised);border:var(--rule-heavy) solid var(--ink);padding:20px 16px;margin:18px 0}
+.panel h2{font-family:var(--display);font-weight:900;font-size:26px;line-height:1;text-transform:uppercase;margin:0 0 12px}
+
+label{display:block;font-family:var(--readable);font-weight:600;font-size:16px;margin:0 0 6px}
+.hint{font-family:var(--readable);font-size:14px;color:var(--ink-soft);line-height:1.4;margin:-2px 0 8px}
+textarea,input[type=text]{display:block;width:100%;font-family:var(--readable);font-size:18px;line-height:1.45;color:var(--ink);background:var(--paper);
+  border:var(--rule) solid var(--ink);border-radius:0;padding:10px 12px;min-height:48px;-webkit-appearance:none;appearance:none}
+textarea{min-height:168px;resize:vertical}
+.field{margin:0 0 20px}
+.count{font-family:var(--label);font-size:12px;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* Spam trap: off screen for people, still in the form for bots. */
+.trap{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
+
+button{font-family:var(--label);font-weight:600;font-size:16px;min-height:52px;width:100%;cursor:pointer;border-radius:0;
+  background:var(--ink);color:var(--paper);border:var(--rule-heavy) solid var(--ink)}
+button:disabled{opacity:.55;cursor:wait}
+button.quiet{background:var(--paper-raised);color:var(--ink);border-width:var(--rule)}
+
+.uses{list-style:none;padding:0;margin:0}
+.uses li{border-left:var(--rule-heavy) solid var(--ink-1);padding:2px 0 2px 12px;margin:0 0 12px;font-size:16px}
+.uses li:last-child{border-left-color:var(--ink-2);margin-bottom:0}
+.uses b{font-family:var(--label);font-size:13px;display:block;letter-spacing:.02em}
+.mails{font-family:var(--readable);font-size:15px;margin-top:6px;line-height:1.7}
+
+.status{font-family:var(--readable);font-size:16px;border-left:var(--rule-heavy) solid var(--ink-2);padding:2px 0 2px 12px;margin:16px 0 0}
+.status:empty{display:none}
+.done[hidden]{display:none}
+footer{margin-top:32px;padding-top:10px;border-top:var(--rule) solid var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span class="studio">a Situated Studio</span>
+    <span class="from" id="from"></span>
+  </header>
+
+  <div class="over">
+    <span class="ghost" aria-hidden="true">Leave us a message</span>
+    <h1>Leave us a message</h1>
+  </div>
+  <p class="lead">What stays with you from today? What would you change? One sentence is enough.</p>
+
+  <form id="form" class="panel" novalidate>
+    <div class="field">
+      <label for="message">Your message</label>
+      <textarea id="message" name="message" maxlength="4000" required></textarea>
+      <div class="count" id="count" aria-live="polite"></div>
+    </div>
+    <div class="field">
+      <label for="name">Your name</label>
+      <p class="hint" id="name-hint">Leave it empty to stay anonymous.</p>
+      <input type="text" id="name" name="name" maxlength="100" autocomplete="name" aria-describedby="name-hint">
+    </div>
+    <div class="trap" aria-hidden="true">
+      <label for="website">Leave this empty</label>
+      <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+    </div>
+    <button type="submit" id="send">Send</button>
+    <p class="status" id="status" role="status"></p>
+  </form>
+
+  <div class="panel done" id="done" hidden>
+    <h2>Thank you</h2>
+    <p>We have your message. We read every one.</p>
+    <button type="button" class="quiet" id="again">Send another</button>
+  </div>
+
+  <section class="panel">
+    <h2>What we do with it</h2>
+    <p>We read every message when we look back on the workshop and write our report for the people who invited us. We may also quote a message in our public work, such as this archive.</p>
+    <ul class="uses">
+      <li><b>With your name</b>We may quote you, with your name.</li>
+      <li><b>Without a name</b>We may quote you, anonymously.</li>
+      <li><b>Only for us</b>Rather not be quoted at all? Write to us instead. Mail stays between us.
+        <div class="mails">
+          <a href="mailto:minsung@bronvandoen.nl">minsung@bronvandoen.nl</a><br>
+          <a href="mailto:gemma.medina@gmail.com">gemma.medina@gmail.com</a>
+        </div>
+      </li>
+    </ul>
+    <p class="note" style="margin:14px 0 0">We keep the message, the name you give, the date and which workshop it came from. Nothing else.</p>
+  </section>
+
+  <footer class="note">Minsung Wang and Gemma Medina, a Situated Studio</footer>
+</div>
+
+<script>
+(function(){
+  // The Apps Script web app address (Deploy → Web app URL). Empty means not connected yet.
+  var ENDPOINT = "";
+
+  // The workshop label comes from the QR link: /feedback/?w=dae-2026-11-03
+  var w = (new URLSearchParams(location.search).get("w") || "").toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 60);
+  if (w) document.getElementById("from").textContent = w;
+
+  var form = document.getElementById("form"), msg = document.getElementById("message"),
+      count = document.getElementById("count"), status = document.getElementById("status"),
+      send = document.getElementById("send"), done = document.getElementById("done");
+
+  msg.addEventListener("input", function(){
+    var left = 4000 - msg.value.length;
+    count.textContent = left < 400 ? left + " characters left" : "";
+  });
+
+  form.addEventListener("submit", function(ev){
+    ev.preventDefault();
+    status.textContent = "";
+    if (!msg.value.trim()) { status.textContent = "Write a few words first."; msg.focus(); return; }
+    if (!ENDPOINT) { status.textContent = "This page is not connected yet. Please mail us instead."; return; }
+
+    var body = new URLSearchParams({
+      message: msg.value,
+      name: document.getElementById("name").value,
+      website: document.getElementById("website").value,
+      w: w
+    });
+    send.disabled = true; send.textContent = "Sending…";
+
+    fetch(ENDPOINT, { method: "POST", body: body })
+      .then(function(r){ return r.json(); })
+      .then(function(res){
+        if (!res || !res.ok) throw new Error("not ok");
+        form.hidden = true; done.hidden = false; done.scrollIntoView({ block: "start" });
+      })
+      .catch(function(){
+        status.textContent = "That did not go through. Try again, or mail us your message.";
+      })
+      .then(function(){ send.disabled = false; send.textContent = "Send"; });
+  });
+
+  document.getElementById("again").addEventListener("click", function(){
+    form.reset(); count.textContent = ""; done.hidden = true; form.hidden = false; msg.focus();
+  });
+})();
+</script>
+</body>
+</html>
