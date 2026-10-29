@@ -12,7 +12,7 @@ This file is the current layout. Where the `situated-studio-lead` skill and this
 | A workshop tool, self-contained HTML | `public/tools/<project>/<tool>/index.html` | `/tools/<project>/<tool>/` |
 | A voice memo's audio (MP3) | `public/audio/<entry id>.mp3` | `/audio/<entry id>.mp3` |
 | A print (flyer, poster) and its exported image | `public/prints/<project>/<print>/` | `/prints/<project>/<print>/` |
-| The workshop feedback page (unlisted: no entry, no link from the site, noindex). Its receiver is a Google Apps Script in the feedback Sheet; the copy here is `apps-script/feedback.gs` (not served). The page never changes per workshop: the QR link carries the label, `?w=<host>-<YYYY-MM-DD>` in lower case, such as `?w=dae-2026-11-03` | `public/feedback/index.html` | `/feedback/` |
+| The feedback page (unlisted: no entry, no link from the site, noindex; recipe "Feedback QR" below) | `public/feedback/index.html` | `/feedback/` |
 | Categories (the public name for `kind`: working notes, workshop tools, prints, essays) | `categories` in `src/lib/entries.ts` | `/categories/<slug>/` |
 | Tags | `src/data/tags.json` (a tag must be listed here before an entry uses it) | `/tags/<tag>/` |
 | Tokens and styles | `src/styles/tokens.css`, `src/styles/archive.css` | |
