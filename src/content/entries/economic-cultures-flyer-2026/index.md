@@ -11,4 +11,4 @@ image: /prints/economic-cultures/blueprints-2026/economic-cultures-2026.png
 imageAlt: The Economic Cultures flyer for DAE Blueprints 2026, printed in two inks, with the three session dates.
 ---
 
-![The programme of Economic Cultures: three evenings, six modules. Tuesday 3 November, My hourly rate and From quote to invoice; Thursday 5 November, Project budget and Seeds of Hope part 1; Tuesday 10 November, Interdependence and Seeds of Hope part 2. 17.00 to 21.00, Room 2A, each module about 90 minutes.](./programme.png "wide: The programme, three evenings and six modules, as shown at the start of each module.")
+![The programme of Economic Cultures: three evenings, six modules. Tuesday 3 November, My hourly rate and From quote to invoice; Thursday 5 November, Project budget and Seeds of Hope part 1; Tuesday 10 November, Interdependence and Seeds of Hope part 2. 17.00 to 21.00, Room 2A, each module about 90 minutes.](./programme.png "wide: The programme, three evenings and six modules.")
