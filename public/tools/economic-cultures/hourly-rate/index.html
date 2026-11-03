@@ -255,7 +255,7 @@ function out(name){return '<span data-o="'+name+'"></span>';}
 /* ---------- steps ---------- */
 var STEPS=[
  {t:"Start",r:function(){
-   return heading("Economic Cultures · Day 1","What does your hour need to earn?")+
+   return heading("Economic Cultures · Module 1","What does your hour need to earn?")+
    '<p class="lead">Your hourly rate is not a price on your talent. It comes out of your life: what you need, what your practice costs, and how many hours someone will actually pay for.</p>'+
    '<p>We work it out together, step by step. You can always go back and change a number.</p>'+
    '<p class="note">Everything you type stays on this phone. We don\'t collect anything.</p>'+
@@ -362,7 +362,7 @@ var STEPS=[
    '<label class="chk"><input type="checkbox" data-share="7" '+(((S.w.shareMask>>7)&1)?"checked":"")+'> <span>Share it<br><span class="note" data-o="sh7"></span></span></label>'+
    '<p class="note" style="margin-top:10px">Shared with how many people, me included</p><div class="row">'+[2,3,4,5].map(function(n){return '<button class="btn" data-n="'+n+'" aria-pressed="'+(S.w.shareN===n)+'">'+n+'</button>';}).join("")+'</div></div>'+
    '<div class="panel"><table class="sum"><tr><td>My practice without sharing</td><td>'+out("costsFull")+'</td></tr><tr><td>My practice, shared</td><td>'+out("costs")+'</td></tr><tr class="t"><td>My rate with sharing</td><td>'+out("rate2")+'</td></tr></table></div>'+
-   '<p>On Day 3 we look at how sharing works in practice.</p>'+
+   '<p>In Module 4, Interdependence, we look at how sharing works in practice.</p>'+
    pause("Talk to your group: what could you share with the people around you?")+
    '<div class="row noprint"><button class="btn primary" data-act="saveshare">Save as a version: shared</button></div><p class="note" data-o="shareMsg"></p>';
  }},
@@ -372,10 +372,10 @@ var STEPS=[
    '<div class="panel"><h2>My versions</h2><div data-o="cmp"></div></div>'+
    '<div class="panel"><h2>Questions to take home</h2><p>What is your money for? Give three things a name.</p><p>Which version feels most like the life you want? What is a first step towards it?</p><p>Which of your unpaid hours would you like someone to pay for, and who?</p><p>Who could you share something with?</p></div>'+
    '<div class="panel noprint"><h2>Save it</h2><p>Save this page as a PDF: tap the button, then choose “Save as PDF”.</p><div class="row"><button class="btn primary" data-act="print">Save as PDF</button></div></div>'+
-   '<div class="panel noprint"><h2>Bring it back on Day 3</h2><p>This link reopens the tool with your numbers. The numbers live in the link, not with us. In the PDF, tap the link.</p>'+
+   '<div class="panel noprint"><h2>Bring it back to the next modules</h2><p>This link reopens the tool with your numbers. The numbers live in the link, not with us. In the PDF, tap the link.</p>'+
    '<a class="linkbox" style="display:block" data-o="link" target="_blank" rel="noopener"></a><div class="row noprint" style="margin-top:10px"><button class="btn" data-act="copy">Copy link</button><span class="note" data-o="copyMsg"></span></div></div>'+
    '<p class="note">More to read: <a href="https://fairpracticecode.nl/" target="_blank" rel="noopener">Fair Practice Code</a> · <a href="https://www.kvk.nl/en/" target="_blank" rel="noopener">KVK</a> · <a href="https://www.belastingdienst.nl/" target="_blank" rel="noopener">Belastingdienst</a></p>'+
-   '<div class="printlink"><h2>Bring it back on Day 3</h2><p>Tap the link to reopen the tool with your numbers. They live in the link, not with us.</p><p><a data-o="plink">Open my numbers in the tool</a></p></div>';
+   '<div class="printlink"><h2>Bring it back to the next modules</h2><p>Tap the link to reopen the tool with your numbers. They live in the link, not with us.</p><p><a data-o="plink">Open my numbers in the tool</a></p></div>';
  }}
 ];
 var COSTNAMES={space:"Workspace",tools:"Tools and software",materials:"Materials",travel:"Travel for work",accountant:"Help with books and tax",insure:"Insurance and memberships",costother:"Everything else"};
