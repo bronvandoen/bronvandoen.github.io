@@ -180,6 +180,11 @@ var PEOPLE={
       space:2400,tools:1200,materials:1500,travel:800,accountant:500,insure:500,costother:300,tax:25,
       weeksOff:6,daysWeek:5,hoursDay:8,holidays:7,sick:6,paid:55,shareMask:0,shareN:2,extra:0,named:0}}
 };
+function pdfHint(){var u="";try{u=navigator.userAgent||"";}catch(e){}
+  if(/Android/i.test(u))return "On Android the print screen opens. At the top, choose “Save as PDF”, then tap the round PDF button.";
+  if(/iPhone|iPad|iPod/i.test(u)||(/Macintosh/.test(u)&&navigator.maxTouchPoints>1))return "On an iPhone the print screen opens. Tap the share icon at the top, then “Save to Files”.";
+  return "In the print window, choose “Save as PDF” as the printer.";}
+function canShare(){try{return typeof navigator.share==="function";}catch(e){return false;}}
 function copy(o){return JSON.parse(JSON.stringify(o));}
 function calc(v){
   var lifeM=v.rent+v.food+v.health+v.move+v.joy+v.other;
@@ -371,9 +376,9 @@ var STEPS=[
    '<p class="pause noprint" style="background:var(--accent-text)">Before you close this page, save your link or the PDF. We don\'t keep your numbers, so without it they are gone.</p>'+
    '<div class="panel"><h2>My versions</h2><div data-o="cmp"></div></div>'+
    '<div class="panel"><h2>Questions to take home</h2><p>What is your money for? Give three things a name.</p><p>Which version feels most like the life you want? What is a first step towards it?</p><p>Which of your unpaid hours would you like someone to pay for, and who?</p><p>Who could you share something with?</p></div>'+
-   '<div class="panel noprint"><h2>Save it</h2><p>Save this page as a PDF: tap the button, then choose “Save as PDF”.</p><div class="row"><button class="btn primary" data-act="print">Save as PDF</button></div></div>'+
+   '<div class="panel noprint"><h2>Save it</h2><div class="row"><button class="btn primary" data-act="print">Save as PDF</button></div>'+'<p class="note noprint" style="margin-top:8px">'+pdfHint()+' Doesn\'t work on your phone? Send yourself the link below: it reopens everything.</p>'+'</div>'+
    '<div class="panel noprint"><h2>Bring it back to the next modules</h2><p>This link reopens the tool with your numbers. The numbers live in the link, not with us. In the PDF, tap the link.</p>'+
-   '<a class="linkbox" style="display:block" data-o="link" target="_blank" rel="noopener"></a><div class="row noprint" style="margin-top:10px"><button class="btn" data-act="copy">Copy link</button><span class="note" data-o="copyMsg"></span></div></div>'+
+   '<a class="linkbox" style="display:block" data-o="link" target="_blank" rel="noopener"></a><div class="row noprint" style="margin-top:10px"><button class="btn" data-act="copy">Copy link</button>'+(canShare()?'<button class="btn" data-act="share">Send it to myself</button>':'')+'<span class="note" data-o="copyMsg"></span></div></div>'+
    '<p class="note">More to read: <a href="https://fairpracticecode.nl/" target="_blank" rel="noopener">Fair Practice Code</a> · <a href="https://www.kvk.nl/en/" target="_blank" rel="noopener">KVK</a> · <a href="https://www.belastingdienst.nl/" target="_blank" rel="noopener">Belastingdienst</a></p>'+
    '<div class="printlink"><h2>Bring it back to the next modules</h2><p>Tap the link to reopen the tool with your numbers. They live in the link, not with us.</p><p><a data-o="plink">Open my numbers in the tool</a></p></div>';
  }}
@@ -498,6 +503,7 @@ stage.addEventListener("click",function(e){
   if(a==="savelife"){var nm2=(document.getElementById("tname").value||"Another life").trim().slice(0,40);S.vs.push({name:nm2,v:tried()});update();stage.querySelector('[data-o="lifeMsg"]').textContent="Saved “"+nm2+"”.";}
   if(a==="saveshare"){S.vs.push({name:"Shared",v:copy(S.w)});update();stage.querySelector('[data-o="shareMsg"]').textContent="Saved “Shared”. See it side by side in step 9.";}
   if(a==="print"){try{window.print();}catch(err){}}
+  if(a==="share"){try{navigator.share({title:document.title,url:shareUrl()}).catch(function(){});}catch(err){}return;}
   if(a==="copy"){var url=shareUrl(),m=stage.querySelector('[data-o="copyMsg"]');
     var fallback=function(){var box=stage.querySelector('[data-o="link"]');var r=document.createRange();r.selectNodeContents(box);var s=window.getSelection();s.removeAllRanges();s.addRange(r);m.textContent="Selected. Copy it from your phone's menu.";};
     try{navigator.clipboard.writeText(url).then(function(){m.textContent="Copied.";},fallback);}catch(err){fallback();}}

@@ -216,6 +216,11 @@ var PEOPLE={
    ok:{how:"signed"},
    inv:{no:"2026-001"}}}
 };
+function pdfHint(){var u="";try{u=navigator.userAgent||"";}catch(e){}
+  if(/Android/i.test(u))return "On Android the print screen opens. At the top, choose “Save as PDF”, then tap the round PDF button.";
+  if(/iPhone|iPad|iPod/i.test(u)||(/Macintosh/.test(u)&&navigator.maxTouchPoints>1))return "On an iPhone the print screen opens. Tap the share icon at the top, then “Save to Files”.";
+  return "In the print window, choose “Save as PDF” as the printer.";}
+function canShare(){try{return typeof navigator.share==="function";}catch(e){return false;}}
 function copy(o){return JSON.parse(JSON.stringify(o));}
 function fresh(p){
   var v=copy(PEOPLE[p].v);
@@ -512,7 +517,7 @@ var STEPS=[
    fair("Trust","Agree before you start. Work begins after a yes in writing.")+
    '<div class="panel"><h2>Check your quote</h2>'+out("qChecks")+'</div>'+
    out("docQ")+
-   '<div class="row"><button class="btn primary" data-act="print" data-what="quote">Save the quote as a PDF</button></div>'+
+   '<div class="row"><button class="btn primary" data-act="print" data-what="quote">Save the quote as a PDF</button></div>'+'<p class="note noprint" style="margin-top:8px">'+pdfHint()+' Doesn\'t work on your phone? Carry on: at the end you can send yourself a link that reopens everything.</p>'+
    pause("Show your quote to your client. Negotiate. Then go to round 2.");
  }},
  {t:"The handshake",r:function(){
@@ -549,11 +554,11 @@ var STEPS=[
    '<div class="panel"><h2>Quote and invoice compared</h2>'+out("diff")+'</div>'+
    '<div class="panel"><h2>Questions to take home</h2><p>What did your client not tell you, and when and how could you have asked?</p><p>Did you lower your price before anyone asked you to?</p><p>What would you rather have put in your quote than done for free?</p><p>Has a client ever asked you to do something for free before giving you a proper assignment?</p></div>'+
    '<div class="panel"><h2>Keep it</h2><p class="pause" style="background:var(--accent-text)">Before you close this page, save the PDFs or the link. We don\'t keep anything, so without them it is gone.</p>'+
-   '<div class="row"><button class="btn primary" data-act="print" data-what="invoice">Save the invoice as a PDF</button><button class="btn" data-act="print" data-what="quote">Save the quote as a PDF</button></div>'+
+   '<div class="row"><button class="btn primary" data-act="print" data-what="invoice">Save the invoice as a PDF</button><button class="btn" data-act="print" data-what="quote">Save the quote as a PDF</button></div>'+'<p class="note noprint" style="margin-top:8px">'+pdfHint()+' Doesn\'t work on your phone? Send yourself the link below: it reopens everything.</p>'+
    '<p class="note" style="margin-top:12px">Keep the PDF as a template. Put in your real numbers once you have them, and the PRACTICE stamp goes.</p>'+
    '<h3 style="margin-top:16px">Reopen it later</h3><p>This link reopens the tool as you left it. Everything lives in the link, not with us.</p>'+
    '<a class="linkbox" data-o="link" target="_blank" rel="noopener"></a>'+
-   '<div class="row" style="margin-top:10px"><button class="btn" data-act="copy">Copy link</button><span class="note" data-o="copyMsg"></span></div></div>'+
+   '<div class="row" style="margin-top:10px"><button class="btn" data-act="copy">Copy link</button>'+(canShare()?'<button class="btn" data-act="share">Send it to myself</button>':'')+'<span class="note" data-o="copyMsg"></span></div></div>'+
    '<p class="note">More to read: <a href="https://fairpracticecode.nl/" target="_blank" rel="noopener">Fair Practice Code</a> · <a href="https://www.kvk.nl/en/" target="_blank" rel="noopener">KVK</a> · <a href="https://www.belastingdienst.nl/" target="_blank" rel="noopener">Belastingdienst</a></p>';
  }}
 ];
@@ -637,6 +642,7 @@ stage.addEventListener("click",function(e){
   var a=b.getAttribute("data-act");
   if(a==="reset"){S.w.inv.lines=copy(S.w.q.lines);render(false);var rm=document.getElementById("resetMsg");if(rm)rm.textContent="The lines are back to your quote.";return;}
   if(a==="print"){printDoc(b.getAttribute("data-what"));return;}
+  if(a==="share"){try{navigator.share({title:document.title,url:shareUrl()}).catch(function(){});}catch(err){}return;}
   if(a==="copy"){var url=shareUrl(),m=stage.querySelector('[data-o="copyMsg"]');
     var fallback=function(){var box=stage.querySelector('[data-o="link"]');var r=document.createRange();r.selectNodeContents(box);var s=window.getSelection();s.removeAllRanges();s.addRange(r);m.textContent="Selected. Copy it from your phone's menu.";};
     try{navigator.clipboard.writeText(url).then(function(){m.textContent="Copied.";},fallback);}catch(err){fallback();}}

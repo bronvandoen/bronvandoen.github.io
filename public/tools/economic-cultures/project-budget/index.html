@@ -259,6 +259,11 @@ var PEOPLE={
    parts:[],people:[],mat:[],src:[]}}
 };
 var ORDER=["noor","sam","femke","teo"];
+function pdfHint(){var u="";try{u=navigator.userAgent||"";}catch(e){}
+  if(/Android/i.test(u))return "On Android the print screen opens. At the top, choose “Save as PDF”, then tap the round PDF button.";
+  if(/iPhone|iPad|iPod/i.test(u)||(/Macintosh/.test(u)&&navigator.maxTouchPoints>1))return "On an iPhone the print screen opens. Tap the share icon at the top, then “Save to Files”.";
+  return "In the print window, choose “Save as PDF” as the printer.";}
+function canShare(){try{return typeof navigator.share==="function";}catch(e){return false;}}
 function copy(o){return JSON.parse(JSON.stringify(o));}
 function fresh(k){var v=copy(PEOPLE[k].v);v.custom=v.custom||[];return v;}
 
@@ -559,11 +564,11 @@ var STEPS=[
    '<div class="panel"><h2>Is it complete and balanced?</h2>'+out("checks")+'</div>'+
    '<div class="docs">'+out("doc")+'</div>'+
    '<div class="panel"><h2>Keep it</h2><p class="pause" style="background:var(--accent-text)">Before you close this page, save the PDF or the link. We don\'t keep anything, so without them it is gone.</p>'+
-   '<div class="row"><button class="btn primary" data-act="print">Save as a PDF</button></div>'+
+   '<div class="row"><button class="btn primary" data-act="print">Save as a PDF</button></div>'+'<p class="note noprint" style="margin-top:8px">'+pdfHint()+' Doesn\'t work on your phone? Send yourself the link below: it reopens everything.</p>'+
    '<p class="note" style="margin-top:12px">Two pages: the budget and the coverage plan, laid out like the model budget many Dutch funds ask for. When you apply for real, use the fund\'s own template.</p>'+
    '<h3>Reopen it later</h3><p>This link reopens the tool as you left it. Everything lives in the link, not with us.</p>'+
    '<a class="linkbox" data-o="link" target="_blank" rel="noopener"></a>'+
-   '<div class="row" style="margin-top:10px"><button class="btn" data-act="copy">Copy link</button><span class="note" data-o="copyMsg"></span></div></div>'+
+   '<div class="row" style="margin-top:10px"><button class="btn" data-act="copy">Copy link</button>'+(canShare()?'<button class="btn" data-act="share">Send it to myself</button>':'')+'<span class="note" data-o="copyMsg"></span></div></div>'+
    '<p class="note">More to read: <a href="https://fairpracticecode.nl/" target="_blank" rel="noopener">Fair Practice Code</a> · <a href="https://www.stimuleringsfonds.nl/" target="_blank" rel="noopener">Stimuleringsfonds</a> · <a href="https://www.mondriaanfonds.nl/" target="_blank" rel="noopener">Mondriaan Fonds</a></p>';
  }}
 ];
@@ -729,6 +734,7 @@ stage.addEventListener("click",function(e){
   if(a==="addmat"){if(S.w.mat.length<30)S.w.mat.push(M("material","",1,0,"f"));render(false);return;}
   if(a==="addsrc"){if(S.w.src.length<8)S.w.src.push({name:"",type:"partner",status:"hoped"});render(false);return;}
   if(a==="print"){printDoc();return;}
+  if(a==="share"){try{navigator.share({title:document.title,url:shareUrl()}).catch(function(){});}catch(err){}return;}
   if(a==="copy"){var url=shareUrl(),m=stage.querySelector('[data-o="copyMsg"]');
     var fallback=function(){var box=stage.querySelector('[data-o="link"]');var r=document.createRange();r.selectNodeContents(box);var s=window.getSelection();s.removeAllRanges();s.addRange(r);m.textContent="Selected. Copy it from your phone's menu.";};
     try{navigator.clipboard.writeText(url).then(function(){m.textContent="Copied.";},fallback);}catch(err){fallback();}}
