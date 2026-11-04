@@ -1,12 +1,13 @@
 ---
 title: a Situated Studio
 date: 2026-10-22
+updated: 2026-11-04
 summary: Who we are, what we hold to, and what this archive is for. Our statement at this moment, to be rewritten as the work moves.
 kind: essay
 tags: [about, statement]
 voices: [Minsung Wang, Gemma Medina]
 ---
-We are a Situated Studio, a social design research practice in Eindhoven. We work with people in the places they live, and we use art, design and research to create the conditions for care.
+We are a Situated Studio, a social design research practice in Eindhoven. We work with people where they live and work, and we use art, design and research to create the conditions for care.
 
 The studio is where our two practices meet. We are Gemma Medina, an art historian, curator and educator who has worked on the Arte Útil archive since the Museum of Arte Útil at the Van Abbemuseum in 2013 and co-organises the Asociación de Arte Útil; and Minsung Wang, a designer in civic service design and urban commoning, whose studio Bron van Doen started Uit de Buurtfabriek, a social furniture workshop, and De Bloemfontein, a neighbourhood hub in Doornakkers. We have worked together since 2015, when we started Agents of Change with the Van Abbemuseum and mapped more than seventy grassroots initiatives across five districts of Eindhoven.
 
