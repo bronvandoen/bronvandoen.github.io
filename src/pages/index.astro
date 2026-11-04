@@ -9,7 +9,7 @@ const entries = await allEntries();
   <p class="eyebrow">Bron van Doen</p>
   <Overprint text="Research archive" />
   <div class="sheet">
-    <p class="lede">We are a Situated Studio, a social design research practice in Eindhoven by Gemma Medina and Bron van Doen. We work with people in the places they live, and we use art, design and research to create the conditions for care.</p>
+    <p class="lede">We are a Situated Studio, a social design research practice in Eindhoven by Gemma Medina and Bron van Doen. We work with people where they live and work, and we use art, design and research to create the conditions for care.</p>
     <p class="prose" style="margin:0">This archive holds our research in progress: {categories.map((c, i) => <>{i > 0 && (i === categories.length - 1 ? ' and ' : ', ')}<a href={`/categories/${c.slug}/`}>{c.label.toLowerCase()}</a></>)}. <a href="/about/">More about us</a>.</p>
   </div>
   <div class="section-head">
