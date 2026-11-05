@@ -533,7 +533,7 @@ var STEPS=[
    h+=(S.w.src.length<8?'<div class="row"><button class="btn" data-act="addsrc">Add someone</button></div>':'')+'</div>'+
    tip("Cofinancing is not a hurdle","Other money means other people believe in it. It can also be what makes the ambition possible at all.")+
    tip("Institutions that already get public money","Schools, universities, municipalities and many museums can be partners. Public funds usually won\'t pay them from your grant, because they are already paid with public money. They show what they give instead: a lecturer\'s hours, a lab, a room.")+
-   tip("Your own money","Money from your own pocket or savings. It balances the budget and can pay for specific lines, but many funds don\'t count it as cofinancing. Your unpaid hours are something else: if you mark your own hours as paid by you, you work them for free, and the budget shows it.")+
+   
    pause("Look at your cofinancing. Who have you asked yet? Who would you ask first, and why would they say yes?");
    return h;
  }},
@@ -556,6 +556,7 @@ var STEPS=[
    });
    if(!S.w.mat.length) h+='<p class="note">No material costs yet.</p>';
    h+='</div><div class="panel"><h2>Your coverage plan</h2>'+out("cover")+'</div>'+
+   tip("Me, own contribution","This means two different things. Your own money for a cost: it balances the budget, but many funds don\'t count it as cofinancing. Your own hours paid by you: you work them for free. Choose it on purpose, or not at all.")+
    pause("Like a puzzle: the costs on one side, the money on the other. Are you missing a piece? Ask each other why something doesn\'t fit, and go back to earlier steps to tweak the budget.");
    return h;
  }},
