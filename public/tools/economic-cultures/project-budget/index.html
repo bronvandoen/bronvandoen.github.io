@@ -90,6 +90,7 @@ input[type=number]{text-align:right;font-variant-numeric:tabular-nums}
 .fair b{font-family:var(--label);font-size:13px;display:block;color:var(--eyebrow-ink);text-transform:uppercase;letter-spacing:.04em}
 .tip{border-left:var(--rule-heavy) solid var(--ink-2);padding:2px 0 2px 12px;margin:16px 0;font-size:16px}
 .tip b{font-family:var(--label);font-size:13px;display:block;text-transform:uppercase;letter-spacing:.04em}
+.done{font-family:var(--display);font-weight:900;font-size:24px;line-height:1.2;background:var(--accent-text);color:var(--paper);padding:14px 16px;margin:18px 0}
 .pause{display:block;font-family:var(--label);font-size:14px;font-weight:600;background:var(--ink);color:var(--paper);padding:12px 14px;margin:18px 0}
 .pause::before{content:"Pause · "}
 
@@ -561,7 +562,7 @@ var STEPS=[
    return h;
  }},
  {t:"Check and take it with you",r:function(){
-   return heading("Step 9","Check and take it with you")+
+   return heading("Step 9","Check and take it with you")+'<div data-o="congrats"></div>'+
    '<div class="panel"><h2>Is it complete and balanced?</h2>'+out("checks")+'</div>'+
    '<div class="docs">'+out("doc")+'</div>'+
    '<div class="panel"><h2>Keep it</h2><p class="pause" style="background:var(--accent-text)">Before you close this page, save the PDF or the link. We don\'t keep anything, so without them it is gone.</p>'+
@@ -660,6 +661,7 @@ function update(){
     else if(k==="mineBar"){el.style.width=(c.commitH?Math.min(100,c.mineH/c.commitH*100):0)+"%";}
     else if(k==="cover") el.innerHTML=coverHtml(c);
     else if(k==="checks") el.innerHTML=checkList(checks(c));
+    else if(k==="congrats") el.innerHTML=checks(c).every(function(x){return !!x[1];})?'<p class="done">Congratulations! Your project budget is complete and balanced. Take a moment to enjoy it.</p>':'';
     else if(k==="doc") el.innerHTML=docHtml(c);
   });
   var live=document.getElementById("live");
