@@ -7,7 +7,7 @@ tags: [economic-cultures, fair-practice, rates-and-fees]
 project: Economic Cultures
 voices: [Minsung Wang, Gemma Medina, Ned Kaar]
 ---
-On Tuesday 3 November we ran the first evening of Economic Cultures at Design Academy Eindhoven, with Ned Kaar, DAE's alumni agent. Two modules: My hourly rate, then From quote to invoice. This is a brief recollection of that evening, also for those who weren't there.
+On Tuesday 3 November we ran the first evening of Economic Cultures at Design Academy Eindhoven, with Ned Kaar, DAE Alumni Coordinator. Two modules: My hourly rate, then From quote to invoice. This is a brief recollection of that evening, also for those who weren't there.
 
 ![A hand holds up a phone showing the handshake step of the quote-to-invoice tool, with participants working at tables behind it.](./handshake-step-on-a-phone.jpg "wide: The handshake, step 7 of From quote to invoice. Photo: Ned Kaar, Design Academy Eindhoven.")
 
