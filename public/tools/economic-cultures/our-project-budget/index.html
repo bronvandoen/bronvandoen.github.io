@@ -83,7 +83,7 @@ input[type=number]{text-align:right;font-variant-numeric:tabular-nums}
 
 .bars{margin:10px 0}
 .meter{height:22px;background:#E6DFD0;position:relative;border:1px solid var(--ink)}
-.meter span{position:absolute;left:0;top:0;bottom:0;background:var(--ink-1)}
+.meter span{position:absolute;left:0;top:0;bottom:0;background:var(--ink)}
 .meter + .mini{margin:4px 0 10px}
 
 .fair{border:var(--rule) solid var(--ink-1);padding:10px 12px;margin:16px 0;font-size:16px;background:var(--paper-raised)}
@@ -190,7 +190,7 @@ footer{padding:28px 0 0;font-family:var(--label);font-size:12px;color:var(--ink-
 .choose.two{grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 6px}
 .pick.small{padding:10px 12px;font-size:14px;line-height:1.3}
 .pick.small strong{font-size:20px;margin-bottom:4px}
-.meter span.over{background:var(--ink-2)}
+.meter span.past{background:var(--ink-2)}
 nav.bar .live .ck{display:block;font-size:12px;color:var(--ink-soft)}
 </style>
 </head>
@@ -546,7 +546,7 @@ var STEPS=[
        '<div class="amt"><span>Total '+out("ma"+i)+'</span><button class="btn small" data-del="mat.'+i+'">Remove</button></div></div>';
    });
    h+='<div class="row"><button class="btn" data-act="addmat">Add a cost</button></div>'+
-   '<table class="sum" style="margin-top:14px"><tr class="t"><td>All material costs</td><td>'+out("mat")+'</td></tr><tr class="t"><td>Total project costs</td><td>'+out("total")+'</td></tr></table></div>'+
+   '<table class="sum" style="margin-top:14px"><tr><td>All people, from step 3</td><td>'+out("people")+'</td></tr><tr class="t"><td>All material costs</td><td>'+out("mat")+'</td></tr><tr class="t"><td>Total project costs</td><td>'+out("total")+'</td></tr></table></div>'+
    '<div class="panel"><h2>Who could pay</h2><h3>Our main fund</h3><p>'+esc(w.fund.name)+'. With partners, a fund like the Stimuleringsfonds grants up to twice as much as to one maker alone. The real funds are on the slides.</p>'+
    '<div class="three">'+cell("fund.max","Pays at most €","number")+cell("fund.min","Others at least %","number")+cell("fund.cap","Rate at most €","number")+'</div>'+
    '<h3>Everyone else</h3><p>Partners, other funds, sales, a space or time given for free.</p>';
@@ -621,9 +621,9 @@ function partHtml(k){
         w.members.map(function(_,mi){return '<button data-who="'+i+'.'+mi+'" aria-pressed="'+(l.m===mi)+'">'+esc(first(mi))+'</button>';}).join("")+
         [["paid","Someone we pay"],["free","Gives time"],["none","Nobody yet"]].map(function(o){return '<button class="'+(o[0]==="none"?"none":"out")+'" data-who="'+i+'.'+o[0]+'" aria-pressed="'+(l.m===o[0])+'">'+o[1]+'</button>';}).join("")+'</div>'+
         (l.m==="none"?'<p class="flag">A part without a person won\'t happen, or someone does it for free without noticing.</p>':
-         (isMember(l)?'<div class="two">'+cell(b+".h","Hours","number")+'<span><span class="mini">Total</span><span class="ro">'+out("la"+i)+'</span></span></div>':
+         (isMember(l)?'<div class="two">'+cell(b+".h","Hours","number")+'<span><span class="mini">Total</span><span class="ro">'+out("lx"+i)+'</span></span></div>':
           cell(b+".name","Name, or who you are looking for")+cell(b+".role","What they do")+'<div class="two">'+cell(b+".h","Hours","number")+cell(b+".r","Rate per hour €","number")+'</div>'+
-          '<div class="amt"><span>Total '+out("la"+i)+'</span></div>'))+
+          '<div class="amt"><span>Total '+out("lx"+i)+'</span></div>'))+
         '<div class="row"><button class="btn small" data-del="lines.'+i+'">Remove</button></div></div>';
     });
     h+='<div class="row"><button class="btn small" data-addl="'+k+'">Add someone to this part</button></div>';
@@ -657,7 +657,7 @@ function checks(c){
   list.push(["Everyone we count on has been asked",!hoped.length,hoped.join(", ")+(hoped.length?": not asked yet":""),"soft"]);
   return list;
 }
-function checkList(list){return '<ul class="checks">'+list.map(function(x){var ok=!!x[1],cls=ok?"":(x[3]==="soft"?"soft":"no");return '<li class="'+cls+'"><span class="m">'+(ok?"✓":x[3]==="soft"?"?":"–")+'</span><span>'+x[0]+(!ok&&x[2]?' <i>('+esc(x[2])+')</i>':'')+'</span></li>';}).join("")+'</ul>';}
+function checkList(list){var bad=list.some(function(x){return !x[1];});return '<ul class="checks">'+list.map(function(x){var ok=!!x[1],cls=ok?"":(x[3]==="soft"?"soft":"no");return '<li class="'+cls+'"><span class="m">'+(ok?"✓":x[3]==="soft"?"?":"–")+'</span><span>'+x[0]+(!ok&&x[2]?' <i>('+esc(x[2])+')</i>':'')+'</span></li>';}).join("")+'</ul>'+(bad?'<p class="note">– to fix · ? to talk over</p>':'');}
 
 function gapText(m){
   var d=m.commit-m.h;
@@ -684,11 +684,11 @@ function coverHtml(c){
   var w=S.w,rows='';
   w.src.forEach(function(s,i){rows+='<tr><td>'+esc(s.name||"Unnamed")+'<small>'+label(TYPES,s.type)+' · '+label(STATUS,s.status)+'</small></td><td>'+eur(c.by["s"+i])+'</td></tr>';});
   return '<table class="sum">'+(rows||'<tr><td colspan="2"><span class="note">Nobody else yet.</span></td></tr>')+
-   '<tr class="t"><td>Cofinancing<small>'+Math.round(c.pct)+'% of the total'+(w.fund.min?', the fund asks at least '+w.fund.min+'%':'')+'</small></td><td>'+eur(c.cof)+'</td></tr>'+
-   '<tr><td>'+esc(w.fund.name)+'<small>pays at most '+eur(w.fund.max)+'</small></td><td>'+eur(c.fund)+'</td></tr>'+
+   '<tr class="t"><td>Cofinancing<small>'+Math.round(c.pct)+'% of the total'+(w.fund.min?', the fund asks at least '+w.fund.min+'%'+(c.pct<w.fund.min?' · '+eur(Math.round(w.fund.min/100*c.total)-c.cof)+' short':''):'')+'</small></td><td>'+eur(c.cof)+'</td></tr>'+
+   '<tr><td>'+esc(w.fund.name)+'<small>pays at most '+eur(w.fund.max)+(w.fund.max&&c.fund>w.fund.max?' · '+eur(c.fund-w.fund.max)+' over':'')+'</small></td><td>'+eur(c.fund)+'</td></tr>'+
    (c.open?'<tr class="gapr"><td>Nobody yet</td><td>'+eur(c.open)+'</td></tr>':'')+
    '<tr class="t"><td>Total project costs</td><td>'+eur(c.total)+'</td></tr></table>'+
-   '<div class="totals" style="margin-top:12px"><div class="total'+(c.open?" warn":"")+'"><div class="k">'+(c.open?"Not covered yet":"Balanced")+'</div><div class="v">'+(c.open?eur(c.open):"✓")+'</div></div>'+
+   '<div class="totals" style="margin-top:12px"><div class="total'+(c.open?" warn":"")+'"><div class="k">'+(c.open?"Not covered yet":"Every euro has a payer")+'</div><div class="v">'+(c.open?eur(c.open):"✓")+'</div></div>'+
    '<div class="total'+(w.fund.max&&c.fund>w.fund.max?" warn":"")+'"><div class="k">We ask the fund</div><div class="v">'+eur(c.fund)+'</div></div></div>';
 }
 
@@ -749,15 +749,15 @@ function update(){
   var c=calc(),w=S.w,teamGap=c.teamCommit-c.teamH,vals={
     teamCommit:hrs(c.teamCommit),teamH:hrs(c.teamH),leadH:c.leadH?hrs(c.leadH):"None",
     teamGap:Math.abs(teamGap)<1?"None":(teamGap>0?hrs(teamGap)+" given away":hrs(-teamGap)+" over"),
-    meetH:hrs(meetH()),mat:eur(c.mat),total:eur(c.total),
+    meetH:hrs(meetH()),mat:eur(c.mat),people:eur(c.people),total:eur(c.total),
     meetAll:eur(w.members.reduce(function(s,_,i){return s+meetAmt(i);},0))};
-  w.lines.forEach(function(l,i){vals["la"+i]=eur(lineAmt(l));});
+  w.lines.forEach(function(l,i){vals["la"+i]=eur(lineAmt(l));vals["lx"+i]=(l.h||0)+" h × "+rate(lineRate(l))+" = "+eur(lineAmt(l))+(lineVat(l)?" with VAT":"");});
   w.mat.forEach(function(m,i){vals["ma"+i]=eur(matAmt(m));});
-  c.mem.forEach(function(m,i){vals["mshare"+i]=m.commit?"Meetings: "+hrs(m.meet)+", "+Math.round(m.meet/m.commit*100)+"% of the committed time":"";vals["commit"+i]=hrs(m.commit);vals["h"+i]=hrs(m.h)+" · "+eur(m.amt);vals["role"+i]=m.role.txt;});
+  c.mem.forEach(function(m,i){vals["mshare"+i]=m.commit?"Meetings: "+hrs(m.meet)+", "+Math.round(m.meet/m.commit*100)+"% of the committed time":"";vals["commit"+i]=hrs(m.commit)+" · "+w.p.months+(w.p.months===1?" month":" months")+" × "+daysTxt(w.members[i].days)+" × "+HOURS_PER_DAY+" h";vals["h"+i]=hrs(m.h)+" · earns "+eur(m.amt);vals["role"+i]=m.role.txt;});
   document.querySelectorAll("[data-o]").forEach(function(el){
     var k=el.getAttribute("data-o"),mt;
     if(vals[k]!==undefined) el.textContent=vals[k];
-    else if((mt=/^bar(\d+)$/.exec(k))){var m=c.mem[+mt[1]];el.style.width=(m&&m.commit?Math.min(100,m.h/m.commit*100):0)+"%";el.classList.toggle("over",!!(m&&m.h>m.commit*1.1));}
+    else if((mt=/^bar(\d+)$/.exec(k))){var m=c.mem[+mt[1]];el.style.width=(m&&m.commit?Math.min(100,m.h/m.commit*100):0)+"%";el.classList.toggle("past",!!(m&&m.h>m.commit*1.1));}
     else if((mt=/^kbar(\d+)$/.exec(k))){var r=c.mem[+mt[1]].role;el.innerHTML=kindBar(r.by,r.tot);}
     else if((mt=/^gap(\d+)$/.exec(k))) el.innerHTML=gapText(c.mem[+mt[1]]);
     else if(k==="flags") el.innerHTML=flagsHtml(c);
@@ -770,8 +770,8 @@ function update(){
   if(S.step===0) live.innerHTML="";
   else if(S.step<=2) live.innerHTML='Our time<b>'+hrs(c.teamCommit)+'</b>';
   else if(S.step===5) live.innerHTML='Project costs<b>'+eur(c.total)+'</b>';
-  else if(S.step<=4) live.innerHTML='Our hours<b'+(Math.abs(teamGap)>c.teamCommit*0.1?' class="warn"':'')+'>'+hrs(c.teamH)+' / '+hrs(c.teamCommit)+'</b>';
-  else live.innerHTML=(c.open?'Not covered yet<b class="warn">'+eur(c.open)+'</b>':'Balanced<b>'+eur(c.total)+'</b>')+'<span class="ck">'+ok+' of '+ck.length+' checks</span>';
+  else if(S.step<=4) live.innerHTML='Hours in the budget / committed<b'+(Math.abs(teamGap)>c.teamCommit*0.1?' class="warn"':'')+'>'+Math.round(c.teamH||0).toLocaleString("en-GB")+' / '+hrs(c.teamCommit)+'</b>';
+  else live.innerHTML=(c.open?'Not covered yet<b class="warn">'+eur(c.open)+'</b>':'All covered<b>'+eur(c.total)+'</b>')+'<span class="ck">'+ok+' of '+ck.length+' checks</span>';
   persist();
 }
 function shareUrl(){var base="";try{base=location.origin+location.pathname+"?open";}catch(e){}return base+"#s="+(CODE&&codeFor===JSON.stringify(snapshot())?CODE:encodeSync());}
