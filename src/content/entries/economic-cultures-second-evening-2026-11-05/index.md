@@ -45,7 +45,7 @@ Ned put the next step simply: "These discussions need a multi-vocal aspect." Tha
 ### From the evening
 
 - [Module 3: Project budget, the slides](/entries/economic-cultures-module-3-2026-11-05/)
-- [Module 5: Seeds of Hope, part 1, the slides](/entries/economic-cultures-module-5-part-1-2026-11-05/)
+- [Module 5: Seeds of Hope, the slides](/entries/economic-cultures-module-5-part-2-2026-11-10/), with the slides of this first run
 - [My project budget, the tool](/tools/economic-cultures/project-budget/)
 - [Fair Practice Code: ten questions to ask yourself](/entries/fair-practice-code-ten-themes/), our English handout
 - [Economic Cultures, the first evening](/entries/economic-cultures-first-evening-2026-11-03/)

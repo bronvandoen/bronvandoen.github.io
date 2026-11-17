@@ -15,12 +15,6 @@ We worked with a smaller group than on the first two evenings. That was to be ex
 
 There is a real request for something online. We can consider this for the future, working with the school so that it can offer it. We have also run this kind of programme before the graduation show. Then other things get in the way: a break, the show itself, too little time after exams. There is no perfect moment. Holding it after every other obligation has one clear cost: the graduates leave.
 
-## Less busy work
-
-These three evenings were intense. We built a tool for each step, and the steps followed each other: an hourly rate, then a quote that becomes an invoice, then a budget for a project of your own, then a budget for a project as a team.
-
-The tools compressed time. The pen-and-paper work of calculating numbers and filling in forms was largely done for us. Instead, the participants needed to learn how to use the tools on a phone, but this was a group very comfortable with apps. We trusted the tools to do their job, and used the time we gained for discussion, for building teams and for the content itself.
-
 ## Budgets that were too big
 
 In Module 4 the teams budgeted a project together with Our project budget. They really discussed it collectively, and that was good to see. But the budgets came out very large, well over €150,000. As we said to each other afterwards, it is quite easy to imagine a budget that size, "but I don't think that necessarily makes it easier", or more interesting.
@@ -35,9 +29,11 @@ After the break we sat around one large table: the bookmarks with lines from the
 
 The most interesting moments came when the conversation went beyond the specifics and the participants spoke about how they could do it in general: what now, after school. Gemma could pull in examples from the Arte Útil archive at the right moment; the table was full of cases to draw on. We will keep improving our moderation, so the conversation stays lively and on topic.
 
-## What we would do again
+## Room for the conversation
 
-Looking back on the three evenings, I believe the sequence mattered: each tool built on the one before. Working with Gemma, the choice to give much more time to discussion, and to good examples from Arte Útil and Seeds of Hope, was the right call. With the tools taking care of the mundane, we bought ourselves valuable time for the conversation.
+These three evenings were intense. We built a tool for each step, and the steps followed each other: an hourly rate, then a quote that becomes an invoice, then a budget for a project of your own, then a budget for a project as a team. I believe that sequence mattered: each tool built on the one before.
+
+The tools compressed time. The pen-and-paper work of calculating numbers and filling in forms was largely done for us. Instead, the participants needed to learn how to use the tools on a phone, but this was a group very comfortable with apps. We trusted the tools to do their job. Taking care of the mundane, they bought us the time, and the mind space, for discussion, for building teams and for the content itself. Working with Gemma, the choice to give much of that time to discussion, and to good examples from Arte Útil and Seeds of Hope, was the right call.
 
 ## A publication that adds up
 
