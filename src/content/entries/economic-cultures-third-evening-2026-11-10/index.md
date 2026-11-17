@@ -29,7 +29,7 @@ After the break we sat around one large table: the bookmarks with lines from the
 
 The most interesting moments came when the conversation went beyond the specifics and the participants spoke about how they could do it in general: what now, after school. Gemma could pull in examples from the Arte Útil archive at the right moment; the table was full of cases to draw on. We will keep improving our moderation, so the conversation stays lively and on topic.
 
-## Room for the conversation
+## Room for conversation
 
 These three evenings were intense. We built a tool for each step, and the steps followed each other: an hourly rate, then a quote that becomes an invoice, then a budget for a project of your own, then a budget for a project as a team. I believe that sequence mattered: each tool built on the one before.
 
