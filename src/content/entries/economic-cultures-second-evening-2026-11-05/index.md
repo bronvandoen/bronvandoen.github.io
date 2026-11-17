@@ -16,7 +16,7 @@ Everyone budgeted a project of their own, in a small group with others from a si
 
 ![A hand holds a phone open on the start of My project budget, with a row of highlighters on the table below.](./my-project-budget-on-a-phone.jpg "My project budget, the start page. Photo: Gemma Medina.")
 
-We skipped the last two slides, on your own number and the chain reaction from the hour to the budget. Not because of the tool: we had a lot of interesting and meaningful things to discuss along the way, and we wanted ample time for Seeds of Hope. They are in the published slides, as questions to take home.
+We skipped the last two slides, on your own number and [the chain reaction](/entries/from-an-hour-to-big-fish/) from the hour to the budget. Not because of the tool: we had a lot of interesting and meaningful things to discuss along the way, and we wanted ample time for Seeds of Hope. They are in the published slides, as questions to take home.
 
 ## Can I use this PDF as my budget?
 
@@ -47,6 +47,8 @@ Ned put the next step simply: "These discussions need a multi-vocal aspect." Tha
 - [Module 3: Project budget, the slides](/entries/economic-cultures-module-3-2026-11-05/)
 - [Module 5: Seeds of Hope, the slides](/entries/economic-cultures-module-5-part-2-2026-11-10/), with the slides of this first run
 - [My project budget, the tool](/tools/economic-cultures/project-budget/)
+- [A grant pays for a purpose](/entries/a-grant-pays-for-a-purpose/), why the budget starts from your ambition
+- [From an hour to BIG FISH](/entries/from-an-hour-to-big-fish/), the chain reaction through Modules 1 to 3
 - [Fair Practice Code: ten questions to ask yourself](/entries/fair-practice-code-ten-themes/), our English handout
 - [Economic Cultures, the first evening](/entries/economic-cultures-first-evening-2026-11-03/)
 

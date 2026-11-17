@@ -61,6 +61,7 @@ The first shared edition will be written with some of the participants this mont
 - [Economic Cultures, the second evening](/entries/economic-cultures-second-evening-2026-11-05/)
 - [My hourly rate](/tools/economic-cultures/hourly-rate/), [From quote to invoice](/tools/economic-cultures/quote-invoice/) and [My project budget](/tools/economic-cultures/project-budget/), the tools
 - [Fair Practice Code: ten questions to ask yourself](/entries/fair-practice-code-ten-themes/), our English handout
+- [A grant pays for a purpose](/entries/a-grant-pays-for-a-purpose/) and [From an hour to BIG FISH](/entries/from-an-hour-to-big-fish/), working notes on the thinking behind the programme
 
 ### Who to keep close
 
