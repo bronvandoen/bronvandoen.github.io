@@ -2,10 +2,10 @@
 import Base from '../../layouts/Base.astro';
 import Overprint from '../../components/Overprint.astro';
 import EntryCard from '../../components/EntryCard.astro';
-import { allEntries, categories } from '../../lib/entries';
+import { listedEntries, categories } from '../../lib/entries';
 
 export async function getStaticPaths() {
-  const entries = await allEntries();
+  const entries = await listedEntries();
   return categories.map((c) => ({ params: { category: c.slug }, props: { c, entries: entries.filter((e) => e.data.kind === c.kind) } }));
 }
 const { c, entries } = Astro.props;

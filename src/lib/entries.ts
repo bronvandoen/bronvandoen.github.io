@@ -23,6 +23,14 @@ export async function allEntries(): Promise<Entry[]> {
   );
 }
 
+/** Entries for the lists (home, categories, tags, feed): an entry that another one supersedes
+ *  keeps its own page and address, but leaves the lists, so readers see only the current version. */
+export async function listedEntries(): Promise<Entry[]> {
+  const all = await allEntries();
+  const replaced = new Set(all.map((e) => e.data.supersedes).filter(Boolean));
+  return all.filter((e) => !replaced.has(e.id));
+}
+
 /** The About page shows the newest entry tagged about; older ones stay as earlier versions. */
 export const isAboutText = (e: Entry) => e.data.tags.includes('about');
 export async function currentAbout(): Promise<Entry | undefined> {

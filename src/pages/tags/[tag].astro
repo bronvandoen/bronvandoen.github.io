@@ -2,10 +2,10 @@
 import Base from '../../layouts/Base.astro';
 import Overprint from '../../components/Overprint.astro';
 import EntryCard from '../../components/EntryCard.astro';
-import { allEntries, tagList } from '../../lib/entries';
+import { listedEntries, tagList } from '../../lib/entries';
 
 export async function getStaticPaths() {
-  const entries = await allEntries();
+  const entries = await listedEntries();
   return Object.keys(tagList)
     .map((tag) => ({ params: { tag }, props: { tag, entries: entries.filter((e) => e.data.tags.includes(tag)) } }))
     .filter((p) => p.props.entries.length > 0);

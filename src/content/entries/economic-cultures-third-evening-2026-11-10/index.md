@@ -15,7 +15,7 @@ We worked with a smaller group than on the first two evenings. That was to be ex
 
 There is a real request for something online. We can consider this for the future, working with the school so that it can offer it. We have also run this kind of programme before the graduation show. Then other things get in the way: a break, the show itself, too little time after exams. There is no perfect moment. Holding it after every other obligation has one clear cost: the graduates leave.
 
-## From an hour to a team
+## Less busy work
 
 These three evenings were intense. We built a tool for each step, and the steps followed each other: an hourly rate, then a quote that becomes an invoice, then a budget for a project of your own, then a budget for a project as a team.
 
@@ -35,7 +35,7 @@ After the break we sat around one large table: the bookmarks with lines from the
 
 The most interesting moments came when the conversation went beyond the specifics and the participants spoke about how they could do it in general: what now, after school. Gemma could pull in examples from the Arte Útil archive at the right moment; the table was full of cases to draw on. We will keep improving our moderation, so the conversation stays lively and on topic.
 
-## Discussion first
+## What we would do again
 
 Looking back on the three evenings, I believe the sequence mattered: each tool built on the one before. Working with Gemma, the choice to give much more time to discussion, and to good examples from Arte Útil and Seeds of Hope, was the right call. With the tools taking care of the mundane, we bought ourselves valuable time for the conversation.
 
@@ -56,7 +56,7 @@ The first shared edition will be written with some of the participants this mont
 ### From the evening
 
 - [Module 4: Interdependence, the slides](/entries/economic-cultures-module-4-2026-11-10/)
-- [Module 5: Seeds of Hope, the slides of the second part](/entries/economic-cultures-module-5-part-2-2026-11-10/)
+- [Module 5: Seeds of Hope, the slides](/entries/economic-cultures-module-5-part-2-2026-11-10/)
 - [Our project budget, the tool](/tools/economic-cultures/our-project-budget/)
 
 ### The three evenings
@@ -72,4 +72,5 @@ The first shared edition will be written with some of the participants this mont
 - [Kunstenbond](https://kunstenbond.nl/), the union for culture
 - [BNO](https://www.bno.nl/), the association of Dutch designers
 - [Juridisch Loket](https://www.juridischloket.nl/), free legal advice on a low income
-- [Foundation We Are](https://foundationweare.org/) and [De Fabriek](https://www.defabriekeindhoven.com/en), cultural institutions in Eindhoven we often collaborate with
+- [Foundation We Are](https://foundationweare.org/), a cultural hub at Strijp-S that brings designers together with people working on change in society
+- [De Fabriek](https://www.defabriekeindhoven.com/en), an art space for and by artists, part of Eindhoven's cultural life for over forty years

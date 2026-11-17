@@ -1,9 +1,9 @@
 import rss from '@astrojs/rss';
 import type { APIContext } from 'astro';
-import { allEntries, entryUrl, kinds } from '../lib/entries';
+import { listedEntries, entryUrl, kinds } from '../lib/entries';
 
 export async function GET(context: APIContext) {
-  const entries = await allEntries();
+  const entries = await listedEntries();
   return rss({
     title: 'Bron van Doen research archive',
     description: 'Research in progress by a Situated Studio: working notes, workshop tools and prints.',

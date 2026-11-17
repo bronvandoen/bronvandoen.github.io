@@ -27,6 +27,7 @@ Checked by `src/content.config.ts`; the build stops on a mistake.
 - A tool or print: `href`, the address of its page (`/tools/...` or `/prints/...`).
 - When they apply: `updated` (the date of a later change), `project`, `voices` (a list of names), `supersedes` (the id of the entry it replaces), `image` and `imageAlt` (a picture under `public/` for the card), `audio` and `audioLength` (a voice memo under `public/audio/` and its length as `m:ss`), `lang` (default `en`).
 - The folder name is the entry's address. Never rename a published one.
+- `supersedes`: the newer entry says "Replaces …", the older one "Superseded by …". The older entry keeps its page and address but leaves the lists (home, categories, tags, feed); `listedEntries()` in `src/lib/entries.ts`.
 
 ## Licence and indexing
 

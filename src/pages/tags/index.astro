@@ -1,8 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Overprint from '../../components/Overprint.astro';
-import { allEntries, tagList } from '../../lib/entries';
-const entries = await allEntries();
+import { listedEntries, tagList } from '../../lib/entries';
+const entries = await listedEntries();
 const counted = Object.entries(tagList)
   .map(([id, t]) => ({ id, ...t, count: entries.filter((e) => e.data.tags.includes(id)).length }))
   .filter((t) => t.count > 0);

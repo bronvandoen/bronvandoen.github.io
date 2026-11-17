@@ -1,8 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Overprint from '../../components/Overprint.astro';
-import { allEntries, categories } from '../../lib/entries';
-const entries = await allEntries();
+import { listedEntries, categories } from '../../lib/entries';
+const entries = await listedEntries();
 const counted = categories.map((c) => ({ ...c, count: entries.filter((e) => e.data.kind === c.kind).length }));
 ---
 <Base title="Categories" description="The four kinds of entry in the archive: working notes, workshop tools, prints and essays." current="categories">
