@@ -5,6 +5,7 @@ summary: A look back at the second evening of Economic Cultures at Design Academ
 kind: essay
 tags: [economic-cultures, budgets, alternative-economies]
 project: Economic Cultures
+updated: 2026-11-17
 voices: [Minsung Wang, Gemma Medina, Ned Kaar]
 ---
 On Thursday 5 November we ran the second evening of Economic Cultures at Design Academy Eindhoven, with Gemma Medina and Ned Kaar, DAE Alumni Coordinator. Two modules: Project budget, then, after the break, the first part of Seeds of Hope. This is a brief recollection of that evening, also for those who weren't there.
@@ -12,6 +13,8 @@ On Thursday 5 November we ran the second evening of Economic Cultures at Design 
 ## A budget in an hour and a half
 
 Everyone budgeted a project of their own, in a small group with others from a similar field, step by step on their phones with the project-budget tool. From the ambition to the parts, the people, the hours and who pays for what. We sprinted through it, and I count that as a success. Ned was happy with how people came together to understand "the technical detailing of writing a budget. This is for me a really crucial aspect." In his words, "it was very streamlined".
+
+![A hand holds a phone open on the start of My project budget, with a row of highlighters on the table below.](./my-project-budget-on-a-phone.jpg "My project budget, the start page. Photo: Gemma Medina.")
 
 We skipped the last two slides, on your own number and the chain reaction from the hour to the budget. Not because of the tool: we had a lot of interesting and meaningful things to discuss along the way, and we wanted ample time for Seeds of Hope. They are in the published slides, as questions to take home.
 
@@ -22,6 +25,8 @@ One participant asked exactly that. My answer came in two parts. First, the tool
 ## Seeds of Hope, part one
 
 After the break there was no tool: a conversation, recorded with everyone's consent. Three coaches each brought a library. Gemma brought the Arte Útil archive: art as a tool, with cases of other ways of economy already in use. I brought Bianca Elzenbaumer's *Designing Economic Cultures*, on designers naming their precarity and tackling it together. Ned brought the Fair Practice Code, the values our field agreed on. Around the room lay printed bookmarks with lines from the first three modules, as conversation starters. The participants led; we nudged and encouraged.
+
+![Participants and hosts sit in a wide circle of chairs around a table with papers and a recorder on a tripod, in a high room with industrial lamps.](./seeds-of-hope-around-the-table.jpg "wide: Seeds of Hope, part one. Photo: Gemma Medina.")
 
 The transcribed conversation is the raw material for a piece we write together with the participants, every one of them named as an author. I believe Modules 1 to 3 had set us up well to engage in it. The talk came round to funding, "which I think is really relevant to everybody", as Ned said.
 
