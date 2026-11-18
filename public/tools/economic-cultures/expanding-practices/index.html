@@ -780,11 +780,11 @@ function docHtml(c){
   var rows=[];
   w.parts.forEach(function(p){p.l.forEach(function(l){
     rows.push('<tr><td>'+esc(p.n||p.ph.replace(" (name it)","")||"A part of our own")+'<span class="n">'+kindWord(p.k)+'</span></td><td class="l">'+esc(lineName(l))+(l.m==="free"?' (gives time)':'')+'</td><td>'+l.h+'</td><td>'+rate(lineRate(l))+'</td><td>'+(l.m==="free"?'<span class="k2">given</span>':eur(lineAmt(l)))+'</td></tr>');});});
-  rows.push('<tr><td>Working together<span class="n">every '+w.meet.e+' weeks, '+w.meet.h+' hours</span></td><td class="l">Each of us</td><td>'+w.mem.length+' × '+mh+'</td><td>'+(w.same?rate(w.rate):"")+'</td><td>'+eur(c.meet)+'</td></tr>');
+  rows.push('<tr><td>Team meetings<span class="n">every '+w.meet.e+' weeks, '+w.meet.h+' hours</span></td><td class="l">Each of us</td><td>'+w.mem.length+' × '+mh+'</td><td>'+(w.same?rate(w.rate):"")+'</td><td>'+eur(c.meet)+'</td></tr>');
   var p1='<div class="doc">'+head.replace("%K%","Budget")+(w.sent?'<p><b>'+esc(w.sent)+'</b></p>':'')+
    '<h4>People</h4><table><thead><tr><th class="l">Part</th><th class="l">Who</th><th>Hours</th><th>Rate</th><th>Total</th></tr></thead><tbody>'+rows.join("")+
    '<tr class="t"><td>All people</td><td></td><td></td><td></td><td>'+eur(c.people)+'</td></tr></tbody></table>'+
-   '<h4>Material costs</h4><table><tbody>'+(w.mat.length?w.mat.map(function(m){return '<tr><td>'+v(m.d,"description")+'</td><td>'+eur(m.a)+'</td></tr>';}).join(""):'<tr><td><span class="empty">No material costs</span></td><td></td></tr>')+
+   '<h4>Material costs</h4><table><tbody>'+(w.mat.length?w.mat.map(function(m){return '<tr><td>'+esc(matTitle(m))+'</td><td>'+eur(m.a)+'</td></tr>';}).join(""):'<tr><td><span class="empty">No material costs</span></td><td></td></tr>')+
    '<tr class="t"><td>All material costs</td><td>'+eur(c.mat)+'</td></tr></tbody></table>'+
    '<table style="margin-top:10px"><tr class="t"><td>Total project costs</td><td>'+eur(c.total)+'</td></tr></table>'+
    '<h4>Who we are</h4><table><tbody>'+w.mem.map(function(m,i){var x=c.mem[i];return '<tr><td>'+esc(mname(i))+'<span class="n">'+esc([m.d,m.b].filter(Boolean).join(" · "))+'</span></td><td class="l">'+esc(x.role.txt)+'</td><td>'+hrs(x.h)+' of '+hrs(x.commit)+'</td><td>'+eur(x.amt)+'</td></tr>';}).join("")+'</tbody></table></div>';
