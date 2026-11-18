@@ -297,7 +297,8 @@ var CARDS={
     start:"We research what the harbour remembers, with the people who still work on its docks, and decide whether, and how, that memory has a place in the neighbourhood to come.",half:[],reg:"The municipality's area development",
     parts:P(110,110,220,120,80,100),
     mat:M(2500,1500,3500,1500,1000,1500),regPay:["p5","t5"],
-    partners:[["The port company","Its history is on these docks, and its name is on the new plans."],["A housing corporation","It builds the new homes, and wants neighbours who know where they live."],["A heritage foundation","It pays for what a city chooses to remember."],["A university of applied sciences","Its students need real fieldwork, and its researchers need sources."],["A brewery in an old shed","Its customers come for the harbour's story."]],ink:null},
+    ink:[["Archive access and a desk to work at",0,"The city archive"]],
+    partners:[["The port company","Its history is on these docks, and its name is on the new plans."],["A housing corporation","It builds the new homes, and wants neighbours who know where they live."],["A heritage foundation","It pays for what a city chooses to remember."],["A university of applied sciences","Its students need real fieldwork, and its researchers need sources."],["A brewery in an old shed","Its customers come for the harbour's story."]]},
  2:{title:"The empty shop",lead:"The city bought empty shop buildings to bring a shopping street back to life.",body:"One unit is yours, rent-free, for six months. After that, it goes to whoever can pay. What opens there, and how do you run it?",
     start:"We open the empty unit for six months with the people of the street, and decide whether what we have started can stay when the rent comes back.",half:[],reg:"The municipality, as owner",
     parts:P(110,90,80,160,100,200),
@@ -308,17 +309,17 @@ var CARDS={
     start:"We give what the market leaves behind a value of its own, decide who does the work, and who benefits.",half:[],reg:"Cultuurfonds Zuid-Holland",
     parts:P(100,80,120,170,110,160),
     mat:M(2500,1500,300,3200,1000,1200),regPay:["p4"],
-    partners:[["The city's cleaning service","Less waste on the square is less work for them."],["The stallholders' association","What is left over at closing time costs them money."],["A neighbourhood cooperative","It turns leftovers into paid work."],["A vocational school","Its students learn a trade with real material."]],ink:null},
+    partners:[["The city's cleaning service","Less waste on the square is less work for them."],["The stallholders' association","What is left over at closing time costs them money."],["A neighbourhood cooperative","It turns leftovers into paid work."],["A vocational school","Its students learn a trade with real material."]],ink:[["Storage for what we collect, between market days",0,"The market organisation"]]},
  4:{title:"The next hot summer",lead:"Last summer was the hottest yet.",body:"About one in three Rotterdammers can't find a cool place at home or nearby. Many neighbours grew up with heat and know how to live with it. How, and where, does the neighbourhood keep cool next summer?",
     start:"We learn how neighbours who grew up with heat keep cool, and decide with them how, and where, the neighbourhood keeps cool next summer.",half:[],reg:"The municipality's climate programme",
     parts:P(110,80,160,160,100,130),
     mat:M(3500,1500,500,1500,1000,1500),regPay:["t0","t3","t5"],
-    partners:[["A housing corporation","Hot flats are its problem too."],["The health service","Heat sends people to hospital."],["The water board","Shade and water are its daily work."],["The library","It is already one of the coolest rooms in the neighbourhood."]],ink:null},
+    partners:[["A housing corporation","Hot flats are its problem too."],["The health service","Heat sends people to hospital."],["The water board","Shade and water are its daily work."],["The library","It is already one of the coolest rooms in the neighbourhood."]],ink:[["The hall for cool afternoons, on the hottest days",0,"The community centre"]]},
  5:{title:"Work that counts",lead:"In Zuid, many people have no steady income, and much of what keeps the neighbourhood going is never paid: cooking, mending, caring, translating.",body:"For some, earning more means losing their benefits; others aren't allowed to earn at all. What could the neighbourhood do differently, so people here can live a decent life?",
     start:"We open an atelier in Zuid where what residents make and do is shown, traded or paid, and decide how that work builds a decent life for everyone here.",half:[],reg:"The municipality, with the National Programme Rotterdam Zuid",
     parts:P(100,100,120,130,90,200),
     mat:M(2000,1000,500,3500,1000,1000),regPay:["t3","t4","t5"],
-    partners:[["A vocational college","Its teachers know the talent; the jobs are elsewhere."],["Local businesses","They need these skills, and can't find them."],["A housing corporation","Tenants with work can pay their rent."],["A neighbourhood cooperative","It can pay where others can't take an invoice."]],ink:[]}
+    partners:[["A vocational college","Its teachers know the talent; the jobs are elsewhere."],["Local businesses","They need these skills, and can't find them."],["A housing corporation","Tenants with work can pay their rent."],["A neighbourhood cooperative","It can pay where others can't take an invoice."]],ink:[["Sewing machines and a kitchen, on loan",0,"The neighbourhood centre"]]}
 };
 var CARD_KEYS=["1","2","3","4","5"];
 
@@ -708,7 +709,9 @@ function checks(c){
   var empty=[];w.parts.forEach(function(p){if(!p.l.length||p.l.some(function(l){return l.m==="none";}))empty.push(partTitle(p));});
   list.push(["Every part has someone who does it",!empty.length,empty.join(", ")]);
   var noname=w.mem.filter(function(m){return !m.n||!(m.days>0);}).length;
+  var noH=[];w.parts.forEach(function(p){if(p.l.some(function(l){return l.m!=="none"&&!(l.h>0);}))noH.push(partTitle(p));});
   list.push(["Everyone has a first name and days a week",!noname]);
+  list.push(["Every part has hours",!noH.length,noH.join(", "),"soft"]);
   var unnamed=w.parts.filter(function(p){return !p.n;}).map(partTitle);
   list.push(["Every part has a name of our own",!unnamed.length,unnamed.join(", "),"soft"]);
   var off=[];c.mem.forEach(function(m,i){if(!m.commit||Math.abs(m.h-m.commit)>m.commit*0.1)off.push(first(i));});
@@ -731,13 +734,13 @@ function checkList(list){var bad=list.some(function(x){return !x[1];});return '<
 /* ---------- tables ---------- */
 function receipt(){
   return '<div class="receipt"><h2>Our time: the receipt</h2>'+out("timeTable")+out("flags")+
-   '<p class="note" style="margin-top:8px">In the budget: each person\'s parts, plus the team meetings. Committed: the months × their days a week × 4.33 weeks × 8 h. Over or under? Note it. Balancing it is for when you do this for real.</p></div>';
+   '<p class="note" style="margin-top:8px">In the budget: each person\'s parts, plus the team meetings. Committed: the months × their days a week × 4.33 weeks × 8 h. Over: up your commitment. Not budgeted: commit less, or that time goes unpaid. Note it; balancing it is for when you do this for real.</p></div>';
 }
 function timeTable(c){
   var w=S.w;
   return '<table class="time"><thead><tr><th>Who</th><th>Committed</th><th>In the budget</th><th>Difference</th></tr></thead><tbody>'+
    w.mem.map(function(m,i){var x=c.mem[i],d=x.h-x.commit,off=x.commit&&Math.abs(d)>x.commit*0.1;
-     return '<tr><td>'+esc(mname(i))+'<small>'+esc(x.role.txt)+'</small></td><td>'+hrs(x.commit)+'<small>'+daysTxt(m.days)+'</small></td><td>'+hrs(x.h)+'<small>'+eur(x.amt)+'</small></td><td class="'+(off?(d>0?"over":"under"):"")+'">'+(Math.abs(d)<1?"–":(d>0?"+":"−")+hrs(Math.abs(d)))+'<small>'+(!off?"in balance":d>0?"over":"given away")+'</small></td></tr>';}).join("")+
+     return '<tr><td>'+esc(mname(i))+'<small>'+esc(x.role.txt)+'</small></td><td>'+hrs(x.commit)+'<small>'+daysTxt(m.days)+'</small></td><td>'+hrs(x.h)+'<small>'+eur(x.amt)+'</small></td><td class="'+(off?(d>0?"over":"under"):"")+'">'+(Math.abs(d)<1?"–":(d>0?"+":"−")+hrs(Math.abs(d)))+'<small>'+(!off?"in balance":d>0?"over":"not budgeted")+'</small></td></tr>';}).join("")+
    '<tr class="t"><td>The team</td><td>'+hrs(c.teamCommit)+'</td><td>'+hrs(c.teamH)+'</td><td>'+(Math.abs(c.teamH-c.teamCommit)<1?"–":(c.teamH>c.teamCommit?"+":"−")+hrs(Math.abs(c.teamH-c.teamCommit)))+'</td></tr></tbody></table>';
 }
 function flagsHtml(c){
@@ -789,8 +792,8 @@ function docHtml(c){
    '<table style="margin-top:10px"><tr class="t"><td>Total project costs</td><td>'+eur(c.total)+'</td></tr></table>'+
    '<h4>Who we are</h4><table><tbody>'+w.mem.map(function(m,i){var x=c.mem[i];return '<tr><td>'+esc(mname(i))+'<span class="n">'+esc([m.d,m.b].filter(Boolean).join(" · "))+'</span></td><td class="l">'+esc(x.role.txt)+'</td><td>'+hrs(x.h)+' of '+hrs(x.commit)+'</td><td>'+eur(x.amt)+'</td></tr>';}).join("")+'</tbody></table></div>';
   var src=payers().filter(function(p){return p[0]!=="f";}).map(function(p){var f=forList(p[0]);return (c.by[p[0]]||f.length)?'<tr><td class="l">'+esc(p[2])+(f.length?'<span class="n">for '+esc(f.join(", "))+'</span>':'')+'</td><td>'+eur(c.by[p[0]])+'</td></tr>':'';}).join("");
-  var given=[];eachLine(function(l,p){if(l.m==="free")given.push('<tr><td class="l">'+esc(lineName(l))+'<span class="n">'+esc(partTitle(p))+', '+l.h+' h</span></td><td>'+eur(lineAmt(l))+'</td></tr>');});
-  if(w.ink)w.ink.forEach(function(x){given.push('<tr><td class="l">'+v(x.d,"something given")+(x.g?'<span class="n">from '+esc(x.g)+'</span>':'')+'</td><td>'+eur(x.a)+'</td></tr>');});
+  var given=[];eachLine(function(l,p){if(l.m==="free"&&lineAmt(l)>0)given.push('<tr><td class="l">'+esc(lineName(l))+'<span class="n">'+esc(partTitle(p))+', '+l.h+' h</span></td><td>'+eur(lineAmt(l))+'</td></tr>');});
+  if(w.ink)w.ink.forEach(function(x){if(x.a>0)given.push('<tr><td class="l">'+v(x.d,"something given")+(x.g?'<span class="n">from '+esc(x.g)+'</span>':'')+'</td><td>'+eur(x.a)+'</td></tr>');});
   var lf=forList("f");
   var p2='<div class="doc">'+head.replace("%K%","Coverage plan")+
    '<h4>Paid by others</h4><table><tbody>'+(src||'<tr><td><span class="empty">Nobody else yet</span></td><td></td></tr>')+'<tr class="t"><td>Paid by others, '+Math.round(c.pct)+'% of the total</td><td>'+eur(c.others)+'</td></tr></tbody></table>'+
