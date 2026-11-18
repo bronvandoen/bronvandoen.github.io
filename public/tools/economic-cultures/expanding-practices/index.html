@@ -1,0 +1,951 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Budget Your Ambition, Together</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:wght@400;600&family=Big+Shoulders+Display:wght@800;900&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* Same sheet as the hourly-rate and quote-to-invoice tools: riso on paper, baseline Blue + Bright Red and black. */
+:root{
+  --paper:#F7F3EA; --paper-raised:#FBF8F1; --ink:#111111; --ink-soft:#4A463F;
+  --ink-1:#0078BF; --ink-2:#F15060; --display-ink:#0078BF; --eyebrow-ink:#3D5588; --accent-text:#B8293A;
+  --display:"Big Shoulders Display","Oswald","Arial Narrow",sans-serif;
+  --text:"Source Serif 4",Georgia,serif;
+  --readable:"Atkinson Hyperlegible Next",Verdana,sans-serif;
+  --label:"Atkinson Hyperlegible Mono","Courier New",monospace;
+  --rule:2px; --rule-heavy:3px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--text);font-size:17px;line-height:1.6;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 120px}
+body.readable{font-family:var(--readable)}
+.wrap{max-width:560px;margin:0 auto}
+a{color:var(--ink);text-decoration-thickness:2px;text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+
+header.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:16px 8px;border-bottom:var(--rule) solid var(--ink)}
+.studio{font-family:var(--display);font-weight:900;font-size:20px;white-space:nowrap;letter-spacing:.01em}
+.toggle{font-family:var(--label);font-size:13px;font-weight:600;background:var(--paper-raised);color:var(--ink);border:var(--rule) solid var(--ink);min-height:44px;padding:0 12px;cursor:pointer;border-radius:0}
+.toggle[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+.progress{font-family:var(--label);font-size:13px;color:var(--ink-soft);padding-top:16px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.eyebrow{font-family:var(--display);font-weight:800;font-size:16px;letter-spacing:.08em;color:var(--eyebrow-ink);text-transform:uppercase;margin:20px 0 6px}
+.over{position:relative;margin:0 0 16px}
+.over h1,.over .ghost{font-family:var(--display);font-weight:900;font-size:clamp(38px,11vw,56px);line-height:.9;text-transform:uppercase;margin:0;text-wrap:balance;mix-blend-mode:multiply}
+.over h1{position:relative;color:var(--display-ink)}
+.over .ghost{position:absolute;left:3px;top:3px;color:var(--ink-2)}
+p{margin:0 0 14px}
+.lead{font-size:19px}
+.note{font-family:var(--label);font-size:13px;color:var(--ink-soft)}
+
+.panel{background:var(--paper-raised);border:var(--rule-heavy) solid var(--ink);padding:20px 16px;margin:18px 0}
+.panel h2{font-family:var(--display);font-weight:900;font-size:26px;line-height:1;text-transform:uppercase;margin:0 0 10px}
+.panel h3{font-family:var(--label);font-weight:600;font-size:14px;margin:14px 0 4px;text-transform:uppercase;letter-spacing:.04em}
+
+.f{display:block;padding:10px 0;border-bottom:1px solid #CFC8B8}
+.f:last-child{border-bottom:0}
+.f label,.f .lbl{display:block;font-family:var(--readable);font-weight:600;font-size:16px;line-height:1.3;margin-bottom:6px}
+.f .hint{display:block;font-family:var(--readable);font-size:14px;color:var(--ink-soft);line-height:1.4;margin-top:4px}
+input,select,textarea{width:100%;min-height:44px;font-family:var(--readable);font-size:17px;padding:8px 10px;border:var(--rule) solid var(--ink);background:var(--paper);color:var(--ink);-webkit-text-fill-color:var(--ink);border-radius:0;color-scheme:light}
+textarea{min-height:88px;resize:vertical;line-height:1.4}
+input[type=number]{text-align:right;font-variant-numeric:tabular-nums}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.three{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:8px}
+.mini{display:block;font-family:var(--label);font-size:12px;margin-bottom:2px}
+
+.ln{border:var(--rule) solid var(--ink);background:var(--paper);padding:10px;margin:10px 0}
+.ln > * + *{margin-top:8px}
+.ln .top2{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-family:var(--label);font-size:13px}
+.ln .amt{display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:var(--label);font-size:14px;font-variant-numeric:tabular-nums}
+.ln.gap{border-color:var(--ink-2);border-style:dashed}
+.flag{font-family:var(--readable);font-size:14px;color:var(--accent-text);line-height:1.4}
+
+.part{border-bottom:1px solid #CFC8B8;padding:10px 0}
+.part:last-child{border-bottom:0}
+.tick{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;padding:4px 0;min-height:44px;font-family:var(--readable);font-weight:600;font-size:16px;color:var(--ink);cursor:pointer}
+.tick .box{flex:0 0 26px;height:26px;border:var(--rule) solid var(--ink);display:grid;place-items:center;font-family:var(--label);font-size:16px;background:var(--paper)}
+.tick[aria-pressed="true"] .box{background:var(--ink);color:var(--paper)}
+.who{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.who button{min-height:44px;font-family:var(--label);font-size:13px;font-weight:600;border:var(--rule) solid var(--ink);background:var(--paper-raised);color:var(--ink);cursor:pointer;border-radius:0;padding:4px 6px}
+.who button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.who button.none[aria-pressed="true"]{background:var(--ink-2);border-color:var(--ink-2);color:#111}
+
+.totals{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0 0}
+.total{flex:1 1 140px;border-top:var(--rule-heavy) solid var(--ink);padding-top:6px}
+.total .k{font-family:var(--label);font-size:13px}
+.total .v{font-family:var(--display);font-weight:900;font-size:34px;line-height:1;font-variant-numeric:tabular-nums}
+.total.warn .v{color:var(--accent-text)}
+
+.bars{margin:10px 0}
+.meter{height:22px;background:#E6DFD0;position:relative;border:1px solid var(--ink)}
+.meter span{position:absolute;left:0;top:0;bottom:0;background:var(--ink)}
+.meter + .mini{margin:4px 0 10px}
+
+.fair{border:var(--rule) solid var(--ink-1);padding:10px 12px;margin:16px 0;font-size:16px;background:var(--paper-raised)}
+.fair b{font-family:var(--label);font-size:13px;display:block;color:var(--eyebrow-ink);text-transform:uppercase;letter-spacing:.04em}
+.tip{border-left:var(--rule-heavy) solid var(--ink-2);padding:2px 0 2px 12px;margin:16px 0;font-size:16px}
+.tip b{font-family:var(--label);font-size:13px;display:block;text-transform:uppercase;letter-spacing:.04em}
+.done{font-family:var(--display);font-weight:900;font-size:24px;line-height:1.2;background:var(--accent-text);color:var(--paper);padding:14px 16px;margin:18px 0}
+.pause{display:block;font-family:var(--label);font-size:14px;font-weight:600;background:var(--ink);color:var(--paper);padding:12px 14px;margin:18px 0}
+.pause::before{content:"Pause · "}
+
+.sum{width:100%;border-collapse:collapse;font-family:var(--readable);font-size:15px;font-variant-numeric:tabular-nums}
+.sum td{padding:7px 0;border-bottom:1px solid #CFC8B8;vertical-align:top}
+.sum td:last-child{text-align:right;white-space:nowrap;padding-left:12px}
+.sum tr.t td{border-top:var(--rule) solid var(--ink);border-bottom:0;font-weight:600}
+.sum tr.gapr td{color:var(--accent-text);font-weight:600}
+.sum small{display:block;font-family:var(--label);font-size:12px;color:var(--ink-soft);font-weight:400}
+
+.btn{font-family:var(--label);font-weight:600;font-size:14px;min-height:48px;padding:0 18px;border:var(--rule) solid var(--ink);background:var(--paper-raised);color:var(--ink);cursor:pointer;border-radius:0}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.btn.small{min-height:44px;padding:0 12px;font-size:13px}
+.btn:disabled{opacity:.4;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+.choose{display:grid;gap:12px;margin:16px 0}
+.pick{display:block;text-align:left;width:100%;background:var(--paper-raised);border:var(--rule-heavy) solid var(--ink);padding:14px 16px;cursor:pointer;font:inherit;font-size:16px;color:var(--ink);border-radius:0}
+.pick strong{font-family:var(--display);font-weight:900;font-size:28px;text-transform:uppercase;display:block;line-height:1}
+.pick em{font-family:var(--label);font-style:normal;font-size:12px;display:block;margin:4px 0;color:var(--eyebrow-ink);text-transform:uppercase;letter-spacing:.04em}
+.pick[aria-pressed="true"]{box-shadow:inset 0 0 0 3px var(--ink-1);border-color:var(--ink-1)}
+
+.checks{list-style:none;margin:0;padding:0;font-family:var(--readable);font-size:15px}
+.checks li{display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-bottom:1px solid #CFC8B8}
+.checks li:last-child{border-bottom:0}
+.checks .m{font-family:var(--label);font-weight:600;min-width:1.6em}
+.checks li.no{color:var(--accent-text)}
+.checks li.soft{color:var(--ink-soft)}
+
+/* The document: plain, printable, two pages like the fund's model budget. */
+.docs{overflow-x:auto;margin:18px 0}
+.doc{background:#fff;color:#111;border:var(--rule) solid var(--ink);padding:18px 14px;margin:0 0 14px;font-family:var(--readable);font-size:12px;line-height:1.4;font-variant-numeric:tabular-nums;min-width:520px}
+.doc .kind{font-family:var(--display);font-weight:900;font-size:34px;line-height:.9;text-transform:uppercase;color:var(--display-ink)}
+.doc .kind small{display:block;font-family:var(--label);font-size:11px;font-weight:600;color:#111;letter-spacing:.04em;margin-top:6px;text-transform:none}
+.doc .head{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+.doc .head .meta{text-align:right;max-width:55%}
+.doc h4{font-family:var(--label);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin:14px 0 4px;border-bottom:2px solid #111;padding-bottom:3px}
+.doc table{width:100%;border-collapse:collapse}
+.doc th{font-family:var(--label);font-size:10px;font-weight:600;text-align:right;padding:3px 0 3px 8px;white-space:nowrap;border-bottom:1px solid #111}
+.doc td{padding:4px 0 4px 8px;border-bottom:1px solid #ddd;text-align:right;vertical-align:top}
+.doc th:first-child,.doc td:first-child{text-align:left;padding-left:0}
+.doc td.l,.doc th.l{text-align:left}
+.doc td .n{display:block;font-size:10px;color:#555;font-style:italic}
+.doc tr.t td{border-top:2px solid #111;border-bottom:0;font-weight:600}
+.doc tr.g td{font-weight:600;color:#B8293A}
+.doc .k2{color:#555}
+.doc .empty{color:#9a958b;font-style:italic}
+.doc .foot{margin-top:12px;font-size:10px;color:#555}
+
+.linkbox{font-family:var(--label);font-size:12px;word-break:break-all;background:var(--paper);border:1px solid var(--ink);padding:8px;max-height:5.5em;overflow:auto;display:block}
+nav.bar{position:fixed;left:0;right:0;bottom:0;background:var(--paper);border-top:var(--rule-heavy) solid var(--ink);
+  padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));z-index:5}
+nav.bar .in{max-width:560px;margin:0 auto;display:flex;gap:10px;align-items:center}
+nav.bar .live{flex:1;text-align:center;font-family:var(--label);font-size:13px;line-height:1.2}
+nav.bar .live b{display:block;font-family:var(--display);font-weight:900;font-size:24px}
+nav.bar .live b.warn{color:var(--accent-text)}
+footer{padding:28px 0 0;font-family:var(--label);font-size:12px;color:var(--ink-soft)}
+
+#printarea{display:none}
+@media print{
+  @page{margin:12mm}
+  body{padding:0;background:#fff}
+  .wrap,nav.bar{display:none!important}
+  #printarea{display:block}
+  #printarea .doc{border:0;margin:0;padding:0;min-width:0}
+  #printarea .doc + .doc,#printarea .reopen{break-before:page}
+  #printarea .reopen{font-family:var(--readable);font-size:13px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+/* Our project budget: the team's pieces */
+.who{grid-template-columns:repeat(auto-fill,minmax(84px,1fr))}
+.who button.out{background:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 8px}
+.chip{flex:1 1 140px;border:var(--rule) solid var(--ink);background:var(--paper-raised);padding:8px 10px;font-family:var(--readable);font-size:14px;line-height:1.3}
+.chip b{display:block;font-family:var(--display);font-weight:900;font-size:20px;text-transform:uppercase;line-height:1;margin-bottom:2px;color:var(--display-ink)}
+.cardhead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.cardhead h2{margin:0}
+.role{font-family:var(--display);font-weight:900;font-size:24px;line-height:1.05;text-transform:uppercase;color:var(--display-ink);margin:10px 0 6px}
+.kbar{display:flex;height:18px;border:1px solid var(--ink);background:#E6DFD0;margin:0 0 6px}
+.kbar span{display:block;height:100%}
+.k-lead{background:var(--ink-1)}
+.k-prod{background:var(--ink)}
+.k-make{background:var(--ink-2)}
+.k-res{background:repeating-linear-gradient(135deg,var(--ink) 0 2px,var(--paper) 2px 6px)}
+.k-host{background:repeating-linear-gradient(135deg,var(--ink-1) 0 3px,var(--paper) 3px 7px)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-family:var(--label);font-size:12px;margin:8px 0}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i,.sw{display:inline-block;width:16px;height:16px;border:1px solid var(--ink);vertical-align:-2px}
+.panel h2 .sw{margin-right:8px;width:18px;height:18px}
+.kinds{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px}
+.kinds button{min-height:44px;font-family:var(--label);font-size:13px;font-weight:600;border:var(--rule) solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer;border-radius:0}
+.kinds button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.fold{border-top:1px solid #CFC8B8;margin-top:10px}
+.fold summary{font-family:var(--label);font-size:13px;font-weight:600;min-height:44px;display:flex;align-items:center;cursor:pointer}
+.fold div{font-size:16px}
+.ro{display:flex;align-items:center;justify-content:flex-end;min-height:44px;font-family:var(--label);font-size:15px;font-variant-numeric:tabular-nums}
+.choose.two{grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 6px}
+.pick.small{padding:10px 12px;font-size:14px;line-height:1.3}
+.pick.small strong{font-size:20px;margin-bottom:4px}
+.meter span.past{background:var(--ink-2)}
+nav.bar .live .ck{display:block;font-size:12px;color:var(--ink-soft)}
+</style>
+
+<style>
+/* Expanding Practices: the card, the team code */
+.situ{background:var(--paper-raised);border:var(--rule-heavy) solid var(--ink);padding:16px;margin:16px 0}
+.situ .no{font-family:var(--label);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--eyebrow-ink)}
+.situ h2{font-family:var(--display);font-weight:900;font-size:30px;line-height:1;text-transform:uppercase;margin:4px 0 10px;color:var(--display-ink)}
+.situ p{font-size:17px;margin:0 0 10px}
+.situ .half{font-style:italic;border-top:1px solid #CFC8B8;padding-top:10px;margin:10px 0 0}
+.situ .half + .half{border-top:0;padding-top:0}
+.cards{display:grid;gap:10px;margin:12px 0}
+.cards .pick strong{font-size:22px}
+.frame{width:100%;border-collapse:collapse;font-family:var(--readable);font-size:15px}
+.frame td{padding:6px 0;border-bottom:1px solid #CFC8B8;vertical-align:top}
+.frame td:first-child{font-family:var(--label);font-size:13px;padding-right:12px;white-space:nowrap}
+.kindtag{display:inline-flex;align-items:center;gap:6px;font-family:var(--label);font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft)}
+.parth{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.pname{font-family:var(--readable);font-weight:600;font-size:18px;border:0;border-bottom:var(--rule) solid var(--ink);background:transparent;padding:6px 0;margin:6px 0 4px}
+.pname.empty{border-bottom:var(--rule) dashed var(--accent-text)}
+.pname::placeholder{color:var(--accent-text);font-style:italic;font-weight:400;opacity:1}
+.time{width:100%;border-collapse:collapse;font-family:var(--readable);font-size:14px;font-variant-numeric:tabular-nums}
+.time th{font-family:var(--label);font-size:11px;font-weight:600;text-align:right;padding:4px 0 4px 8px;border-bottom:var(--rule) solid var(--ink)}
+.time td{padding:7px 0 7px 8px;border-bottom:1px solid #CFC8B8;text-align:right;vertical-align:top}
+.time th:first-child,.time td:first-child{text-align:left;padding-left:0}
+.time td small{display:block;font-family:var(--label);font-size:11px;color:var(--ink-soft)}
+.time td.over{color:var(--accent-text);font-weight:600}
+.time td.under{color:var(--ink-1);font-weight:600}
+.time tr.t td{border-top:var(--rule) solid var(--ink);border-bottom:0;font-weight:600}
+.qrbox{background:#fff;border:var(--rule-heavy) solid var(--ink);padding:12px;margin:12px 0;display:flex;justify-content:center}
+.qrbox svg{width:100%;max-width:420px;height:auto;display:block}
+.given{border:var(--rule) dashed var(--ink-1);padding:10px;margin:10px 0;background:var(--paper)}
+.chips{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.chips .chip{grid-column:span 2;min-width:0}
+.chips.n4 .chip{grid-column:span 3}
+.chips.n5 .chip:nth-child(n+4){grid-column:span 3}
+.payrow{border-bottom:1px solid #CFC8B8;padding:8px 0}
+.payrow .top2{display:flex;justify-content:space-between;gap:10px;font-family:var(--readable);font-size:15px;margin-bottom:6px}
+.payrow .top2 span:last-child{font-family:var(--label);white-space:nowrap}
+.payers{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px}
+.payers button{min-height:44px;font-family:var(--label);font-size:12px;font-weight:600;border:var(--rule) solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer;border-radius:0;padding:2px 6px;overflow:hidden;text-overflow:ellipsis}
+.payers button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.pickrow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}
+.phline{color:var(--accent-text);font-style:italic}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 10px}
+.facts.one{grid-template-columns:1fr}
+.facts > div{border-top:var(--rule-heavy) solid var(--ink);padding-top:6px}
+.facts .k{display:block;font-family:var(--label);font-size:13px}
+.facts .v{display:block;font-family:var(--display);font-weight:900;font-size:34px;line-height:1.05;font-variant-numeric:tabular-nums}
+.rateline{border:var(--rule) solid var(--ink);background:var(--paper-raised);padding:10px 12px;margin:14px 0;font-family:var(--readable);font-size:15px}
+.rateline .fold{margin-top:6px}
+.receipt{background:#fff;border:1px solid #CFC8B8;box-shadow:0 2px 0 #CFC8B8;padding:18px 14px 22px;margin:22px 4px;font-family:var(--label);
+  -webkit-mask:linear-gradient(#000,#000) top/100% calc(100% - 8px) no-repeat,radial-gradient(circle 6px at 8px 100%,transparent 6px,#000 6.5px) bottom/16px 8px repeat-x;
+  mask:linear-gradient(#000,#000) top/100% calc(100% - 8px) no-repeat,radial-gradient(circle 6px at 8px 100%,transparent 6px,#000 6.5px) bottom/16px 8px repeat-x}
+.receipt h2{font-family:var(--label);font-size:15px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;text-align:center;border-bottom:1px dashed #111;padding-bottom:8px;margin:0 0 6px}
+.receipt .time td,.receipt .time th{font-family:var(--label)}
+.receipt .time tr.t td{border-top:1px dashed #111}
+.given .top2{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-family:var(--label);font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <span class="studio">a Situated Studio</span>
+    <button class="toggle" id="readable" aria-pressed="false">Readable mode</button>
+  </header>
+  <div class="progress" id="progress"></div>
+  <main id="stage" aria-live="polite"></main>
+  <footer>Economic Cultures · Expanding Practices, Nieuwe Instituut · a prototype by a Situated Studio. Nothing you type leaves this phone until you share the link.</footer>
+</div>
+<nav class="bar" aria-label="Steps">
+  <div class="in">
+    <button class="btn" id="back">Back</button>
+    <div class="live" id="live"></div>
+    <button class="btn primary" id="next">Next</button>
+  </div>
+</nav>
+<div id="printarea" aria-hidden="true"></div>
+
+<script>
+/* qrcode-generator 1.4.4, Copyright (c) 2009 Kazuhiko Arase, MIT licence, https://github.com/kazuhikoarase/qrcode-generator */
+var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],f={},c=function(t,r){o=function(t){for(var r=new Array(t),e=0;e<t;e+=1){r[e]=new Array(t);for(var n=0;n<t;n+=1)r[e][n]=null}return r}(i=4*e+17),l(0,0),l(i-7,0),l(0,i-7),s(),h(),d(t,r),e>=7&&v(t),null==a&&(a=p(e,n,u)),w(a,r)},l=function(t,r){for(var e=-1;e<=7;e+=1)if(!(t+e<=-1||i<=t+e))for(var n=-1;n<=7;n+=1)r+n<=-1||i<=r+n||(o[t+e][r+n]=0<=e&&e<=6&&(0==n||6==n)||0<=n&&n<=6&&(0==e||6==e)||2<=e&&e<=4&&2<=n&&n<=4)},h=function(){for(var t=8;t<i-8;t+=1)null==o[t][6]&&(o[t][6]=t%2==0);for(var r=8;r<i-8;r+=1)null==o[6][r]&&(o[6][r]=r%2==0)},s=function(){for(var t=B.getPatternPosition(e),r=0;r<t.length;r+=1)for(var n=0;n<t.length;n+=1){var i=t[r],a=t[n];if(null==o[i][a])for(var u=-2;u<=2;u+=1)for(var f=-2;f<=2;f+=1)o[i+u][a+f]=-2==u||2==u||-2==f||2==f||0==u&&0==f}},v=function(t){for(var r=B.getBCHTypeNumber(e),n=0;n<18;n+=1){var a=!t&&1==(r>>n&1);o[Math.floor(n/3)][n%3+i-8-3]=a}for(n=0;n<18;n+=1){a=!t&&1==(r>>n&1);o[n%3+i-8-3][Math.floor(n/3)]=a}},d=function(t,r){for(var e=n<<3|r,a=B.getBCHTypeInfo(e),u=0;u<15;u+=1){var f=!t&&1==(a>>u&1);u<6?o[u][8]=f:u<8?o[u+1][8]=f:o[i-15+u][8]=f}for(u=0;u<15;u+=1){f=!t&&1==(a>>u&1);u<8?o[8][i-u-1]=f:u<9?o[8][15-u-1+1]=f:o[8][15-u-1]=f}o[i-8][8]=!t},w=function(t,r){for(var e=-1,n=i-1,a=7,u=0,f=B.getMaskFunction(r),c=i-1;c>0;c-=2)for(6==c&&(c-=1);;){for(var g=0;g<2;g+=1)if(null==o[n][c-g]){var l=!1;u<t.length&&(l=1==(t[u]>>>a&1)),f(n,c-g)&&(l=!l),o[n][c-g]=l,-1==(a-=1)&&(u+=1,a=7)}if((n+=e)<0||i<=n){n-=e,e=-e;break}}},p=function(t,r,e){for(var n=A.getRSBlocks(t,r),o=b(),i=0;i<e.length;i+=1){var a=e[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var u=0;for(i=0;i<n.length;i+=1)u+=n[i].dataCount;if(o.getLengthInBits()>8*u)throw"code length overflow. ("+o.getLengthInBits()+">"+8*u+")";for(o.getLengthInBits()+4<=8*u&&o.put(0,4);o.getLengthInBits()%8!=0;)o.putBit(!1);for(;!(o.getLengthInBits()>=8*u||(o.put(236,8),o.getLengthInBits()>=8*u));)o.put(17,8);return function(t,r){for(var e=0,n=0,o=0,i=new Array(r.length),a=new Array(r.length),u=0;u<r.length;u+=1){var f=r[u].dataCount,c=r[u].totalCount-f;n=Math.max(n,f),o=Math.max(o,c),i[u]=new Array(f);for(var g=0;g<i[u].length;g+=1)i[u][g]=255&t.getBuffer()[g+e];e+=f;var l=B.getErrorCorrectPolynomial(c),h=k(i[u],l.getLength()-1).mod(l);for(a[u]=new Array(l.getLength()-1),g=0;g<a[u].length;g+=1){var s=g+h.getLength()-a[u].length;a[u][g]=s>=0?h.getAt(s):0}}var v=0;for(g=0;g<r.length;g+=1)v+=r[g].totalCount;var d=new Array(v),w=0;for(g=0;g<n;g+=1)for(u=0;u<r.length;u+=1)g<i[u].length&&(d[w]=i[u][g],w+=1);for(g=0;g<o;g+=1)for(u=0;u<r.length;u+=1)g<a[u].length&&(d[w]=a[u][g],w+=1);return d}(o,n)};f.addData=function(t,r){var e=null;switch(r=r||"Byte"){case"Numeric":e=M(t);break;case"Alphanumeric":e=x(t);break;case"Byte":e=m(t);break;case"Kanji":e=L(t);break;default:throw"mode:"+r}u.push(e),a=null},f.isDark=function(t,r){if(t<0||i<=t||r<0||i<=r)throw t+","+r;return o[t][r]},f.getModuleCount=function(){return i},f.make=function(){if(e<1){for(var t=1;t<40;t++){for(var r=A.getRSBlocks(t,n),o=b(),i=0;i<u.length;i++){var a=u[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var g=0;for(i=0;i<r.length;i++)g+=r[i].dataCount;if(o.getLengthInBits()<=8*g)break}e=t}c(!1,function(){for(var t=0,r=0,e=0;e<8;e+=1){c(!0,e);var n=B.getLostPoint(f);(0==e||t>n)&&(t=n,r=e)}return r}())},f.createTableTag=function(t,r){t=t||2;var e="";e+='<table style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: "+(r=void 0===r?4*t:r)+"px;",e+='">',e+="<tbody>";for(var n=0;n<f.getModuleCount();n+=1){e+="<tr>";for(var o=0;o<f.getModuleCount();o+=1)e+='<td style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: 0px;",e+=" width: "+t+"px;",e+=" height: "+t+"px;",e+=" background-color: ",e+=f.isDark(n,o)?"#000000":"#ffffff",e+=";",e+='"/>';e+="</tr>"}return e+="</tbody>",e+="</table>"},f.createSvgTag=function(t,r,e,n){var o={};"object"==typeof arguments[0]&&(t=(o=arguments[0]).cellSize,r=o.margin,e=o.alt,n=o.title),t=t||2,r=void 0===r?4*t:r,(e="string"==typeof e?{text:e}:e||{}).text=e.text||null,e.id=e.text?e.id||"qrcode-description":null,(n="string"==typeof n?{text:n}:n||{}).text=n.text||null,n.id=n.text?n.id||"qrcode-title":null;var i,a,u,c,g=f.getModuleCount()*t+2*r,l="";for(c="l"+t+",0 0,"+t+" -"+t+",0 0,-"+t+"z ",l+='<svg version="1.1" xmlns="http://www.w3.org/2000/svg"',l+=o.scalable?"":' width="'+g+'px" height="'+g+'px"',l+=' viewBox="0 0 '+g+" "+g+'" ',l+=' preserveAspectRatio="xMinYMin meet"',l+=n.text||e.text?' role="img" aria-labelledby="'+y([n.id,e.id].join(" ").trim())+'"':"",l+=">",l+=n.text?'<title id="'+y(n.id)+'">'+y(n.text)+"</title>":"",l+=e.text?'<description id="'+y(e.id)+'">'+y(e.text)+"</description>":"",l+='<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>',l+='<path d="',a=0;a<f.getModuleCount();a+=1)for(u=a*t+r,i=0;i<f.getModuleCount();i+=1)f.isDark(a,i)&&(l+="M"+(i*t+r)+","+u+c);return l+='" stroke="transparent" fill="black"/>',l+="</svg>"},f.createDataURL=function(t,r){t=t||2,r=void 0===r?4*t:r;var e=f.getModuleCount()*t+2*r,n=r,o=e-r;return I(e,e,function(r,e){if(n<=r&&r<o&&n<=e&&e<o){var i=Math.floor((r-n)/t),a=Math.floor((e-n)/t);return f.isDark(a,i)?0:1}return 1})},f.createImgTag=function(t,r,e){t=t||2,r=void 0===r?4*t:r;var n=f.getModuleCount()*t+2*r,o="";return o+="<img",o+=' src="',o+=f.createDataURL(t,r),o+='"',o+=' width="',o+=n,o+='"',o+=' height="',o+=n,o+='"',e&&(o+=' alt="',o+=y(e),o+='"'),o+="/>"};var y=function(t){for(var r="",e=0;e<t.length;e+=1){var n=t.charAt(e);switch(n){case"<":r+="&lt;";break;case">":r+="&gt;";break;case"&":r+="&amp;";break;case'"':r+="&quot;";break;default:r+=n}}return r};return f.createASCII=function(t,r){if((t=t||1)<2)return function(t){t=void 0===t?2:t;var r,e,n,o,i,a=1*f.getModuleCount()+2*t,u=t,c=a-t,g={"██":"█","█ ":"▀"," █":"▄","  ":" "},l={"██":"▀","█ ":"▀"," █":" ","  ":" "},h="";for(r=0;r<a;r+=2){for(n=Math.floor((r-u)/1),o=Math.floor((r+1-u)/1),e=0;e<a;e+=1)i="█",u<=e&&e<c&&u<=r&&r<c&&f.isDark(n,Math.floor((e-u)/1))&&(i=" "),u<=e&&e<c&&u<=r+1&&r+1<c&&f.isDark(o,Math.floor((e-u)/1))?i+=" ":i+="█",h+=t<1&&r+1>=c?l[i]:g[i];h+="\n"}return a%2&&t>0?h.substring(0,h.length-a-1)+Array(a+1).join("▀"):h.substring(0,h.length-1)}(r);t-=1,r=void 0===r?2*t:r;var e,n,o,i,a=f.getModuleCount()*t+2*r,u=r,c=a-r,g=Array(t+1).join("██"),l=Array(t+1).join("  "),h="",s="";for(e=0;e<a;e+=1){for(o=Math.floor((e-u)/t),s="",n=0;n<a;n+=1)i=1,u<=n&&n<c&&u<=e&&e<c&&f.isDark(o,Math.floor((n-u)/t))&&(i=0),s+=i?g:l;for(o=0;o<t;o+=1)h+=s+"\n"}return h.substring(0,h.length-1)},f.renderTo2dContext=function(t,r){r=r||2;for(var e=f.getModuleCount(),n=0;n<e;n++)for(var o=0;o<e;o++)t.fillStyle=f.isDark(n,o)?"black":"white",t.fillRect(n*r,o*r,r,r)},f};t.stringToBytes=(t.stringToBytesFuncs={default:function(t){for(var r=[],e=0;e<t.length;e+=1){var n=t.charCodeAt(e);r.push(255&n)}return r}}).default,t.createStringToBytes=function(t,r){var e=function(){for(var e=S(t),n=function(){var t=e.read();if(-1==t)throw"eof";return t},o=0,i={};;){var a=e.read();if(-1==a)break;var u=n(),f=n()<<8|n();i[String.fromCharCode(a<<8|u)]=f,o+=1}if(o!=r)throw o+" != "+r;return i}(),n="?".charCodeAt(0);return function(t){for(var r=[],o=0;o<t.length;o+=1){var i=t.charCodeAt(o);if(i<128)r.push(i);else{var a=e[t.charAt(o)];"number"==typeof a?(255&a)==a?r.push(a):(r.push(a>>>8),r.push(255&a)):r.push(n)}}return r}};var r,e,n,o,i,a=1,u=2,f=4,c=8,g={L:1,M:0,Q:3,H:2},l=0,h=1,s=2,v=3,d=4,w=5,p=6,y=7,B=(r=[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],e=1335,n=7973,i=function(t){for(var r=0;0!=t;)r+=1,t>>>=1;return r},(o={}).getBCHTypeInfo=function(t){for(var r=t<<10;i(r)-i(e)>=0;)r^=e<<i(r)-i(e);return 21522^(t<<10|r)},o.getBCHTypeNumber=function(t){for(var r=t<<12;i(r)-i(n)>=0;)r^=n<<i(r)-i(n);return t<<12|r},o.getPatternPosition=function(t){return r[t-1]},o.getMaskFunction=function(t){switch(t){case l:return function(t,r){return(t+r)%2==0};case h:return function(t,r){return t%2==0};case s:return function(t,r){return r%3==0};case v:return function(t,r){return(t+r)%3==0};case d:return function(t,r){return(Math.floor(t/2)+Math.floor(r/3))%2==0};case w:return function(t,r){return t*r%2+t*r%3==0};case p:return function(t,r){return(t*r%2+t*r%3)%2==0};case y:return function(t,r){return(t*r%3+(t+r)%2)%2==0};default:throw"bad maskPattern:"+t}},o.getErrorCorrectPolynomial=function(t){for(var r=k([1],0),e=0;e<t;e+=1)r=r.multiply(k([1,C.gexp(e)],0));return r},o.getLengthInBits=function(t,r){if(1<=r&&r<10)switch(t){case a:return 10;case u:return 9;case f:case c:return 8;default:throw"mode:"+t}else if(r<27)switch(t){case a:return 12;case u:return 11;case f:return 16;case c:return 10;default:throw"mode:"+t}else{if(!(r<41))throw"type:"+r;switch(t){case a:return 14;case u:return 13;case f:return 16;case c:return 12;default:throw"mode:"+t}}},o.getLostPoint=function(t){for(var r=t.getModuleCount(),e=0,n=0;n<r;n+=1)for(var o=0;o<r;o+=1){for(var i=0,a=t.isDark(n,o),u=-1;u<=1;u+=1)if(!(n+u<0||r<=n+u))for(var f=-1;f<=1;f+=1)o+f<0||r<=o+f||0==u&&0==f||a==t.isDark(n+u,o+f)&&(i+=1);i>5&&(e+=3+i-5)}for(n=0;n<r-1;n+=1)for(o=0;o<r-1;o+=1){var c=0;t.isDark(n,o)&&(c+=1),t.isDark(n+1,o)&&(c+=1),t.isDark(n,o+1)&&(c+=1),t.isDark(n+1,o+1)&&(c+=1),0!=c&&4!=c||(e+=3)}for(n=0;n<r;n+=1)for(o=0;o<r-6;o+=1)t.isDark(n,o)&&!t.isDark(n,o+1)&&t.isDark(n,o+2)&&t.isDark(n,o+3)&&t.isDark(n,o+4)&&!t.isDark(n,o+5)&&t.isDark(n,o+6)&&(e+=40);for(o=0;o<r;o+=1)for(n=0;n<r-6;n+=1)t.isDark(n,o)&&!t.isDark(n+1,o)&&t.isDark(n+2,o)&&t.isDark(n+3,o)&&t.isDark(n+4,o)&&!t.isDark(n+5,o)&&t.isDark(n+6,o)&&(e+=40);var g=0;for(o=0;o<r;o+=1)for(n=0;n<r;n+=1)t.isDark(n,o)&&(g+=1);return e+=Math.abs(100*g/r/r-50)/5*10},o),C=function(){for(var t=new Array(256),r=new Array(256),e=0;e<8;e+=1)t[e]=1<<e;for(e=8;e<256;e+=1)t[e]=t[e-4]^t[e-5]^t[e-6]^t[e-8];for(e=0;e<255;e+=1)r[t[e]]=e;var n={glog:function(t){if(t<1)throw"glog("+t+")";return r[t]},gexp:function(r){for(;r<0;)r+=255;for(;r>=256;)r-=255;return t[r]}};return n}();function k(t,r){if(void 0===t.length)throw t.length+"/"+r;var e=function(){for(var e=0;e<t.length&&0==t[e];)e+=1;for(var n=new Array(t.length-e+r),o=0;o<t.length-e;o+=1)n[o]=t[o+e];return n}(),n={getAt:function(t){return e[t]},getLength:function(){return e.length},multiply:function(t){for(var r=new Array(n.getLength()+t.getLength()-1),e=0;e<n.getLength();e+=1)for(var o=0;o<t.getLength();o+=1)r[e+o]^=C.gexp(C.glog(n.getAt(e))+C.glog(t.getAt(o)));return k(r,0)},mod:function(t){if(n.getLength()-t.getLength()<0)return n;for(var r=C.glog(n.getAt(0))-C.glog(t.getAt(0)),e=new Array(n.getLength()),o=0;o<n.getLength();o+=1)e[o]=n.getAt(o);for(o=0;o<t.getLength();o+=1)e[o]^=C.gexp(C.glog(t.getAt(o))+r);return k(e,0).mod(t)}};return n}var A=function(){var t=[[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],[2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],[4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],[2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],[4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],[3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],[5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12,7,37,13],[5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],[1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],[5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],[3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],[3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],[4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],[2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],[4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],[6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],[8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],[10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],[8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],[3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],[7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],[5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],[13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],[17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],[17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],[13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],[12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],[6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],[17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],[4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],[20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],[19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]],r=function(t,r){var e={};return e.totalCount=t,e.dataCount=r,e},e={};return e.getRSBlocks=function(e,n){var o=function(r,e){switch(e){case g.L:return t[4*(r-1)+0];case g.M:return t[4*(r-1)+1];case g.Q:return t[4*(r-1)+2];case g.H:return t[4*(r-1)+3];default:return}}(e,n);if(void 0===o)throw"bad rs block @ typeNumber:"+e+"/errorCorrectionLevel:"+n;for(var i=o.length/3,a=[],u=0;u<i;u+=1)for(var f=o[3*u+0],c=o[3*u+1],l=o[3*u+2],h=0;h<f;h+=1)a.push(r(c,l));return a},e}(),b=function(){var t=[],r=0,e={getBuffer:function(){return t},getAt:function(r){var e=Math.floor(r/8);return 1==(t[e]>>>7-r%8&1)},put:function(t,r){for(var n=0;n<r;n+=1)e.putBit(1==(t>>>r-n-1&1))},getLengthInBits:function(){return r},putBit:function(e){var n=Math.floor(r/8);t.length<=n&&t.push(0),e&&(t[n]|=128>>>r%8),r+=1}};return e},M=function(t){var r=a,e=t,n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=e,n=0;n+2<r.length;)t.put(o(r.substring(n,n+3)),10),n+=3;n<r.length&&(r.length-n==1?t.put(o(r.substring(n,n+1)),4):r.length-n==2&&t.put(o(r.substring(n,n+2)),7))}},o=function(t){for(var r=0,e=0;e<t.length;e+=1)r=10*r+i(t.charAt(e));return r},i=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);throw"illegal char :"+t};return n},x=function(t){var r=u,e=t,n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=e,n=0;n+1<r.length;)t.put(45*o(r.charAt(n))+o(r.charAt(n+1)),11),n+=2;n<r.length&&t.put(o(r.charAt(n)),6)}},o=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);if("A"<=t&&t<="Z")return t.charCodeAt(0)-"A".charCodeAt(0)+10;switch(t){case" ":return 36;case"$":return 37;case"%":return 38;case"*":return 39;case"+":return 40;case"-":return 41;case".":return 42;case"/":return 43;case":":return 44;default:throw"illegal char :"+t}};return n},m=function(r){var e=f,n=t.stringToBytes(r),o={getMode:function(){return e},getLength:function(t){return n.length},write:function(t){for(var r=0;r<n.length;r+=1)t.put(n[r],8)}};return o},L=function(r){var e=c,n=t.stringToBytesFuncs.SJIS;if(!n)throw"sjis not supported.";!function(){var t=n("友");if(2!=t.length||38726!=(t[0]<<8|t[1]))throw"sjis not supported."}();var o=n(r),i={getMode:function(){return e},getLength:function(t){return~~(o.length/2)},write:function(t){for(var r=o,e=0;e+1<r.length;){var n=(255&r[e])<<8|255&r[e+1];if(33088<=n&&n<=40956)n-=33088;else{if(!(57408<=n&&n<=60351))throw"illegal char at "+(e+1)+"/"+n;n-=49472}n=192*(n>>>8&255)+(255&n),t.put(n,13),e+=2}if(e<r.length)throw"illegal char at "+(e+1)}};return i},D=function(){var t=[],r={writeByte:function(r){t.push(255&r)},writeShort:function(t){r.writeByte(t),r.writeByte(t>>>8)},writeBytes:function(t,e,n){e=e||0,n=n||t.length;for(var o=0;o<n;o+=1)r.writeByte(t[o+e])},writeString:function(t){for(var e=0;e<t.length;e+=1)r.writeByte(t.charCodeAt(e))},toByteArray:function(){return t},toString:function(){var r="";r+="[";for(var e=0;e<t.length;e+=1)e>0&&(r+=","),r+=t[e];return r+="]"}};return r},S=function(t){var r=t,e=0,n=0,o=0,i={read:function(){for(;o<8;){if(e>=r.length){if(0==o)return-1;throw"unexpected end of file./"+o}var t=r.charAt(e);if(e+=1,"="==t)return o=0,-1;t.match(/^\s$/)||(n=n<<6|a(t.charCodeAt(0)),o+=6)}var i=n>>>o-8&255;return o-=8,i}},a=function(t){if(65<=t&&t<=90)return t-65;if(97<=t&&t<=122)return t-97+26;if(48<=t&&t<=57)return t-48+52;if(43==t)return 62;if(47==t)return 63;throw"c:"+t};return i},I=function(t,r,e){for(var n=function(t,r){var e=t,n=r,o=new Array(t*r),i={setPixel:function(t,r,n){o[r*e+t]=n},write:function(t){t.writeString("GIF87a"),t.writeShort(e),t.writeShort(n),t.writeByte(128),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(255),t.writeByte(255),t.writeByte(255),t.writeString(","),t.writeShort(0),t.writeShort(0),t.writeShort(e),t.writeShort(n),t.writeByte(0);var r=a(2);t.writeByte(2);for(var o=0;r.length-o>255;)t.writeByte(255),t.writeBytes(r,o,255),o+=255;t.writeByte(r.length-o),t.writeBytes(r,o,r.length-o),t.writeByte(0),t.writeString(";")}},a=function(t){for(var r=1<<t,e=1+(1<<t),n=t+1,i=u(),a=0;a<r;a+=1)i.add(String.fromCharCode(a));i.add(String.fromCharCode(r)),i.add(String.fromCharCode(e));var f,c,g,l=D(),h=(f=l,c=0,g=0,{write:function(t,r){if(t>>>r!=0)throw"length over";for(;c+r>=8;)f.writeByte(255&(t<<c|g)),r-=8-c,t>>>=8-c,g=0,c=0;g|=t<<c,c+=r},flush:function(){c>0&&f.writeByte(g)}});h.write(r,n);var s=0,v=String.fromCharCode(o[s]);for(s+=1;s<o.length;){var d=String.fromCharCode(o[s]);s+=1,i.contains(v+d)?v+=d:(h.write(i.indexOf(v),n),i.size()<4095&&(i.size()==1<<n&&(n+=1),i.add(v+d)),v=d)}return h.write(i.indexOf(v),n),h.write(e,n),h.flush(),l.toByteArray()},u=function(){var t={},r=0,e={add:function(n){if(e.contains(n))throw"dup key:"+n;t[n]=r,r+=1},size:function(){return r},indexOf:function(r){return t[r]},contains:function(r){return void 0!==t[r]}};return e};return i}(t,r),o=0;o<r;o+=1)for(var i=0;i<t;i+=1)n.setPixel(i,o,e(i,o));var a=D();n.write(a);for(var u=function(){var t=0,r=0,e=0,n="",o={},i=function(t){n+=String.fromCharCode(a(63&t))},a=function(t){if(t<0);else{if(t<26)return 65+t;if(t<52)return t-26+97;if(t<62)return t-52+48;if(62==t)return 43;if(63==t)return 47}throw"n:"+t};return o.writeByte=function(n){for(t=t<<8|255&n,r+=8,e+=1;r>=6;)i(t>>>r-6),r-=6},o.flush=function(){if(r>0&&(i(t<<6-r),t=0,r=0),e%3!=0)for(var o=3-e%3,a=0;a<o;a+=1)n+="="},o.toString=function(){return n},o}(),f=a.toByteArray(),c=0;c<f.length;c+=1)u.writeByte(f[c]);return u.flush(),"data:image/gif;base64,"+u};return t}();qrcode.stringToBytesFuncs["UTF-8"]=function(t){return function(t){for(var r=[],e=0;e<t.length;e++){var n=t.charCodeAt(e);n<128?r.push(n):n<2048?r.push(192|n>>6,128|63&n):n<55296||n>=57344?r.push(224|n>>12,128|n>>6&63,128|63&n):(e++,n=65536+((1023&n)<<10|1023&t.charCodeAt(e)),r.push(240|n>>18,128|n>>12&63,128|n>>6&63,128|63&n))}return r}(t)},function(t){"function"==typeof define&&define.amd?define([],t):"object"==typeof exports&&(module.exports=t())}(function(){return qrcode});
+</script>
+<script>
+(function(){
+"use strict";
+var LAST=5, HOURS_PER_DAY=8, WEEKS_PER_MONTH=4.33, STORE="ec-expanding-practices";
+var LEAD_SHARE=0.25, ALSO_SHARE=0.25, CARRY_SHARE=0.6, MAX_MEMBERS=5, MIN_MEMBERS=3, MAX_PARTS=12, MAX_OTHERS=3, MAX_INK=4;
+var FUND={name:"Fonds Lef",sub:"an imaginary national fund for the creative industries",max:50000,min:20,cap:82.5};
+
+var KINDS=[["lead","Leading","leading"],["prod","Organising","organising"],["res","Researching","researching"],["make","Making","making"],["host","Gathering","gathering"]];
+var KIND_KEYS=KINDS.map(function(k){return k[0];});
+function kindName(k){for(var i=0;i<KINDS.length;i++)if(KINDS[i][0]===k)return KINDS[i][1];return "";}
+function kindWord(k){for(var i=0;i<KINDS.length;i++)if(KINDS[i][0]===k)return KINDS[i][2];return "";}
+
+/* ---------- the five situation cards: hypotheticals inspired by real situations in Rotterdam ---------- */
+/* Six starter parts for every situation: three named plainly, three for the team to name */
+function M(o1,o2,res,space,print,gat){return [["",o1,"Materials for our outcome, part 1 (name it)"],["",o2,"Materials for our outcome, part 2 (name it)"],["Research costs: access, fees, rights",res],["Space and equipment",space],["Printing and publicity",print],["Gathering: food, drinks, a venue",gat]];}
+function P(lead,org,res,m1,m2,gat){return [["Partner talks and decisions","lead",lead],["Planning, money and logistics","prod",org],["Research, fieldwork and writing","res",res],
+  ["","make",m1,"Our outcome, part 1 (name it)"],["","make",m2,"Our outcome, part 2 (name it)"],["","host",gat,"Bringing people together (name it)"]];}
+var CARDS={
+ 1:{title:"What the harbour remembers",lead:"The harbour is becoming a neighbourhood.",body:"Before the sheds go, what should the city keep of them, and who will find it in fifty years?",
+    start:"We research what the harbour remembers, with the people who still work on its docks, and decide whether, and how, that memory has a place in the neighbourhood to come.",half:[],reg:"The municipality's area development",
+    parts:P(110,110,220,120,80,100),
+    mat:M(2500,1500,3500,1500,1000,1500),regPay:["p5","t5"],
+    partners:[["The port company","Its history is on these docks, and its name is on the new plans."],["A housing corporation","It builds the new homes, and wants neighbours who know where they live."],["A heritage foundation","It pays for what a city chooses to remember."],["A university of applied sciences","Its students need real fieldwork, and its researchers need sources."],["A brewery in an old shed","Its customers come for the harbour's story."]],ink:null},
+ 2:{title:"The empty shop",lead:"The city bought empty shop buildings to bring a shopping street back to life.",body:"One unit is yours, rent-free, for six months. After that, it goes to whoever can pay. What opens there, and how do you run it?",
+    start:"We open the empty unit for six months with the people of the street, and decide whether what we have started can stay when the rent comes back.",half:[],reg:"The municipality, as owner",
+    parts:P(110,90,80,160,100,200),
+    mat:M(3000,2000,300,1800,1200,1700),regPay:["t3","t4","t5"],
+    partners:[["The shopkeepers' association","A busy unit brings people to their doors too."],["A cooperative bank's local fund","It backs what keeps a street alive."],["A fashion label from the city","It wants a shop window that isn't an advert."],["A housing corporation","Its tenants live above these shops."]],
+    ink:[["The shop unit, rent-free for six months",0,"The municipality, as owner"]]},
+ 3:{title:"300 stalls later",lead:"Twice a week, 300 stalls fill a square in Zuid.",body:"By evening the stallholders have packed up, and thousands of kilos of leftover crates, fabric and fruit wait to be taken away. What if it didn't all have to go?",
+    start:"We give what the market leaves behind a value of its own, decide who does the work, and who benefits.",half:[],reg:"Cultuurfonds Zuid-Holland",
+    parts:P(100,80,120,170,110,160),
+    mat:M(2500,1500,300,3200,1000,1200),regPay:["p4"],
+    partners:[["The city's cleaning service","Less waste on the square is less work for them."],["The stallholders' association","What is left over at closing time costs them money."],["A neighbourhood cooperative","It turns leftovers into paid work."],["A vocational school","Its students learn a trade with real material."]],ink:null},
+ 4:{title:"The next hot summer",lead:"Last summer was the hottest yet.",body:"About one in three Rotterdammers can't find a cool place at home or nearby. Many neighbours grew up with heat and know how to live with it. How, and where, does the neighbourhood keep cool next summer?",
+    start:"We learn how neighbours who grew up with heat keep cool, and decide with them how, and where, the neighbourhood keeps cool next summer.",half:[],reg:"The municipality's climate programme",
+    parts:P(110,80,160,160,100,130),
+    mat:M(3500,1500,500,1500,1000,1500),regPay:["t0","t3","t5"],
+    partners:[["A housing corporation","Hot flats are its problem too."],["The health service","Heat sends people to hospital."],["The water board","Shade and water are its daily work."],["The library","It is already one of the coolest rooms in the neighbourhood."]],ink:null},
+ 5:{title:"Work that counts",lead:"In Zuid, many people have no steady income, and much of what keeps the neighbourhood going is never paid: cooking, mending, caring, translating.",body:"For some, earning more means losing their benefits; others aren't allowed to earn at all. What could the neighbourhood do differently, so people here can live a decent life?",
+    start:"We open an atelier in Zuid where what residents make and do is shown, traded or paid, and decide how that work builds a decent life for everyone here.",half:[],reg:"The municipality, with the National Programme Rotterdam Zuid",
+    parts:P(100,100,120,130,90,200),
+    mat:M(2000,1000,500,3500,1000,1000),regPay:["t3","t4","t5"],
+    partners:[["A vocational college","Its teachers know the talent; the jobs are elsewhere."],["Local businesses","They need these skills, and can't find them."],["A housing corporation","Tenants with work can pay their rent."],["A neighbourhood cooperative","It can pay where others can't take an invoice."]],ink:[]}
+};
+var CARD_KEYS=["1","2","3","4","5"];
+
+function copy(o){return JSON.parse(JSON.stringify(o));}
+function Mb(){return {n:"",d:"",b:"",days:1,r:55};}
+function Ln(m,h){return {m:m,h:h||0,nm:"",r:0,pay:"f"};}
+function base(c){
+  var k=CARDS[c]?String(c):"1",C=CARDS[k];
+  return {card:k,team:"",sent:C.start,why:"",months:6,rate:55,same:true,
+    mem:[Mb(),Mb(),Mb(),Mb()],meet:{e:2,h:2,pay:"f"},
+    parts:C.parts.map(function(p){return {n:p[0],k:p[1],ph:p[3]||"",l:[Ln("none",p[2])]};}),
+    mat:C.mat.map(function(m){return {d:m[0],a:m[1],ph:m[2]||"",pay:"f"};}),
+    reg:{n:C.reg},oth:[{n:""}],
+    ink:C.ink?C.ink.map(function(x){return {d:x[0],a:x[1],g:x[2]};}):null};
+}
+function preset(c){
+  var w=base(c);
+  (CARDS[w.card].regPay||[]).forEach(function(ref){var i=+ref.slice(1);if(ref.charAt(0)==="p"&&w.parts[i])w.parts[i].l[0].pay="r";if(ref.charAt(0)==="t"&&w.mat[i])w.mat[i].pay="r";});
+  return w;
+}
+
+/* ---------- state ---------- */
+var S={step:0,w:null,chosen:false};
+function set(path,val){var ks=path.split("."),o=S.w;for(var i=0;i<ks.length-1;i++){o=o[ks[i]];if(o==null)return;}o[ks[ks.length-1]]=val;}
+function get(path){return path.split(".").reduce(function(o,k){return o==null?undefined:o[k];},S.w);}
+function isMember(l){return typeof l.m==="number";}
+function mname(i){var m=S.w.mem[i];return m&&m.n?m.n:"Member "+(i+1);}
+function card(){return CARDS[S.w.card];}
+function first(i){var m=S.w.mem[i];return m&&m.n?m.n.split(" ")[0]:"Member "+(i+1);}
+
+/* ---------- the link carries the result: only what differs from the card, deflated ---------- */
+function b64u(bytes){var bin="";for(var i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);return btoa(bin).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");}
+function unb64u(str){var b=str.replace(/-/g,"+").replace(/_/g,"/");while(b.length%4)b+="=";var bin=atob(b),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return u;}
+function packLine(l){var a=[l.m==="none"?"x":l.m==="paid"?"p":l.m==="free"?"g":l.m,l.h];if(l.nm||l.r||l.pay!=="f"){a.push(l.nm,l.r);}if(l.pay!=="f")a.push(l.pay);return a;}
+function unpackLine(a){if(!Array.isArray(a))return Ln("none",0);var m=a[0]==="x"?"none":a[0]==="p"?"paid":a[0]==="g"?"free":a[0];return {m:m,h:a[1],nm:a[2]||"",r:a[3]||0,pay:a[4]||"f"};}
+function payOk(p,w){w=w||S.w;return p==="f"||p==="r"||(/^o\d$/.test(p)&&+p.charAt(1)<w.oth.length);}
+function pack(){
+  var w=S.w,p=preset(w.card),o={c:w.card};
+  ["team","why"].forEach(function(k){if(w[k])o[k]=w[k];});
+  if(w.sent!==p.sent)o.sent=w.sent;
+  if(w.months!==p.months)o.mo=w.months;
+  if(w.rate!==p.rate)o.ra=w.rate;
+  if(!w.same)o.sa=0;
+  if(w.meet.e!==p.meet.e||w.meet.h!==p.meet.h)o.me=[w.meet.e,w.meet.h];
+  if(w.meet.pay!=="f")o.mp=w.meet.pay;
+  o.m=w.mem.map(function(m){var a=[m.n,m.d,m.b,m.days];if(!w.same)a.push(m.r);return a;});
+  o.p=w.parts.map(function(pt,i){var q=p.parts[i],a=[pt.l.map(packLine)];if(!q||q.n!==pt.n||q.k!==pt.k)a.push(pt.n,pt.k);return a;});
+  if(JSON.stringify(w.mat)!==JSON.stringify(p.mat))o.t=w.mat.map(function(m,i){var q=p.mat[i];return q&&q.d===m.d&&q.a===m.a&&q.pay===m.pay&&q.ph===m.ph?0:[m.d,m.a,m.pay,m.ph];});
+  if(w.reg.n!==p.reg.n)o.rn=w.reg.n;
+  if(w.oth.length>1||w.oth[0].n)o.o=w.oth.map(function(x){return x.n;});
+  if(w.ink&&JSON.stringify(w.ink)!==JSON.stringify(p.ink))o.i=w.ink.map(function(x){return [x.d,x.a,x.g];});
+  return {v:1,t:S.step,w:o};
+}
+function num(x,max){var n=Number(x);return isFinite(n)&&n>=0?Math.min(n,max||1e7):0;}
+function str(x,n){return x==null?"":String(x).slice(0,n||300);}
+function lineOk(l,nm){var m=l.m;if(typeof m==="number"&&!(m>=0&&m<nm&&m===Math.floor(m)))m="none";if(typeof m!=="number"&&["paid","free","none"].indexOf(m)<0)m="none";
+  return {m:m,h:num(l.h,5000),nm:str(l.nm,60),r:num(l.r,1000)};}
+function unpack(snap){
+  var o=(snap&&snap.w)||{},w=preset(o.c);
+  w.team=str(o.team,40);if(o.sent!=null)w.sent=str(o.sent,240);w.why=str(o.why,240);
+  if(o.mo!=null)w.months=Math.min(24,Math.max(1,Math.round(num(o.mo))||1));
+  if(o.ra!=null)w.rate=num(o.ra,1000);
+  w.same=o.sa!==0;
+  if(Array.isArray(o.me)){w.meet.e=Math.min(8,Math.max(1,Math.round(num(o.me[0]))||1));w.meet.h=Math.min(8,num(o.me[1]));}
+  if(o.rn!=null)w.reg.n=str(o.rn,80);
+  if(Array.isArray(o.o)&&o.o.length)w.oth=o.o.slice(0,MAX_OTHERS).map(function(n){return {n:str(n,60)};});
+  if(o.mp!=null&&payOk(o.mp,w))w.meet.pay=o.mp;
+  if(Array.isArray(o.m)){var mem=o.m.slice(0,MAX_MEMBERS).map(function(a){a=Array.isArray(a)?a:[];return {n:str(a[0],40),d:str(a[1],40),b:str(a[2],80),days:Math.min(5,num(a[3])),r:a[4]!=null?num(a[4],1000):w.rate};});
+    while(mem.length<MIN_MEMBERS)mem.push(Mb());w.mem=mem;}
+  var nm=w.mem.length,pp=preset(w.card).parts;
+  if(Array.isArray(o.p))w.parts=o.p.slice(0,MAX_PARTS).map(function(a,i){a=Array.isArray(a)?a:[[]];var base=pp[i]||{n:"",k:"",ph:""};
+    var lines=(Array.isArray(a[0])?a[0]:[]).slice(0,8).map(function(x){var u=unpackLine(x),l=lineOk(u,nm);l.pay=payOk(u.pay,w)?u.pay:"f";return l;});
+    var k=a.length>2&&KIND_KEYS.indexOf(a[2])>=0?a[2]:(a.length>2?"":base.k);return {n:a.length>1?str(a[1],80):base.n,k:k,ph:k===base.k?base.ph:"",l:lines};});
+  if(Array.isArray(o.t)){var pm=preset(w.card).mat;w.mat=o.t.slice(0,20).map(function(a,i){if(a===0&&pm[i])return pm[i];a=Array.isArray(a)?a:[];return {d:str(a[0],80),a:num(a[1],1e6),pay:payOk(a[2],w)?a[2]:"f",ph:str(a[3],80)};});}
+  if(Array.isArray(o.i))w.ink=o.i.slice(0,MAX_INK).map(function(a){a=Array.isArray(a)?a:[];return {d:str(a[0],80),a:num(a[1],1e6),g:str(a[2],60)};});
+  S.w=w;S.step=Math.min(LAST,Math.max(0,Math.round(+snap.t||0)));S.chosen=true;
+}
+function canZip(){return typeof CompressionStream==="function"&&typeof DecompressionStream==="function"&&typeof Response==="function";}
+function json(){return JSON.stringify(pack());}
+function encodeSync(){return "j"+b64u(new TextEncoder().encode(json()));}
+function encodeZip(){
+  var stream=new Blob([new TextEncoder().encode(json())]).stream().pipeThrough(new CompressionStream("deflate-raw"));
+  return new Response(stream).arrayBuffer().then(function(buf){var u=new Uint8Array(buf);return canBig()?"Z"+to43(u):"z"+b64u(u);});
+}
+/* For the code: the deflated bytes in the QR's own 43-letter alphabet, about a quarter denser than base64 */
+var A43="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ$*+-./:",CH=[0,2,3,5,6,8,9,11,12];
+function canBig(){return typeof BigInt==="function";}
+function to43(bytes){var out="";for(var i=0;i<bytes.length;i+=8){var n=Math.min(8,bytes.length-i),v=BigInt(0);
+  for(var j=0;j<n;j++)v=v*BigInt(256)+BigInt(bytes[i+j]);var s="";for(var k=0;k<CH[n];k++){s=A43.charAt(Number(v%BigInt(43)))+s;v=v/BigInt(43);}out+=s;}return out;}
+function from43(str){var bytes=[],i=0;while(i<str.length){var left=str.length-i,n=8;while(n>0&&CH[n]>left)n--;if(!n)throw new Error("bad");
+  var v=BigInt(0);for(var k=0;k<CH[n];k++){var d=A43.indexOf(str.charAt(i+k));if(d<0)throw new Error("bad");v=v*BigInt(43)+BigInt(d);}
+  var chunk=[];for(var j=0;j<n;j++){chunk.unshift(Number(v%BigInt(256)));v=v/BigInt(256);}bytes=bytes.concat(chunk);i+=CH[n];}return new Uint8Array(bytes);}
+function decode(code){
+  if(code.charAt(0)==="Z"){
+    var st=new Blob([from43(code.slice(1))]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+    return new Response(st).text().then(function(t){unpack(JSON.parse(t));});
+  }
+  if(code.charAt(0)==="z"){
+    var stream=new Blob([unb64u(code.slice(1))]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+    return new Response(stream).text().then(function(t){unpack(JSON.parse(t));});
+  }
+  if(code.charAt(0)==="j"){unpack(JSON.parse(new TextDecoder().decode(unb64u(code.slice(1)))));return Promise.resolve();}
+  return Promise.reject(new Error("unknown"));
+}
+var saveTimer=null,CODE="",codeFor="";
+function persist(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(function(){
+    if(!S.chosen)return;
+    var key=json();
+    if(key===codeFor&&CODE)return;
+    var store=function(code){
+      if(key!==json())return;
+      CODE=code;codeFor=key;
+      try{history.replaceState(null,"",location.pathname+"?card="+S.w.card+"#s="+code);}catch(e){}
+      try{localStorage.setItem(STORE,code);}catch(e){}
+      refreshLink();
+    };
+    if(canZip())encodeZip().then(store,function(){store(encodeSync());});else store(encodeSync());
+  },300);
+}
+function load(){
+  var h="",q="";try{h=location.hash||"";q=location.search||"";}catch(e){}
+  var m=/[?&]card=(\d)/.exec(q),c=m&&CARDS[m[1]]?m[1]:null;
+  var tryCode=function(code){try{return decode(code);}catch(e){return Promise.reject(e);}};
+  var fresh=function(){S.w=preset(c||"1");S.chosen=!!c;S.step=0;};
+  var fromStore=function(){
+    try{var code=localStorage.getItem(STORE);if(code)return tryCode(code).then(function(){if(c&&S.w.card!==c){fresh();}},fresh);}catch(e){}
+    fresh();return Promise.resolve();};
+  if(h.indexOf("#s=")===0)return tryCode(h.slice(3)).catch(fromStore);
+  return fromStore();
+}
+
+/* ---------- numbers ---------- */
+function eur(n){return (n<0?"−€":"€")+Math.abs(Math.round(n||0)).toLocaleString("en-GB");}
+function rate(n){return "€"+Number(n||0).toLocaleString("en-GB",{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2});}
+function hrs(n){return Math.round(n||0).toLocaleString("en-GB")+" h";}
+function daysTxt(d){return (d||0)+(d===1?" day a week":" days a week");}
+function rateOf(i){var w=S.w;return w.same?w.rate:(w.mem[i]?w.mem[i].r:0);}
+function lineRate(l){return isMember(l)?rateOf(l.m):l.m==="none"?S.w.rate:l.r;}
+function lineAmt(l){return Math.round(l.h*lineRate(l));}
+function meetH(){var w=S.w;return w.meet.e?Math.round(w.months*WEEKS_PER_MONTH/w.meet.e*w.meet.h):0;}
+function commitOf(i){return Math.round(S.w.months*WEEKS_PER_MONTH*S.w.mem[i].days*HOURS_PER_DAY);}
+function eachLine(fn){S.w.parts.forEach(function(p,pi){p.l.forEach(function(l,li){fn(l,p,pi,li);});});}
+
+function roleOf(i){
+  var by={},tot=0;KIND_KEYS.forEach(function(k){by[k]=0;});
+  eachLine(function(l,p){if(l.m===i&&by[p.k]!==undefined){by[p.k]+=l.h;tot+=l.h;}});
+  var sorted=KIND_KEYS.slice().sort(function(a,b){return by[b]-by[a];}),txt;
+  if(!tot)txt="No parts yet";
+  else{var top=sorted[0],second=sorted[1];
+    if(by.lead/tot>=LEAD_SHARE)txt="Takes a lead role"+(top!=="lead"?", mostly "+kindWord(top):"");
+    else txt="Mostly "+kindWord(top)+(by[second]/tot>=ALSO_SHARE&&second!=="lead"?", also "+kindWord(second):"");}
+  return {by:by,tot:tot,txt:txt};
+}
+
+function calc(){
+  var w=S.w,c={team:0,outside:0,nobody:0,nobodyH:0,meet:0,people:0,mat:0,total:0,mem:[],teamCommit:0,teamH:0,leadH:0,givenTime:0,givenInk:0};
+  var mh=meetH();
+  w.mem.forEach(function(m,i){var commit=commitOf(i),ma=Math.round(mh*rateOf(i));
+    c.mem.push({h:mh,amt:ma,commit:commit,role:roleOf(i)});c.meet+=ma;c.teamCommit+=commit;});
+  eachLine(function(l,p){
+    var a=lineAmt(l);
+    if(l.m==="none"){c.nobody+=a;c.nobodyH+=l.h;return;}
+    if(isMember(l)){var mm=c.mem[l.m];mm.h+=l.h;mm.amt+=a;c.team+=a;if(p.k==="lead")c.leadH+=l.h;}
+    else if(l.m==="paid")c.outside+=a;
+    else c.givenTime+=a;
+  });
+  c.mem.forEach(function(m){c.teamH+=m.h;});
+  c.team+=c.meet;
+  c.people=c.team+c.outside+c.nobody;
+  w.mat.forEach(function(m){c.mat+=Math.round(m.a);});
+  c.total=c.people+c.mat;
+  if(w.ink)w.ink.forEach(function(x){c.givenInk+=Math.round(x.a);});
+  c.given=c.givenTime+c.givenInk;
+  c.by={f:0,r:0};w.oth.forEach(function(_,i){c.by["o"+i]=0;});
+  var add=function(p,a){if(c.by[p]===undefined)p="f";c.by[p]+=a;};
+  eachLine(function(l){if(l.m!=="free")add(l.pay,lineAmt(l));});
+  add(w.meet.pay,c.meet);
+  w.mat.forEach(function(m){add(m.pay,Math.round(m.a));});
+  c.fund=c.by.f;c.over=Math.max(0,c.fund-FUND.max);
+  c.others=c.total-c.fund;
+  c.pct=c.total?c.others/c.total*100:0;
+  c.short=Math.max(0,Math.ceil(FUND.min/100*c.total)-c.others);
+  return c;
+}
+
+/* ---------- small builders ---------- */
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch];});}
+function heading(eyebrow,title){return '<div class="eyebrow">'+eyebrow+'</div><div class="over"><div class="ghost" aria-hidden="true">'+title+'</div><h1 tabindex="-1">'+title+'</h1></div>';}
+var uid=0;
+function txt(path,lbl,hint,type,area,max){
+  var id="f"+(uid++),v=get(path);if(v==null)v="";
+  var input=area?'<textarea id="'+id+'" data-p="'+path+'" maxlength="'+(max||200)+'">'+esc(v)+'</textarea>'
+    :'<input id="'+id+'" data-p="'+path+'" '+(type==="number"?'type="number" data-n="1" inputmode="decimal" min="0" step="any"':'type="text" maxlength="'+(max||80)+'"')+' value="'+esc(v)+'">';
+  return '<div class="f"><label for="'+id+'">'+lbl+'</label>'+input+(hint?'<span class="hint">'+hint+'</span>':'')+'</div>';
+}
+function cell(path,lbl,type,max){
+  var v=get(path);if(v==null)v="";
+  return '<span><span class="mini">'+lbl+'</span><input '+(type==="number"?'type="number" data-n="1" inputmode="decimal" min="0" step="any"':'type="text" maxlength="'+(max||80)+'"')+' aria-label="'+esc(lbl)+'" data-p="'+path+'" value="'+esc(v)+'"></span>';
+}
+function fold(title,body){return '<details class="fold"><summary>'+title+'</summary><div>'+body+'</div></details>';}
+function tip(tag,t){return '<p class="tip"><b>'+tag+'</b>'+t+'</p>';}
+function pause(t){return '<span class="pause">'+t+'</span>';}
+function out(name){return '<span data-o="'+name+'"></span>';}
+var DIE='<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" style="vertical-align:-4px;margin-right:6px"><rect x="1.5" y="1.5" width="17" height="17" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="6" cy="6" r="1.6" fill="currentColor"/><circle cx="10" cy="10" r="1.6" fill="currentColor"/><circle cx="14" cy="14" r="1.6" fill="currentColor"/></svg>';
+function partTitle(p){return p.n||(p.ph?p.ph.replace(" (name it)",""):"")||"A part of our own";}
+function matTitle(m){return m.d||(m.ph?m.ph.replace(" (name it)",""):"")||"A cost";}
+function partnerWhy(n){var f=(card().partners||[]).filter(function(x){return n&&x[0].toLowerCase()===String(n).trim().toLowerCase();});return f.length?f[0][1]:"";}
+function payers(){var w=S.w,o=[["f",FUND.name,FUND.name],["r","Regional",w.reg.n||"Our regional backer"]];
+  w.oth.forEach(function(x,i){var nm=x.n.replace(/^(A|An|The) /,"");nm=nm.charAt(0).toUpperCase()+nm.slice(1);var short=x.n?(nm.length>14?nm.slice(0,13)+"…":nm):"Partner"+(w.oth.length>1?" "+(i+1):"");o.push(["o"+i,short,x.n||"Our third partner"+(i?" ("+(i+1)+")":"")]);});return o;}
+function payRow(lbl,path){
+  var cur=path==="meet"?S.w.meet.pay:get(path+".pay");
+  return '<div class="payrow"><div class="top2"><span>'+lbl+'</span><span data-o="pa:'+path+'"></span></div><div class="payers" role="group" aria-label="Paid by">'+
+    payers().map(function(p){return '<button data-pay="'+path+'|'+p[0]+'" aria-pressed="'+(cur===p[0])+'">'+esc(p[1])+'</button>';}).join("")+'</div></div>';
+}
+function lineName(l){if(isMember(l))return mname(l.m);if(l.m==="none")return "Nobody yet";return l.nm||(l.m==="free"?"Someone who gives time":"Someone we pay");}
+function chips(){return '<div class="chips n'+S.w.mem.length+'">'+S.w.mem.map(function(m,i){return '<span class="chip"><b>'+esc(mname(i))+'</b>'+esc([m.d,m.b].filter(Boolean).join(" · "))+'</span>';}).join("")+'</div>';}
+function situ(full){
+  var C=card();
+  return '<div class="situ"><span class="no">Situation '+S.w.card+'</span><h2>'+esc(C.title)+'</h2>'+
+    (full?'<p><b>'+esc(C.lead)+'</b> '+esc(C.body)+'</p>':'')+
+    C.half.map(function(h){return '<p class="half">'+esc(h)+'</p>';}).join("")+'</div>';
+}
+
+/* ---------- the steps ---------- */
+var STEPS=[
+ {t:"Start",r:function(){
+   var h=heading("Economic Cultures · Expanding Practices","Budget your ambition, together")+
+   '<p class="lead">One team, one situation in Rotterdam, thirty minutes. You plan a project of about €55,000, paid by three backers, each for its own purpose.</p>';
+   if(S.chosen){
+     h+=situ(true)+
+     '<div class="panel"><h2>The rules of the game</h2><table class="frame">'+
+     '<tr><td>'+FUND.name+'</td><td>'+FUND.sub.charAt(0).toUpperCase()+FUND.sub.slice(1)+'. Pays at most '+eur(FUND.max)+'. Others must pay at least '+FUND.min+'% of the total.</td></tr>'+
+     '<tr><td>Backers</td><td>'+esc(S.w.reg.n)+', already paying for a few lines, and a third partner you name or roll</td></tr>'+
+     '<tr><td>Time</td><td>6 months, a day a week each</td></tr>'+
+     '<tr><td>Rate</td><td>€55 an hour, the same for everyone</td></tr>'+
+     '<tr><td>Parts</td><td>'+hrs(S.w.parts.reduce(function(s,p){return s+p.l.reduce(function(t,l){return t+l.h;},0);},0))+' of work in five parts, not yet given to anyone</td></tr>'+
+     '</table><p class="note" style="margin-top:10px">What is on the board is what a project like this is likely to need. Anything can change, except the fund\'s rules.</p></div>'+
+     '<p class="note">One phone builds it. Everything you type stays on this phone until you share the link at the end.</p>'+
+     fold("Choose another situation",cardPicker());
+   }else{
+     h+='<div class="panel"><h2>Choose your situation</h2><p>Scan the code on your table\'s board, or choose it here.</p>'+cardPicker()+'</div>';
+   }
+   return h;
+ }},
+ {t:"Who we are",r:function(){
+   var w=S.w,h=heading("Step 1","Who we are")+situ(false)+
+   '<p class="lead">You may have met a minute ago. Start from what each of you brings.</p>';
+   w.mem.forEach(function(m,i){
+     var b="mem."+i;
+     h+='<div class="panel card"><div class="cardhead"><h2>'+esc(m.n||"Member "+(i+1))+'</h2>'+(w.mem.length>MIN_MEMBERS?'<button class="btn small" data-delm="'+i+'">Remove</button>':'')+'</div>'+
+       txt(b+".n","First name","Real or made up. It may be shown on our archive.",null,false,40)+
+       txt(b+".d","Your discipline, in one word",null,null,false,40)+
+       txt(b+".b","What I bring",null,null,false,80)+
+       txt(b+".days","Days a week I can give","Half days are fine: 0.5","number")+'</div>';
+   });
+   h+=(w.mem.length<MAX_MEMBERS?'<div class="row"><button class="btn" data-act="addm">Add a member</button></div>':'<p class="note">Five is the most for this exercise.</p>')+
+   '<p class="note" style="margin-top:12px">Three to five of you.</p>';
+   return h;
+ }},
+ {t:"Our sentence",r:function(){
+   var C=card();
+   return heading("Step 2","Our sentence")+chips()+situ(true)+
+   '<div class="panel">'+txt("sent","Our project statement","What you make, with whom, and where. A starter, finished but not decided: make it yours.",null,true,240)+
+   txt("team","Our team's name",null,null,false,40)+
+   txt("months","How many months does it run?","Keep it at 6 for today. Change it, and watch the number below.","number")+
+   '<table class="sum"><tr class="t"><td>Our time in this project<small>'+out("commitHow")+'</small></td><td>'+out("teamCommit")+'</td></tr></table></div>'+
+   pause("Read it out loud, then pass the phone. Each of you changes one thing and passes it on. Then decide together, and say it out loud.");
+ }},
+ {t:"Who does what",r:function(){
+   var w=S.w,h=heading("Step 3","Who does what")+chips()+
+   '<p class="lead">Give every part to someone, by name: in the team, or outside it.</p>'+
+   '<div class="panel"><h2>Rate and team meetings</h2><div class="facts">'+
+   '<div><span class="k">Our rate</span><span class="v">'+(w.same?rate(w.rate):'Own rates')+'</span><span class="mini">'+(w.same?'an hour, the same for each of us':'each of us at our own rate')+'</span></div>'+
+   '<div><span class="k">Team meetings</span><span class="v">'+w.meet.h+' h</span><span class="mini">every '+w.meet.e+' weeks, '+out("meetH")+' each over the project</span></div></div>'+
+   '<p class="note">Your regular meetings as a team. Everyone is paid for them, and they count in your time. Keep both as they are, or change them.</p>'+
+   fold("Change the rate or the meetings",
+   '<div class="choose two">'+
+   '<button class="pick small" data-same="1" aria-pressed="'+w.same+'"><strong>One team rate</strong>Equal pay for every hour.</button>'+
+   '<button class="pick small" data-same="0" aria-pressed="'+(!w.same)+'"><strong>Our own rates</strong>Each of us brings our own.</button></div>'+
+   (w.same?txt("rate","Our rate per hour €",null,"number")
+     :w.mem.map(function(m,i){return txt("mem."+i+".r",esc(mname(i))+"'s rate per hour €",null,"number");}).join("")+'<p class="note">'+FUND.name+' pays at most '+rate(FUND.cap)+' an hour.</p>')+
+   '<h3>Team meetings</h3><p class="note">Your regular meetings as a team. Everyone is paid for them, and they count in your time.</p><div class="two">'+cell("meet.e","Every … weeks","number")+cell("meet.h","Hours each time","number")+'</div>'+
+   '<table class="sum"><tr class="t"><td>Meetings, for each of us<small>'+out("meetHow")+'</small></td><td>'+out("meetH")+'</td></tr></table>')+'</div>';
+   w.parts.forEach(function(p,pi){h+=partHtml(p,pi);});
+   h+=(w.parts.length<MAX_PARTS?'<div class="row"><button class="btn" data-act="addpart">Add a part</button></div>':'')+
+   receipt()+
+   pause("Does the role the tool sees match the role you thought you were taking?");
+   return h;
+ }},
+ {t:"Who pays",r:function(){
+   var w=S.w,c=calc(),h=heading("Step 4","Who pays")+
+   '<p class="lead">Three backers, each paying for its own purpose. Tap who pays for each line.</p>'+
+   '<div class="panel"><h2>Our backers</h2>'+
+   '<h3>1 · '+FUND.name+'</h3><p>'+FUND.sub.charAt(0).toUpperCase()+FUND.sub.slice(1)+'. Pays at most '+eur(FUND.max)+'; others must pay at least '+FUND.min+'% of the total. Every line starts here.</p>'+
+   '<h3>2 · Our regional backer</h3>'+cell("reg.n","Who",null,80)+'<p class="note" style="margin-top:6px">It starts with the lines it would usually pay for.</p>'+
+   '<h3>3 · Our third partner</h3>';
+   w.oth.forEach(function(x,i){
+     var why=partnerWhy(x.n);
+     h+='<div class="ln"><div class="pickrow">'+cell("oth."+i+".n",i?"Another partner":"Who",null,60)+'<button class="btn small" data-roll="'+i+'">'+DIE+'Roll</button></div>'+
+       '<p class="note">'+(why?esc(why):(x.n?'Our own choice.':'Roll one, or name your own.'))+'</p>'+
+       (w.oth.length>1?'<div class="row"><button class="btn small" data-delo="'+i+'">Remove</button></div>':'')+'</div>';
+   });
+   var ed='';
+   w.mat.forEach(function(m,i){
+     ed+='<div class="ln"><input class="pname'+(m.d?'':' empty')+'" type="text" maxlength="80" data-p="mat.'+i+'.d" aria-label="What is it?" placeholder="'+esc(m.ph||"What is it?")+'" value="'+esc(m.d)+'">'+
+       '<div class="two">'+cell("mat."+i+".a","Amount €","number")+'<span class="row" style="align-items:flex-end"><button class="btn small" data-del="mat.'+i+'">Remove</button></span></div></div>';
+   });
+   ed+=(w.mat.length<20?'<div class="row"><button class="btn small" data-act="addmat">Add a cost</button></div>':'');
+   h+=(w.oth.length<MAX_OTHERS?'<div class="row"><button class="btn small" data-act="addoth">Add another partner</button></div>':'')+'</div>'+
+   '<div class="panel"><h2>Material costs</h2><div class="facts one"><div><span class="k">In '+w.mat.length+' lines</span><span class="v">'+out("matTotal")+'</span><span class="mini">'+out("matPct")+'</span></div></div>'+
+   '<table class="sum">'+w.mat.map(function(m,i){return '<tr><td'+(m.d?'':' class="phline"')+'>'+esc(matTitle(m))+'</td><td>'+out("pa:mat."+i)+'</td></tr>';}).join("")+'</table>'+
+   '<p class="note" style="margin-top:8px">Leave them as they are, or adjust them to suit your project better.</p>'+
+   fold("Change the material costs",ed)+'</div>'+
+   '<div class="panel"><h2>Who pays for what</h2><p class="note">Every line starts with '+FUND.name+'. Move lines until others pay at least '+FUND.min+'% and '+FUND.name+' stays within '+eur(FUND.max)+'.</p>'+
+   '<h3>Our parts</h3>';
+   w.parts.forEach(function(p,pi){p.l.forEach(function(l,li){if(l.m==="free")return;
+     h+=payRow(esc(partTitle(p))+' · '+esc(lineName(l)),"parts."+pi+".l."+li);});});
+   h+='<h3>Team meetings</h3>'+payRow('All of us, every '+w.meet.e+' weeks','meet')+
+   '<h3>Material costs</h3>';
+   w.mat.forEach(function(m,i){h+=payRow(esc(matTitle(m)),"mat."+i);});
+   h+='</div>';
+   var free=[];eachLine(function(l,p){if(l.m==="free")free.push([l,p]);});
+   if(w.ink||free.length){
+     h+='<div class="panel"><h2>Given, not in euros</h2><p>Time, space or work given for free. It shows what the project really costs, beside the budget, but it doesn\'t count towards the '+FUND.min+'%.</p>';
+     free.forEach(function(x){h+='<div class="given"><div class="top2"><span><b>'+esc(lineName(x[0]))+'</b> · '+esc(partTitle(x[1]))+'</span><span>'+eur(lineAmt(x[0]))+'</span></div><span class="mini">'+x[0].h+' h × '+rate(x[0].r)+', from step 3</span></div>';});
+     if(w.ink){
+       w.ink.forEach(function(x,i){
+         h+='<div class="ln">'+cell("ink."+i+".d","What is given")+'<div class="two">'+cell("ink."+i+".a","Worth €","number")+cell("ink."+i+".g","Given by",null,60)+'</div>'+
+           '<div class="row"><button class="btn small" data-del="ink.'+i+'">Remove</button></div></div>';
+       });
+       h+=(w.ink.length<MAX_INK?'<div class="row"><button class="btn small" data-act="addink">Add something given</button></div>':'');
+     }
+     h+='</div>';
+   }
+   h+='<div class="receipt"><h2>Our coverage plan</h2>'+out("cover")+'</div>'+
+   pause("Like a puzzle: the costs on one side, the money on the other. What doesn't fit? Move a line, together.");
+   return h;
+ }},
+ {t:"Why it's worth it",r:function(){
+   return heading("Step 5","Why it's worth it")+'<div data-o="congrats"></div>'+
+   '<div class="panel">'+txt("why","Why this deserves fair support","State what this project gives to Rotterdam and her people. Say it as a claim, not a request.",null,true,240)+'</div>'+
+   '<div class="panel"><h2>Is it complete and balanced?</h2>'+out("checks")+'</div>'+receipt()+
+   '<div class="panel"><h2>Our team\'s code</h2><p><b>Your team name, first names and numbers may be shown on our archive.</b></p>'+
+   '<p>Scan it with each other\'s phones, and show it to the host before you go. The code is the whole budget: nothing is kept anywhere else.</p>'+
+   '<div class="qrbox" data-o="qr"></div>'+
+   '<div class="row"><button class="btn primary" data-act="print">Save as a PDF</button>'+(canShare()?'<button class="btn" data-act="share">Send the link</button>':'')+'<button class="btn" data-act="copy">Copy link</button></div>'+
+   '<p class="note" style="margin-top:8px" data-o="copyMsg">'+pdfHint()+'</p>'+
+   '<a class="linkbox" data-o="link" target="_blank" rel="noopener"></a></div>'+
+   '<div class="docs">'+out("doc")+'</div>'+
+   '<p class="note">More to read: <a href="https://fairpracticecode.nl/" target="_blank" rel="noopener">Fair Practice Code</a> · <a href="https://www.stimuleringsfonds.nl/" target="_blank" rel="noopener">Stimuleringsfonds, the real fund behind the rules</a> · <a href="/tags/economic-cultures/">Economic Cultures on our archive</a></p>';
+ }}
+];
+
+var PENDING="";
+function cardPicker(){
+  return (PENDING?'<p class="flag">Tap situation '+PENDING+' again to start over from it. What you typed for situation '+S.w.card+' will be replaced.</p>':'')+'<div class="cards">'+CARD_KEYS.map(function(k){var C=CARDS[k];
+    return '<button class="pick" data-card="'+k+'" aria-pressed="'+(S.chosen&&S.w.card===k)+'"><em>Situation '+k+'</em><strong>'+esc(C.title)+'</strong>'+esc(C.lead)+'</button>';}).join("")+'</div>';
+}
+
+function partHtml(p,pi){
+  var w=S.w,b="parts."+pi,custom=!p.k;
+  var h='<div class="panel"><div class="parth">'+(p.k?'<span class="kindtag"><i class="sw k-'+p.k+'"></i>'+kindName(p.k)+'</span>':'<span class="kindtag">A part of our own</span>')+'</div>'+
+    '<input class="pname'+(p.n?'':' empty')+'" type="text" maxlength="80" data-p="'+b+'.n" aria-label="Name of this part" placeholder="'+esc(p.ph||"Name this part")+'" value="'+esc(p.n)+'">';
+  if(custom){
+    h+='<span class="mini" style="margin-top:8px">What kind of work is this?</span><div class="kinds" role="group" aria-label="Kind of work">'+
+      KINDS.map(function(kd){return '<button data-kind="'+pi+'.'+kd[0]+'" aria-pressed="'+(p.k===kd[0])+'">'+kd[1]+'</button>';}).join("")+'</div>';
+  }
+  p.l.forEach(function(l,li){
+    var lb=b+".l."+li;
+    h+='<div class="ln'+(l.m==="none"?" gap":"")+'"><div class="who" role="group" aria-label="Who does it">'+
+      w.mem.map(function(_,mi){return '<button data-who="'+pi+'.'+li+'.'+mi+'" aria-pressed="'+(l.m===mi)+'">'+esc(first(mi))+'</button>';}).join("")+
+      [["paid","Someone we pay"],["free","Gives time"],["none","Nobody yet"]].map(function(o){return '<button class="'+(o[0]==="none"?"none":"out")+'" data-who="'+pi+'.'+li+'.'+o[0]+'" aria-pressed="'+(l.m===o[0])+'">'+o[1]+'</button>';}).join("")+'</div>'+
+      (isMember(l)||l.m==="none"?'<div class="two">'+cell(lb+".h","Hours","number")+'<span><span class="mini">Total</span><span class="ro">'+out("lx"+pi+"_"+li)+'</span></span></div>':
+       cell(lb+".nm","Who, or who you are looking for",null,60)+'<div class="two">'+cell(lb+".h","Hours","number")+cell(lb+".r",l.m==="free"?"Worth per hour €":"Rate per hour €","number")+'</div>'+
+       '<div class="amt"><span>'+(l.m==="free"?"Given":"Total")+' '+out("lx"+pi+"_"+li)+'</span></div>')+
+      (p.l.length>1?'<div class="row"><button class="btn small" data-dell="'+pi+'.'+li+'">Remove</button></div>':'')+'</div>';
+  });
+  h+='<div class="row"><button class="btn small" data-addl="'+pi+'">Split with someone else</button>'+(custom||w.parts.length>1?'<button class="btn small" data-delpart="'+pi+'">Remove this part</button>':'')+'</div>';
+  return h+'</div>';
+}
+
+/* ---------- checks: each says what is missing ---------- */
+function checks(c){
+  var w=S.w,list=[];
+  var empty=[];w.parts.forEach(function(p){if(!p.l.length||p.l.some(function(l){return l.m==="none";}))empty.push(partTitle(p));});
+  list.push(["Every part has someone who does it",!empty.length,empty.join(", ")]);
+  var noname=w.mem.filter(function(m){return !m.n||!(m.days>0);}).length;
+  list.push(["Everyone has a first name and days a week",!noname]);
+  var unnamed=w.parts.filter(function(p){return !p.n;}).map(partTitle);
+  list.push(["Every part has a name of our own",!unnamed.length,unnamed.join(", "),"soft"]);
+  var off=[];c.mem.forEach(function(m,i){if(!m.commit||Math.abs(m.h-m.commit)>m.commit*0.1)off.push(first(i));});
+  list.push(["Everyone's hours match the time they give",!off.length,off.join(", "),"soft"]);
+  list.push(["Someone in the team spends hours leading",c.leadH>0]);
+  list.push([FUND.name+" pays at most "+eur(FUND.max),!c.over,c.over?eur(c.over)+" over: move lines to the others":""]);
+  list.push(["Others pay at least "+FUND.min+"%",c.pct>=FUND.min,Math.round(c.pct)+"% now"+(c.short?", "+eur(c.short)+" short":"")]);
+  var t0=w.oth[0]||{n:""};
+  list.push(["Our third partner is named, and pays for something",!!(t0.n&&c.by.o0>0)]);
+  if(!w.same){var high=w.mem.filter(function(m){return m.r>FUND.cap;}).map(function(m){return m.n||"a member";});
+    list.push(["Every rate is within "+FUND.name+"'s "+rate(FUND.cap)+" an hour",!high.length,high.join(", ")]);}
+  if(w.ink&&w.ink.length){var noval=w.ink.filter(function(x){return !(x.a>0);}).map(function(x){return x.d||"something given";});
+    list.push(["Everything given has a value",!noval.length,noval.join(", "),"soft"]);}
+  list.push(["We made the project statement our own",!!w.sent&&w.sent!==card().start,"","soft"]);
+  list.push(["We said why it deserves fair support",!!w.why,"","soft"]);
+  return list;
+}
+function checkList(list){var bad=list.some(function(x){return !x[1];});return '<ul class="checks">'+list.map(function(x){var ok=!!x[1],cls=ok?"":(x[3]==="soft"?"soft":"no");return '<li class="'+cls+'"><span class="m">'+(ok?"✓":x[3]==="soft"?"?":"–")+'</span><span>'+x[0]+(!ok&&x[2]?' <i>('+esc(x[2])+')</i>':'')+'</span></li>';}).join("")+'</ul>'+(bad?'<p class="note">– to fix · ? to talk over</p>':'');}
+
+/* ---------- tables ---------- */
+function receipt(){
+  return '<div class="receipt"><h2>Our time: the receipt</h2>'+out("timeTable")+out("flags")+
+   '<p class="note" style="margin-top:8px">In the budget: each person\'s parts, plus the team meetings. Committed: the months × their days a week × 4.33 weeks × 8 h. Over or under? Note it. Balancing it is for when you do this for real.</p></div>';
+}
+function timeTable(c){
+  var w=S.w;
+  return '<table class="time"><thead><tr><th>Who</th><th>Committed</th><th>In the budget</th><th>Difference</th></tr></thead><tbody>'+
+   w.mem.map(function(m,i){var x=c.mem[i],d=x.h-x.commit,off=x.commit&&Math.abs(d)>x.commit*0.1;
+     return '<tr><td>'+esc(mname(i))+'<small>'+esc(x.role.txt)+'</small></td><td>'+hrs(x.commit)+'<small>'+daysTxt(m.days)+'</small></td><td>'+hrs(x.h)+'<small>'+eur(x.amt)+'</small></td><td class="'+(off?(d>0?"over":"under"):"")+'">'+(Math.abs(d)<1?"–":(d>0?"+":"−")+hrs(Math.abs(d)))+'<small>'+(!off?"in balance":d>0?"over":"given away")+'</small></td></tr>';}).join("")+
+   '<tr class="t"><td>The team</td><td>'+hrs(c.teamCommit)+'</td><td>'+hrs(c.teamH)+'</td><td>'+(Math.abs(c.teamH-c.teamCommit)<1?"–":(c.teamH>c.teamCommit?"+":"−")+hrs(Math.abs(c.teamH-c.teamCommit)))+'</td></tr></tbody></table>';
+}
+function flagsHtml(c){
+  var w=S.w,o=[];
+  if(!c.leadH)o.push('<p class="flag"><b>Nobody in the team spends hours leading.</b> Someone will do it anyway: unpaid and unseen.</p>');
+  else{var top=-1,max=0;c.mem.forEach(function(m,i){if(m.role.by.lead>max){max=m.role.by.lead;top=i;}});
+    if(max/c.leadH>=CARRY_SHARE&&w.mem.length>1)o.push('<p class="note"><b>'+esc(first(top))+' does '+Math.round(max/c.leadH*100)+'% of the leading</b>, '+hrs(max)+'. Visible now, and in the budget.</p>');}
+  return o.join("");
+}
+function forList(code){
+  var w=S.w,t=[];
+  eachLine(function(l,p){if(l.m!=="free"&&l.pay===code)t.push(partTitle(p)+(isMember(l)&&p.l.length>1?" ("+first(l.m)+")":""));});
+  if(w.meet.pay===code)t.push("Team meetings");
+  w.mat.forEach(function(m){if(m.pay===code)t.push(matTitle(m));});
+  return t;
+}
+function coverHtml(c){
+  var rows='';
+  payers().forEach(function(p){
+    if(p[0]==="f")return;
+    var f=forList(p[0]);
+    rows+='<tr><td>'+esc(p[2])+'<small>'+(f.length?'for '+esc(f.join(", ")):'nothing yet')+'</small></td><td>'+eur(c.by[p[0]])+'</td></tr>';
+  });
+  var lf=forList("f");
+  return '<table class="sum">'+rows+
+   '<tr class="t'+(c.pct<FUND.min?' gapr':'')+'"><td>Paid by others<small>'+Math.round(c.pct)+'% of the total; at least '+FUND.min+'% is '+eur(Math.ceil(FUND.min/100*c.total))+(c.short?' · '+eur(c.short)+' short':'')+'</small></td><td>'+eur(c.others)+'</td></tr>'+
+   '<tr'+(c.over?' class="gapr"':'')+'><td>'+FUND.name+'<small>pays the rest, at most '+eur(FUND.max)+(c.over?' · '+eur(c.over)+' over: move lines to the others':'')+'</small></td><td>'+eur(c.fund)+'</td></tr>'+
+   '<tr class="t"><td>Total project costs</td><td>'+eur(c.total)+'</td></tr>'+
+   (c.given?'<tr><td>Given, not in euros<small>not counted in the '+FUND.min+'%</small></td><td>'+eur(c.given)+'</td></tr><tr class="t"><td>What the project is really worth</td><td>'+eur(c.total+c.given)+'</td></tr>':'')+
+   '</table>'+
+   '<div class="totals" style="margin-top:12px"><div class="total'+(c.over?" warn":"")+'"><div class="k">'+FUND.name+'</div><div class="v">'+(c.over?eur(c.over)+' over':'✓')+'</div></div>'+
+   '<div class="total'+(c.pct<FUND.min?" warn":"")+'"><div class="k">Paid by others</div><div class="v">'+Math.round(c.pct)+'%</div></div></div>';
+}
+
+/* ---------- the document ---------- */
+function v(s,fb){return s?esc(s):'<span class="empty">'+fb+'</span>';}
+function docHtml(c){
+  var w=S.w,C=card(),mh=meetH();
+  var head='<div class="head"><div class="kind">%K%<small>'+v(w.team,"team name")+' · Situation '+w.card+': '+esc(C.title)+'</small></div><div class="meta">'+esc(w.mem.map(function(_,i){return mname(i);}).join(", "))+'<br>'+w.months+' months · '+(w.same?rate(w.rate)+' an hour for everyone':'our own rates')+'</div></div>';
+  var rows=[];
+  w.parts.forEach(function(p){p.l.forEach(function(l){
+    rows.push('<tr><td>'+esc(p.n||p.ph.replace(" (name it)","")||"A part of our own")+'<span class="n">'+kindWord(p.k)+'</span></td><td class="l">'+esc(lineName(l))+(l.m==="free"?' (gives time)':'')+'</td><td>'+l.h+'</td><td>'+rate(lineRate(l))+'</td><td>'+(l.m==="free"?'<span class="k2">given</span>':eur(lineAmt(l)))+'</td></tr>');});});
+  rows.push('<tr><td>Working together<span class="n">every '+w.meet.e+' weeks, '+w.meet.h+' hours</span></td><td class="l">Each of us</td><td>'+w.mem.length+' × '+mh+'</td><td>'+(w.same?rate(w.rate):"")+'</td><td>'+eur(c.meet)+'</td></tr>');
+  var p1='<div class="doc">'+head.replace("%K%","Budget")+(w.sent?'<p><b>'+esc(w.sent)+'</b></p>':'')+
+   '<h4>People</h4><table><thead><tr><th class="l">Part</th><th class="l">Who</th><th>Hours</th><th>Rate</th><th>Total</th></tr></thead><tbody>'+rows.join("")+
+   '<tr class="t"><td>All people</td><td></td><td></td><td></td><td>'+eur(c.people)+'</td></tr></tbody></table>'+
+   '<h4>Material costs</h4><table><tbody>'+(w.mat.length?w.mat.map(function(m){return '<tr><td>'+v(m.d,"description")+'</td><td>'+eur(m.a)+'</td></tr>';}).join(""):'<tr><td><span class="empty">No material costs</span></td><td></td></tr>')+
+   '<tr class="t"><td>All material costs</td><td>'+eur(c.mat)+'</td></tr></tbody></table>'+
+   '<table style="margin-top:10px"><tr class="t"><td>Total project costs</td><td>'+eur(c.total)+'</td></tr></table>'+
+   '<h4>Who we are</h4><table><tbody>'+w.mem.map(function(m,i){var x=c.mem[i];return '<tr><td>'+esc(mname(i))+'<span class="n">'+esc([m.d,m.b].filter(Boolean).join(" · "))+'</span></td><td class="l">'+esc(x.role.txt)+'</td><td>'+hrs(x.h)+' of '+hrs(x.commit)+'</td><td>'+eur(x.amt)+'</td></tr>';}).join("")+'</tbody></table></div>';
+  var src=payers().filter(function(p){return p[0]!=="f";}).map(function(p){var f=forList(p[0]);return (c.by[p[0]]||f.length)?'<tr><td class="l">'+esc(p[2])+(f.length?'<span class="n">for '+esc(f.join(", "))+'</span>':'')+'</td><td>'+eur(c.by[p[0]])+'</td></tr>':'';}).join("");
+  var given=[];eachLine(function(l,p){if(l.m==="free")given.push('<tr><td class="l">'+esc(lineName(l))+'<span class="n">'+esc(partTitle(p))+', '+l.h+' h</span></td><td>'+eur(lineAmt(l))+'</td></tr>');});
+  if(w.ink)w.ink.forEach(function(x){given.push('<tr><td class="l">'+v(x.d,"something given")+(x.g?'<span class="n">from '+esc(x.g)+'</span>':'')+'</td><td>'+eur(x.a)+'</td></tr>');});
+  var lf=forList("f");
+  var p2='<div class="doc">'+head.replace("%K%","Coverage plan")+
+   '<h4>Paid by others</h4><table><tbody>'+(src||'<tr><td><span class="empty">Nobody else yet</span></td><td></td></tr>')+'<tr class="t"><td>Paid by others, '+Math.round(c.pct)+'% of the total</td><td>'+eur(c.others)+'</td></tr></tbody></table>'+
+   '<table style="margin-top:10px"><tbody><tr><td class="l">Asked from '+FUND.name+(lf.length?'<span class="n">for '+esc(lf.join(", "))+'</span>':'')+'</td><td>'+eur(c.fund)+'</td></tr>'+
+   (c.over?'<tr class="g"><td>Over '+FUND.name+'\'s '+eur(FUND.max)+'</td><td>'+eur(c.over)+'</td></tr>':'')+
+   '<tr class="t"><td>Total project costs</td><td>'+eur(c.total)+'</td></tr></tbody></table>'+
+   (given.length?'<h4>Given, not in euros</h4><table><tbody>'+given.join("")+'<tr class="t"><td>What the project is really worth</td><td>'+eur(c.total+c.given)+'</td></tr></tbody></table>':'')+
+   (w.why?'<h4>Why it\'s worth it</h4><p>'+esc(w.why)+'</p>':'')+
+   '<p class="foot">A practice budget from Economic Cultures at Expanding Practices, Nieuwe Instituut, 21 November 2026. '+FUND.name+' is made up; its rules follow the Stimuleringsfonds\' good practice: at most '+eur(FUND.max)+', others pay at least '+FUND.min+'%. A Situated Studio, CC BY 4.0.</p></div>';
+  return p1+p2;
+}
+
+/* ---------- the team's code ---------- */
+function qrSvg(text){
+  try{
+    var cut=text.indexOf("#s=Z"),q=qrcode(0,"L");
+    if(cut>0){q.addData(text.slice(0,cut+3),"Byte");q.addData(text.slice(cut+3),"Alphanumeric");}else q.addData(text,"Byte");q.make();
+    var n=q.getModuleCount(),m=4,d="";
+    for(var r=0;r<n;r++)for(var col=0;col<n;col++)if(q.isDark(r,col))d+="M"+(col+m)+" "+(r+m)+"h1v1h-1z";
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+(n+2*m)+' '+(n+2*m)+'" shape-rendering="crispEdges" role="img" aria-label="Our team\'s code"><rect width="100%" height="100%" fill="#fff"/><path d="'+d+'" fill="#111"/></svg>';
+  }catch(e){return '<p class="note">This team\'s budget is too long for a code. Shorten a few texts, or send the link.</p>';}
+}
+
+/* ---------- outputs ---------- */
+function update(){
+  var c=calc(),w=S.w,vals={teamCommit:hrs(c.teamCommit),meetH:hrs(meetH()),
+    commitHow:w.mem.length+" of us, "+w.mem.reduce(function(s,m){return s+(m.days||0);},0)+" days a week together × "+w.months+" months × 4.33 weeks × 8 h",meetHow:w.months+" months × 4.33 weeks ÷ every "+w.meet.e+" weeks × "+w.meet.h+" h"};
+  w.parts.forEach(function(p,pi){p.l.forEach(function(l,li){vals["lx"+pi+"_"+li]=(l.h||0)+" h × "+rate(lineRate(l))+" = "+eur(lineAmt(l));});});
+  document.querySelectorAll("[data-o]").forEach(function(el){
+    var k=el.getAttribute("data-o");
+    if(vals[k]!==undefined)el.textContent=vals[k];
+    else if(k.indexOf("pa:")===0){var pth=k.slice(3),amt=pth==="meet"?c.meet:/^mat\./.test(pth)?Math.round(get(pth+".a")||0):lineAmt(get(pth));el.textContent=eur(amt);}
+    else if(k==="matTotal")el.textContent=eur(c.mat);
+    else if(k==="matPct")el.textContent=(c.total?Math.round(c.mat/c.total*100):0)+"% of the project";
+    else if(k==="timeTable")el.innerHTML=timeTable(c);
+    else if(k==="flags")el.innerHTML=flagsHtml(c);
+    else if(k==="costTable")el.innerHTML=costTable(c);
+    else if(k==="cover")el.innerHTML=coverHtml(c);
+    else if(k==="checks")el.innerHTML=checkList(checks(c));
+    else if(k==="congrats")el.innerHTML=checks(c).every(function(x){return !!x[1];})?'<p class="done">Well done, '+esc(w.team||"team")+'! Every euro has a payer, and everyone\'s time is in it. Take a moment to enjoy it together.</p>':'';
+    else if(k==="doc")el.innerHTML=docHtml(c);
+  });
+  var live=document.getElementById("live"),ck=checks(c),ok=ck.filter(function(x){return !!x[1];}).length;
+  if(S.step===0)live.innerHTML="";
+  else if(S.step<=2)live.innerHTML='Our time<b>'+hrs(c.teamCommit)+'</b>';
+  else if(S.step===3)live.innerHTML='In the budget / committed<b'+(Math.abs(c.teamH-c.teamCommit)>c.teamCommit*0.1?' class="warn"':'')+'>'+Math.round(c.teamH).toLocaleString("en-GB")+' / '+hrs(c.teamCommit)+'</b>';
+  else if(S.step===4)live.innerHTML=FUND.name+'<b'+(c.over?' class="warn"':'')+'>'+eur(c.fund)+'</b><span class="ck'+(c.pct<FUND.min?' warn':'')+'">others pay '+Math.round(c.pct)+'%</span>';
+  else live.innerHTML='Checks<b>'+ok+' of '+ck.length+'</b>';
+  persist();
+}
+function shareUrl(){var base="";try{base=location.origin+location.pathname;}catch(e){}return base+"?card="+S.w.card+"#s="+(CODE&&codeFor===json()?CODE:encodeSync());}
+function refreshLink(){
+  if(!S.w)return;
+  var u=shareUrl();
+  document.querySelectorAll('[data-o="link"]').forEach(function(el){el.textContent=u;el.setAttribute("href",u);});
+  document.querySelectorAll('[data-o="qr"]').forEach(function(el){if(el.getAttribute("data-for")!==u){el.innerHTML=qrSvg(u);el.setAttribute("data-for",u);}});
+}
+function pdfHint(){var u="";try{u=navigator.userAgent||"";}catch(e){}
+  if(/Android/i.test(u))return "On Android the print screen opens: choose “Save as PDF”, then tap the round PDF button.";
+  if(/iPhone|iPad|iPod/i.test(u)||(/Macintosh/.test(u)&&navigator.maxTouchPoints>1))return "On an iPhone the print screen opens: tap the share icon at the top, then “Save to Files”.";
+  return "In the print window, choose “Save as PDF” as the printer.";}
+function canShare(){try{return typeof navigator.share==="function";}catch(e){return false;}}
+
+/* ---------- render & events ---------- */
+var stage=document.getElementById("stage");
+function render(focus){
+  var y=window.scrollY,openF=[];stage.querySelectorAll("details[open] summary").forEach(function(s){openF.push(s.textContent);});
+  uid=0;stage.innerHTML=STEPS[S.step].r();
+  stage.querySelectorAll("details summary").forEach(function(s){if(openF.indexOf(s.textContent)>=0)s.parentNode.open=true;});
+  document.getElementById("progress").innerHTML='<span>'+(S.step?"Step "+S.step+" of "+LAST+" · "+STEPS[S.step].t:"Start")+'</span><span>'+(S.step&&S.w.team?esc(S.w.team):(S.chosen?"Situation "+S.w.card:""))+'</span>';
+  document.getElementById("back").style.visibility=S.step===0?"hidden":"";
+  var n=document.getElementById("next");n.textContent=S.step===0?"Begin":S.step===LAST?"Save as PDF":"Next";n.disabled=S.step===0&&!S.chosen;
+  update();refreshLink();
+  if(focus){var h=stage.querySelector("h1");if(h)h.focus({preventScroll:true});window.scrollTo(0,0);}else window.scrollTo(0,y);
+}
+function go(d){S.step=Math.min(LAST,Math.max(0,S.step+d));render(true);}
+document.getElementById("next").onclick=function(){if(S.step===0&&!S.chosen)return;if(S.step<LAST)go(1);else printDoc();};
+document.getElementById("back").onclick=function(){if(S.step>0)go(-1);};
+function onEdit(e){
+  var t=e.target,p=t.getAttribute("data-p");if(!p)return;
+  var val;
+  if(t.getAttribute("data-n")){var n=parseFloat(String(t.value).replace(",","."));val=isFinite(n)&&n>=0?n:0;
+    if(p==="months")val=Math.min(24,Math.max(0,Math.round(val)));if(/\.days$/.test(p))val=Math.min(5,val);
+    if(p==="meet.e")val=Math.min(8,Math.max(0,Math.round(val)));if(p==="meet.h")val=Math.min(8,val);if(/\.h$/.test(p))val=Math.min(5000,val);}
+  else val=String(t.value).slice(0,+(t.getAttribute("maxlength"))||200);
+  set(p,val);
+  update();
+  if(/^mem\.\d+\.n$/.test(p)){var h=t.closest(".card");if(h){var h2=h.querySelector("h2");if(h2)h2.textContent=val||"Member";}}
+  if(/^(parts\.\d+\.n|mat\.\d+\.d)$/.test(p))t.classList.toggle("empty",!val);
+  if(p==="reg.n"){var r3=t.closest(".panel");if(r3){var hs=r3.querySelectorAll("h3");if(hs[1])hs[1].textContent="2 · "+(val||"Our regional backer");}}
+}
+stage.addEventListener("input",onEdit);
+stage.addEventListener("change",function(e){var p=e.target.getAttribute("data-p");if(p&&/^(oth\.\d+\.n|reg\.n|mat\.\d+\.d)$/.test(p))render(false);});
+function removeOther(i){
+  var w=S.w;if(w.oth.length<2)return;w.oth.splice(i,1);
+  var fix=function(p){if(p==="o"+i)return "f";if(/^o\d$/.test(p)&&+p.charAt(1)>i)return "o"+(+p.charAt(1)-1);return p;};
+  eachLine(function(l){l.pay=fix(l.pay);});w.mat.forEach(function(m){m.pay=fix(m.pay);});w.meet.pay=fix(w.meet.pay);
+}
+function removeMember(i){
+  var w=S.w;w.mem.splice(i,1);
+  eachLine(function(l){if(l.m===i){l.m="none";}else if(isMember(l)&&l.m>i)l.m--;});
+}
+function hasEdits(){return S.chosen&&json()!==JSON.stringify((function(){var keep=S.w,st=S.step;S.w=preset(keep.card);var j=pack();S.w=keep;j.t=st;return j;})());}
+stage.addEventListener("click",function(e){
+  var b=e.target.closest("button");if(!b)return;
+  var a,w=S.w;
+  if((a=b.getAttribute("data-card"))){
+    if(S.chosen&&a===w.card){return;}
+    if(hasEdits()&&PENDING!==a){PENDING=a;render(false);return;}
+    PENDING="";S.w=preset(a);S.chosen=true;S.step=0;render(true);return;}
+  if((a=b.getAttribute("data-who"))){
+    var pr=a.split("."),l=w.parts[+pr[0]].l[+pr[1]],who=/^\d+$/.test(pr[2])?+pr[2]:pr[2];
+    l.m=who;if(!isMember(l)&&who!=="none"&&!l.r)l.r=w.same?w.rate:55;
+    render(false);return;}
+  if((a=b.getAttribute("data-kind"))){var kp=a.split(".");w.parts[+kp[0]].k=kp[1];render(false);return;}
+  if((a=b.getAttribute("data-addl"))){var pt=w.parts[+a];if(pt.l.length<8)pt.l.push(Ln("none",0));render(false);return;}
+  if((a=b.getAttribute("data-dell"))){var dl=a.split(".");w.parts[+dl[0]].l.splice(+dl[1],1);render(false);return;}
+  if((a=b.getAttribute("data-delpart"))){w.parts.splice(+a,1);render(false);return;}
+  if((a=b.getAttribute("data-delm"))){if(w.mem.length>MIN_MEMBERS)removeMember(+a);render(false);return;}
+  if((a=b.getAttribute("data-del"))){var d=a.split(".");w[d[0]].splice(+d[1],1);render(false);return;}
+  if((a=b.getAttribute("data-pay"))){var pp=a.split("|");if(pp[0]==="meet")w.meet.pay=pp[1];else{var o=get(pp[0]);if(o)o.pay=pp[1];}render(false);return;}
+  if((a=b.getAttribute("data-roll"))){var oi=+a,cur=w.oth[oi].n,used=w.oth.map(function(x){return x.n;}),pool=(card().partners||[]).filter(function(x){return used.indexOf(x[0])<0;});
+    if(!pool.length)pool=(card().partners||[]).filter(function(x){return x[0]!==cur;});
+    if(pool.length)w.oth[oi].n=pool[Math.floor(Math.random()*pool.length)][0];render(false);return;}
+  if((a=b.getAttribute("data-delo"))){removeOther(+a);render(false);return;}
+  if((a=b.getAttribute("data-same"))){w.same=a==="1";if(!w.same)w.mem.forEach(function(m){m.r=m.r||w.rate;});render(false);return;}
+  a=b.getAttribute("data-act");
+  if(a==="addm"){if(w.mem.length<MAX_MEMBERS){var nm=Mb();nm.r=w.rate;w.mem.push(nm);}render(false);return;}
+  if(a==="addpart"){if(w.parts.length<MAX_PARTS)w.parts.push({n:"",k:"",ph:"",l:[Ln("none",0)]});render(false);return;}
+  if(a==="addmat"){if(w.mat.length<20)w.mat.push({d:"",a:0,ph:"",pay:"f"});render(false);return;}
+  if(a==="addoth"){if(w.oth.length<MAX_OTHERS)w.oth.push({n:""});render(false);return;}
+  if(a==="addink"){if(w.ink&&w.ink.length<MAX_INK)w.ink.push({d:"",a:0,g:""});render(false);return;}
+  if(a==="print"){printDoc();return;}
+  if(a==="share"){try{navigator.share({title:document.title,url:shareUrl()}).catch(function(){});}catch(err){}return;}
+  if(a==="copy"){var url=shareUrl(),m=stage.querySelector('[data-o="copyMsg"]');
+    var fallback=function(){var box=stage.querySelector('[data-o="link"]');var r=document.createRange();r.selectNodeContents(box);var s=window.getSelection();s.removeAllRanges();s.addRange(r);m.textContent="Selected. Copy it from your phone's menu.";};
+    try{navigator.clipboard.writeText(url).then(function(){m.textContent="Copied.";},fallback);}catch(err){fallback();}}
+});
+function printDoc(){
+  var u=shareUrl();
+  document.getElementById("printarea").innerHTML=docHtml(calc())+
+    '<div class="reopen"><p><b>Reopen this in the tool.</b> Tap the link below. Everything lives in the link, not with us.</p><p><a class="linkbox" href="'+esc(u)+'">Open it in the tool, as we left it</a></p></div>';
+  var prev=document.title;
+  try{document.title="Budget "+(S.w.team||"")+" situation "+S.w.card;}catch(e){}
+  var done=function(){document.title=prev;window.removeEventListener("afterprint",done);};
+  window.addEventListener("afterprint",done);
+  try{window.print();}catch(err){}
+}
+var rb=document.getElementById("readable");
+try{if(localStorage.getItem("ec-readable")==="1"){document.body.classList.add("readable");rb.setAttribute("aria-pressed","true");}}catch(e){}
+rb.onclick=function(){var on=document.body.classList.toggle("readable");rb.setAttribute("aria-pressed",String(on));try{localStorage.setItem("ec-readable",on?"1":"0");}catch(e){}};
+
+window.__budget={get S(){return S;},calc:calc,checks:checks,preset:preset,pack:pack,shareUrl:shareUrl,meetH:meetH,commitOf:commitOf};
+load().then(function(){},function(){if(!S.w)S.w=preset("1");}).then(function(){if(!S.w)S.w=preset("1");render(false);refreshLink();});
+})();
+</script>
+</body>
+</html>
