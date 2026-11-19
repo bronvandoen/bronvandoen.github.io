@@ -721,8 +721,12 @@ function checks(c){
   list.push(["Others pay at least "+FUND.min+"%",c.pct>=FUND.min,Math.round(c.pct)+"% now"+(c.short?", "+eur(c.short)+" short":"")]);
   var t0=w.oth[0]||{n:""};
   list.push(["Our third partner is named, and pays for something",!!(t0.n&&c.by.o0>0)]);
-  if(!w.same){var high=w.mem.filter(function(m){return m.r>FUND.cap;}).map(function(m){return m.n||"a member";});
-    list.push(["Every rate is within "+FUND.name+"'s "+rate(FUND.cap)+" an hour",!high.length,high.join(", ")]);}
+  /* the hourly cap holds for every paid hour: the team rate, members' own rates and people paid from outside the team */
+  var high=[];
+  if(w.same){if(w.rate>FUND.cap)high.push("our team rate");}
+  else w.mem.forEach(function(m,i){if(m.r>FUND.cap)high.push(mname(i));});
+  eachLine(function(l,p){if(l.m==="paid"&&l.r>FUND.cap&&high.indexOf(lineName(l))<0)high.push(lineName(l));if(l.m==="none"&&!w.same&&w.rate>FUND.cap&&high.indexOf("parts nobody has yet")<0)high.push("parts nobody has yet");});
+  list.push(["Every rate is within "+FUND.name+"'s "+rate(FUND.cap)+" an hour",!high.length,high.join(", ")]);
   if(w.ink&&w.ink.length){var noval=w.ink.filter(function(x){return !(x.a>0);}).map(function(x){return x.d||"something given";});
     list.push(["Everything given has a value",!noval.length,noval.join(", "),"soft"]);}
   list.push(["We made the project statement our own",!!w.sent&&w.sent!==card().start,"","soft"]);
