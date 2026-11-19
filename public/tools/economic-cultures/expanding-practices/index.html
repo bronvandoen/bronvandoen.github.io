@@ -588,7 +588,7 @@ var STEPS=[
    txt("team","Our team's name",null,null,false,40,teamPh())+
    txt("months","How many months does it run?","Keep it at 6 for today. Change it, and watch the number below.","number")+
    '<table class="sum"><tr class="t"><td>Our time in this project<small>'+out("commitHow")+'</small></td><td>'+out("teamCommit")+'</td></tr></table></div>'+
-   pause("Read it out loud, then pass the phone. Each of you changes one thing and passes it on. Then decide together, and say it out loud.");
+   pause("Read it out loud. Each of you says one thing to change, and the typist types it. Then decide together, and say it out loud.");
  }},
  {t:"Who does what",r:function(){
    var w=S.w,h=heading("Step 3","Who does what")+chips()+
@@ -611,8 +611,8 @@ var STEPS=[
    pause("Does the role the tool sees match the role you thought you were taking?");
    return h;
  }},
- {t:"Who pays",r:function(){
-   var w=S.w,c=calc(),h=heading("Step 4","Who pays")+
+ {t:"Who pays for what",r:function(){
+   var w=S.w,c=calc(),h=heading("Step 4","Who pays for what")+
    '<p class="lead">Three backers, each paying for its own purpose. Tap who pays for each line.</p>'+
    '<div class="panel"><h2>Our backers</h2>'+
    '<h3>1 · '+FUND.name+'</h3><p>'+FUND.sub.charAt(0).toUpperCase()+FUND.sub.slice(1)+'. Pays at most '+eur(FUND.max)+'; others must pay at least '+FUND.min+'% of the total. Every line starts here.</p>'+
@@ -635,7 +635,7 @@ var STEPS=[
    '<table class="sum">'+w.mat.map(function(m,i){return '<tr><td'+(m.d?'':' class="phline"')+'>'+esc(matTitle(m))+'</td><td>'+out("pa:mat."+i)+'</td></tr>';}).join("")+'</table>'+
    '<p class="note" style="margin-top:8px">Leave them as they are, or adjust them to suit your project better.</p>'+
    fold("Change the material costs",ed)+'</div>'+
-   '<div class="panel"><h2>Who pays for what</h2><p class="note">Every line starts with '+FUND.name+'. Move lines until others pay at least '+FUND.min+'% and '+FUND.name+' stays within '+eur(FUND.max)+'.</p>'+
+   '<div class="panel"><h2>Line by line</h2><p class="note">Every line starts with '+FUND.name+'. Move lines until others pay at least '+FUND.min+'% and '+FUND.name+' stays within '+eur(FUND.max)+'.</p>'+
    '<h3>Our parts</h3>';
    w.parts.forEach(function(p,pi){p.l.forEach(function(l,li){if(l.m==="free")return;
      h+=payRow(esc(partTitle(p))+' · '+esc(lineName(l)),"parts."+pi+".l."+li);});});
@@ -662,7 +662,7 @@ var STEPS=[
  }},
  {t:"Why it's worth it",r:function(){
    return heading("Step 5","Why it's worth it")+'<div data-o="congrats"></div>'+
-   '<div class="panel">'+txt("why","Why this deserves fair support","State what this project gives to Rotterdam and her people. Say it as a claim, not a request.",null,true,240)+'</div>'+
+   '<div class="panel">'+txt("why","Why this deserves fair support","Declare what this project is to Rotterdam and her people. Make it a statement, not a request.",null,true,240)+'</div>'+
    '<div class="panel"><h2>Is it complete and balanced?</h2>'+out("checks")+'</div>'+receipt()+
    '<div class="panel"><h2>Our team\'s code</h2><p><b>Your team name, first names and numbers may be shown on our archive.</b></p>'+
    '<p>Scan it with each other\'s phones, and show it to the host before you go. The code is the whole budget: nothing is kept anywhere else.</p>'+
