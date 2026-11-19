@@ -47,7 +47,7 @@ button{font:inherit;color:inherit}
 /* ---------- the plans side by side ---------- */
 .plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(calc(var(--u)*30),1fr));gap:calc(var(--u)*1.6);margin:calc(var(--u)*1.2) 0 calc(var(--u)*2.4)}
 .plan{position:relative;text-align:left;background:var(--paper-raised);border:3px solid var(--ink);padding:0;cursor:pointer;display:flex;flex-direction:column}
-.plan .band{height:calc(var(--u)*1.1);background:var(--pc)}
+.plan .head2{display:flex;flex-direction:column;gap:calc(var(--u)*.4);background:var(--pc);color:var(--on);padding:calc(var(--u)*1.1) calc(var(--u)*1.4) calc(var(--u)*1)}
 .plan .in{padding:calc(var(--u)*1.2) calc(var(--u)*1.4) calc(var(--u)*1.4);display:flex;flex-direction:column;gap:calc(var(--u)*.8);flex:1}
 .plan .team{font-family:var(--display);font-weight:900;font-size:calc(var(--u)*2.6);line-height:.95;text-transform:uppercase}
 .plan .claim{font-size:calc(var(--u)*1.7);line-height:1.3;flex:1}
@@ -99,7 +99,14 @@ button{font:inherit;color:inherit}
 .full{display:none}
 body.open .overview{display:none}
 body.open .full{display:block}
-.full .top{display:grid;grid-template-columns:1.1fr 1fr;gap:calc(var(--u)*3);border-top:calc(var(--u)*1.2) solid var(--pc);padding-top:calc(var(--u)*1.6)}
+.full .top{display:grid;grid-template-columns:1.1fr 1fr;gap:calc(var(--u)*3);padding-top:calc(var(--u)*1.6)}
+.phead{background:var(--pc);color:var(--on);padding:calc(var(--u)*1.2) calc(var(--u)*1.6) calc(var(--u)*1.4)}
+.phead h1{font-family:var(--display);font-weight:900;font-size:calc(var(--u)*6);line-height:.9;text-transform:uppercase;margin:calc(var(--u)*.4) 0 0}
+.pnav{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:calc(var(--u)*1);background:var(--paper);padding:calc(var(--u)*.6) 0;margin:calc(var(--u)*-1) 0 calc(var(--u)*1);border-bottom:2px solid var(--ink)}
+.pnav .where{font-family:var(--label);font-size:calc(var(--u)*1.1);flex:1;text-align:center}
+.pnav .arrows{display:flex;gap:calc(var(--u)*.5)}
+.pnav button{min-height:44px;border:2px solid var(--ink);background:var(--paper-raised);padding:0 calc(var(--u)*1);cursor:pointer;font-family:var(--label);font-size:calc(var(--u)*1.1);font-weight:600}
+.pnav button[data-nav="back"]{background:var(--ink);color:var(--paper)}
 .full .claim{font-family:var(--display);font-weight:900;font-size:calc(var(--u)*4.4);line-height:.95;text-transform:uppercase;margin:calc(var(--u)*.6) 0 calc(var(--u)*1.2)}
 .full .stmt{font-size:calc(var(--u)*1.8);font-style:italic;margin:0 0 calc(var(--u)*1.2)}
 .people{display:flex;flex-wrap:wrap;gap:calc(var(--u)*.8)}
@@ -164,7 +171,6 @@ body.screen .status:hover,body.screen .status:focus-within{opacity:1}
     <button data-round="all" aria-pressed="true">Both rounds</button>
     <button data-round="1" aria-pressed="false">Round 1</button>
     <button data-round="2" aria-pressed="false">Round 2</button>
-    <button id="reload" aria-label="Read the sheet now">Read now</button>
   </span>
 </div>
 
@@ -425,6 +431,8 @@ var EDITION={
   }
 };
 var PAWN={1:"var(--p1)",2:"var(--p2)",3:"var(--p3)",4:"var(--p4)",5:"var(--p5)"};
+/* text on the pawn colour: paper on blue and purple, ink on pink, orange and red (each at least 4.5:1) */
+var ON={1:"#FBF8F1",2:"#111111",3:"#111111",4:"#111111",5:"#FBF8F1"};
 var PAWN_NAME={1:"Blue",2:"Pink",3:"Orange",4:"Red",5:"Purple"};
 var SAMPLES=[{"round": 1, "link": "https://bronvandoen.github.io/tools/economic-cultures/expanding-practices/?card=1#s=Z6RDN3P0.H$6GJZ1NIWO*CICACV3SFRVTN-R/5XZT-U27$$.F1AEC9TZKB:WXJQJ418/4ZE865KMK5EM8$+.M0WAIUEASPLJX7MC80JQUP24A0V*Q/CJV8GG$E5Q/8C-51$L73UPMUJGL:J$Q5M5NRHDHGIN-1+*SJSG3VANK5A:*F+Z4LUQ0075+3F7Q5HNU0U++5T4OC6UB2PV$GR9$SBZ0G5X7G3WKAJ8*0/--QAUYHOEQGM+FDSL1$$HJ6LPMEKV4MTDJD2.8SQ867*VFIRVKTB:0X:GID5+THLW08.1TB2M2J-V.Y8$RBHR4A7AFXUW68-6WMY7RRDV52NRALQHX8HR782N8+MJ9M/7M7T$M0U-1GD5S31NZ86HW+048CDAUT/66+US1JBJVBPXZTO746M.YRPHI/0/$H/D/DUHX3F-A135GFHUFVI1BGIHH$0DZML/LC*75N+QZ7E.HH53CMKEP/QSD9VMG65:*YH7L9X1E3W:2ZM3U1BVPQ9::J*4*1RFL89QW14KBH0UGL1W0T+GK33LC:8RL6C5.7H+AEIRTKL+1G1TDX-RVPKAGH2DGN$5JWB540JJJ9ERRCR7UF2X0B8HLY3W360ZQ:PKF2.QQ2VKPU9V-46RO2VHI+6WT45CSGOI7DAQVR1LDC.*.V8U7G+G6I$T-UR6J5Z:J2.PCXCW2$UZ8IHR-N:JAO+SYE+MY0$+I-71S"}, {"round": 1, "link": "https://bronvandoen.github.io/tools/economic-cultures/expanding-practices/?card=2#s=Z7A6-RJSO$TKG1T5I1WJMU+SBG8XGVVDP$E$BBRM*ORE0IB8B8FK1$OLNGVCJ9QA.C2.ZB1-HCD:WDVU5HYKL2S260U85WRQ5DUFU2XQG5M9+GSWSWN8Y:0012ZAJ+M/DVEW-22WFW5$90./L05TZ::CBPAXB9VY63Q1/NPUU562P:D7$.PD50ND-PD96C-0:E62178+VYOF68MTQG*0E1UPE0NW5Y5YIPQUJF1/TABHRTF:00U4JNV1XAU5XF+:MZ0GF9VH$GR72BA2B+O6MD9XBLIPG$LQWJ0*DNL14I-SN1+/:R+XTRINZ87YDDQ5XDJJZIEVAS3V/U4PY1ZB1BRRJT1ERAWB-H4WIR2TC4NWPI*8ATWZ/2VY.NF4YP3U-IAV05Y74PLPN8$BVB44J+O3B25.R3/BX-7TBGEVY7*DVZCC-6TEW.6T8AHS3AUT0WNPCYMZFC0JEGTJT+1BQ3UFOWWYQ5E6+4:.5X:Z+BR8U8*A/6W/JSBEN09UW$2K/YDMS5F-/LGGADOZ727DS**84MZXKBTG4VKIAS:P1B:IFU99PWXJ77QGHP704AECA0.I7AJJWX8YU0Y/FMYVWQ9-:DTST84HWZEVJ3KD152+3"}, {"round": 1, "link": "https://bronvandoen.github.io/tools/economic-cultures/expanding-practices/?card=3#s=Z6RDN3P0.H$6GJZ1NGS.JLXPE0BUA50.K7+PPA2$Q+T3AUM:.979Y727ONYT-9*2R/*C2SIUTIWZE40DWDYXHC1Q628E8+:*T9J0GDT/P9IGOCD5CMF3H0NT0HL3+9/0EW+1/JPNT6JHS10G/7M0JGWX8SJU+5TTWMGJ9YGH.5KWKIKXDK:-$5F4JOFIEV18O9K9MJGW2Z+AXB23HZ78EMT742IGWY5S1GK98CP$8T0EWG-FCGTYGAY/VLBA+BPT:KQI67$QD2L/CM0EL16+$D*/54-HN*124GAV+3Q6RQSETF47S-HJ+-Z4/E3O$PE$/VWB249019AT48TIPCVG1Z:J9I-Z36.DG**RTB$3B1*RSQW*2-MEK6ZN0J3NO3-.$BZOI5/MV*2Q3CAT*72BQMV723J-7DB/BLV8F0OG+S7F1I4N7IHRIB*Q20ZI179Z+.P8P9S7WEDTL1NZRO2G.8CNR7YJM$.FDIORB*G+9-4VCC48ECRXZA81ZAPYJ90-:T48V7FEW-HE.:G6+IFZX7T3SE4EV3H6C7TD+$2:68/CPSC9/5-AX5B:4I9.0HJ-Q9UX5+D9BN65YET5*5F7M$8EZ2VHXBWGZ4K$HG75UKJ*GQ*887H61TLP:OH:W9IGB:8DM49CHJJPCJH8+1PBR2UD3GG7MEZAGF:I:OWTGRBBX4LPDOMIBDVZR"}, {"round": 2, "link": "https://bronvandoen.github.io/tools/economic-cultures/expanding-practices/?card=4#s=Z6QK/TU3KSLJV1SU$3ERPQI:SIQY*BGJNLW8FI.Z0-GHE1CD5E7*4N1ZDT3-WAGN4GEAZABJ.B.32*YH/E+*BB$4X750Q$NETFC5R2Y3SC0.SHOFGD2DS9.O5AB$D4:FUP2XNCBANPD9P155G4NRGG6*RLH1*IU+NHC$M2YF*FS84P3BT208HAAY7098-O22AE.GOP8U4B2Y1BYVS+.AL$G$4HGJ21OC6O5SS3YL$ORYPU5M-91F1H-2B0Z2LH/UOHT2NOU5TH$4PX*MX$H3BHXTN6$8NYJF8JCE89OE/1UY80KKX*1U/L27$466XKZ2:IC-OI-:FJ2TT.C+92*C3W4I-RF8EH/9ZEX-SPC.RBU8-Q6.O49BV86R:AD:YM+UH2$C8LED:3LLC62DJSNQY27Z13B:S$/4EDL.*4:IHBX7:T0/S9UY-P7YBJ$QE28WAX710EW$T6LG$*C$RVRYMBE9.R+3H62217IGKIGUV.5DL0SZ4E8-41*$IA$GDLYK*U6YLEHUX6Y+NW0-O73XJC5M.XD2G3U2O2W-SG.2X8BQ*MMXG4F2RG:GQ74$5.XXIE:+JVIZT7X$R57NUOC6FM*I$IGPEA85FLGNJ63OVMF-S42G:J1AXI9KCU7H-2O/JPKNE.Z.6"}, {"round": 2, "link": "https://bronvandoen.github.io/tools/economic-cultures/expanding-practices/?card=5#s=Z7$Z+MY1-238TBQO+4ZYS-8WR6I87O1.6LDB6I.S8R5NCMQVM4U$6.KM59Y907E.8SL0AH-ZIF:K:GY04/9RVA+LHTGCZ/D//AAME+-SUDB5OEC3R-RY3.-8G3/FY*Z2$4T9381PWLN8BXC-47:OZX9O.9N-FE*A96*DP1F/1CO/29UP:DPX6C.O62CA*$S.KDCXWZYPVIO+.IH3HWM6R-ASM6Q*GA1MM7ZJJ1G:54L570WIT28X6P./CPZS79VD86P5JCKBMB7M$EV7TJDPQA.-M3B+741-98PJIZMCPEQSL8S4ZA4MX8P:JBI7$BCQ7FD6/A5EY8GG4S*:GDXW8**:FAU-D7GC2X/X+RJ$WDAL9QC7KZD332U+$5WBTQ31W5IYA2TWIEGC3JXS1F68:KHMC9AL7LTSW8TH130MCB2YLOK5HJ2YJY/77F08EF3OYE$+*BRK*HC$FNK9YRNU+0-3TO:GV75/.6.1HYIVVE29D4:O7OGU+7*.KGUD:UZS/LK+X8WUGNH9RLS0G1XT7P8CXEPDP769T3XUHP1M0A/LWWH*CG7N052X1B$QD0.W1B75BP133ZX4.0JB-Z32S"}];
 var FORCE_DEMO=/*FORCE_DEMO*/false;
@@ -538,9 +546,9 @@ function shares(pl){
 }
 function planCard(pl){
   var w=pl.w,c=pl.c,isNew=!FIRST&&!SEEN[pl.key],mk=makes(pl);
-  return '<button class="plan'+(isNew?" new":"")+'" data-k="'+esc(pl.key)+'" style="--pc:'+PAWN[w.card]+'"><span class="band"></span><span class="in">'+
+  return '<button class="plan'+(isNew?" new":"")+'" data-k="'+esc(pl.key)+'" style="--pc:'+PAWN[w.card]+';--on:'+ON[w.card]+'"><span class="head2">'+
     '<span class="label">Situation '+w.card+' · '+esc(pl.C.title)+'</span>'+
-    '<span class="team">'+esc(teamName(pl))+'</span>'+
+    '<span class="team">'+esc(teamName(pl))+'</span></span><span class="in">'+
     '<span class="claim">'+(w.why?esc(w.why):'<span class="soft">No claim written.</span>')+'</span>'+
     (mk.length?'<span class="makes"><span class="k">What they make</span>'+mk.map(function(m){return '<span class="m">'+esc(m)+'</span>';}).join("")+'</span>':'')+
     '<span class="funds"><span class="k">'+eur(c.total)+' budgeted '+(pl.holds?'(balanced)':'<span class="nb">(not balanced yet)</span>')+', paid by</span>'+
@@ -590,9 +598,12 @@ function renderFull(pl){
     '</tbody></table>';
   var reading=pl.leading==="one"?esc(pl.leadTop)+" holds "+pct(pl.leadShare*100)+" of the leading hours. The lead is a role, not a title. Is it shared and budgeted?":
     pl.leading==="shared"?"The leading is shared: nobody carries more than "+pct(pl.leadShare*100)+" of it.":"Nobody holds the leading yet.";
-  var h='<div class="top" style="--pc:'+PAWN[w.card]+'"><div>'+
-    '<p class="eyebrow">Situation '+w.card+' · '+esc(pl.C.title)+' · round '+pl.round+'</p>'+
-    '<div class="over"><div class="ghost" aria-hidden="true">'+esc(teamName(pl))+'</div><h1>'+esc(teamName(pl))+'</h1></div>'+
+  var ps=shown(),idx=0;ps.forEach(function(p,j){if(p.key===pl.key)idx=j;});
+  var h='<nav class="pnav" aria-label="Budgets"><button data-nav="back">← All budgets</button><span class="where">'+(idx+1)+' of '+ps.length+'</span>'+
+    '<span class="arrows"><button data-nav="prev" aria-label="Previous budget">‹ Previous</button><button data-nav="next" aria-label="Next budget">Next ›</button></span></nav>'+
+    '<div class="phead" style="--pc:'+PAWN[w.card]+';--on:'+ON[w.card]+'"><p class="label">Situation '+w.card+' · '+esc(pl.C.title)+' · round '+pl.round+'</p>'+
+    '<h1>'+esc(teamName(pl))+'</h1></div>'+
+    '<div class="top" style="--pc:'+PAWN[w.card]+'"><div>'+
     '<p class="claim">'+(w.why?esc(w.why):'No claim written.')+'</p>'+
     '<p class="stmt">'+esc(w.sent)+'</p>'+
     '<div class="people">'+w.mem.map(function(m,i){return '<span class="person"><b>'+esc(firsts(w)[i])+'</b>'+esc([m.d,m.b].filter(Boolean).join(" · "))+'</span>';}).join("")+'</div>'+
@@ -604,6 +615,8 @@ function renderFull(pl){
     '<div class="question"><span class="label">The question this situation asks</span><br>'+esc(EDITION.questions[w.card]||"")+'</div></div>'+
     '</div></div>';
   document.getElementById("full").innerHTML=h;
+  Array.prototype.forEach.call(document.querySelectorAll("[data-nav]"),function(b){b.addEventListener("click",function(){
+    var a=b.getAttribute("data-nav");if(a==="back")closePlan();else step(a==="next"?1:-1);});});
 }
 function openPlan(k){
   var pl=PLANS.filter(function(p){return p.key===k;})[0];if(!pl){closePlan();return;}
@@ -611,7 +624,8 @@ function openPlan(k){
   try{history.replaceState(null,"",location.pathname+location.search+"#"+encodeURIComponent(k));}catch(e){}
   window.scrollTo(0,0);
 }
-function closePlan(){OPEN=null;document.body.classList.remove("open");try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}}
+function closePlan(){var k=OPEN;OPEN=null;document.body.classList.remove("open");try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}
+  var el=k&&document.querySelector('.plan[data-k="'+k+'"]');if(el)el.scrollIntoView({block:"center"});}
 function step(d){var ps=shown();if(!ps.length)return;var i=-1;ps.forEach(function(p,j){if(p.key===OPEN)i=j;});openPlan(ps[(i+d+ps.length)%ps.length].key);}
 
 /* ---------- reading the sheet ---------- */
@@ -652,15 +666,14 @@ function render(){
 }
 function state(failed){
   var t=LAST_OK?LAST_OK.toLocaleTimeString("en-GB"):"–";
-  document.getElementById("state").innerHTML=(DEMO?"Sample plans (demo)":"Live from the team-link sheet")+" · read "+t+" · "+PLANS.length+(PLANS.length===1?" plan":" plans")+
+  document.getElementById("state").innerHTML=(DEMO?"Sample plans (demo)":"Live: new budgets appear by themselves")+" · last checked "+t+" · "+PLANS.length+(PLANS.length===1?" budget":" budgets")+
     (BAD?' · <span class="warn">'+BAD+(BAD===1?" row is":" rows are")+" not a team link</span>":"")+
     (failed?' · <span class="warn">the sheet could not be read; showing what was read last</span>':"");
 }
 Array.prototype.forEach.call(document.querySelectorAll("[data-round]"),function(b){b.addEventListener("click",function(){
   ROUND=b.getAttribute("data-round");Array.prototype.forEach.call(document.querySelectorAll("[data-round]"),function(x){x.setAttribute("aria-pressed",String(x===b));});
-  if(OPEN&&!shown().some(function(p){return p.key===OPEN;}))closePlan();renderOverview();});});
+  renderOverview();if(OPEN)closePlan();});});
 Array.prototype.forEach.call(document.querySelectorAll("[data-round]"),function(x){x.setAttribute("aria-pressed",String(x.getAttribute("data-round")===ROUND));});
-document.getElementById("reload").addEventListener("click",read);
 document.addEventListener("keydown",function(e){
   if(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName))return;
   if(e.key==="Escape")closePlan();else if(e.key==="ArrowRight")step(1);else if(e.key==="ArrowLeft")step(-1);else if(e.key==="r"||e.key==="R")read();
