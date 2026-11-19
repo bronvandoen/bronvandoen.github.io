@@ -511,10 +511,10 @@ function calc(){
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch];});}
 function heading(eyebrow,title){return '<div class="eyebrow">'+eyebrow+'</div><div class="over"><div class="ghost" aria-hidden="true">'+title+'</div><h1 tabindex="-1">'+title+'</h1></div>';}
 var uid=0;
-function txt(path,lbl,hint,type,area,max){
+function txt(path,lbl,hint,type,area,max,ph){
   var id="f"+(uid++),v=get(path);if(v==null)v="";
   var input=area?'<textarea id="'+id+'" data-p="'+path+'" maxlength="'+(max||200)+'">'+esc(v)+'</textarea>'
-    :'<input id="'+id+'" data-p="'+path+'" '+(type==="number"?'type="number" data-n="1" inputmode="decimal" min="0" step="any"':'type="text" maxlength="'+(max||80)+'"')+' value="'+esc(v)+'">';
+    :'<input id="'+id+'" data-p="'+path+'" '+(type==="number"?'type="number" data-n="1" inputmode="decimal" min="0" step="any"':'type="text" maxlength="'+(max||80)+'"'+(ph?' placeholder="'+esc(ph)+'"':''))+' value="'+esc(v)+'">';
   return '<div class="f"><label for="'+id+'">'+lbl+'</label>'+input+(hint?'<span class="hint">'+hint+'</span>':'')+'</div>';
 }
 function cell(path,lbl,type,max){
@@ -585,7 +585,7 @@ var STEPS=[
    var C=card();
    return heading("Step 2","Our sentence")+chips()+situ(true)+
    '<div class="panel">'+txt("sent","Our project statement","What you make, with whom, and where. A starter, finished but not decided: make it yours.",null,true,240)+
-   txt("team","Our team's name",null,null,false,40)+
+   txt("team","Our team's name",null,null,false,40,teamPh())+
    txt("months","How many months does it run?","Keep it at 6 for today. Change it, and watch the number below.","number")+
    '<table class="sum"><tr class="t"><td>Our time in this project<small>'+out("commitHow")+'</small></td><td>'+out("teamCommit")+'</td></tr></table></div>'+
    pause("Read it out loud, then pass the phone. Each of you changes one thing and passes it on. Then decide together, and say it out loud.");
@@ -776,10 +776,12 @@ function coverHtml(c){
 }
 
 /* ---------- the document ---------- */
+function teamPh(){return "Team "+({1:"Blue",2:"Pink",3:"Orange",4:"Red",5:"Purple"}[S.w.card]||"");}
+function teamName(){return S.w.team||teamPh();}
 function v(s,fb){return s?esc(s):'<span class="empty">'+fb+'</span>';}
 function docHtml(c){
   var w=S.w,C=card(),mh=meetH();
-  var head='<div class="head"><div class="kind">%K%<small>'+v(w.team,"team name")+' · Situation '+w.card+': '+esc(C.title)+'</small></div><div class="meta">'+esc(w.mem.map(function(_,i){return mname(i);}).join(", "))+'<br>'+w.months+' months · '+(w.same?rate(w.rate)+' an hour for everyone':'our own rates')+'</div></div>';
+  var head='<div class="head"><div class="kind">%K%<small>'+esc(teamName())+' · Situation '+w.card+': '+esc(C.title)+'</small></div><div class="meta">'+esc(w.mem.map(function(_,i){return mname(i);}).join(", "))+'<br>'+w.months+' months · '+(w.same?rate(w.rate)+' an hour for everyone':'our own rates')+'</div></div>';
   var rows=[];
   w.parts.forEach(function(p){p.l.forEach(function(l){
     rows.push('<tr><td>'+esc(p.n||p.ph.replace(" (name it)","")||"A part of our own")+'<span class="n">'+kindWord(p.k)+'</span></td><td class="l">'+esc(lineName(l))+(l.m==="free"?' (gives time)':'')+'</td><td>'+l.h+'</td><td>'+rate(lineRate(l))+'</td><td>'+(l.m==="free"?'<span class="k2">given</span>':eur(lineAmt(l)))+'</td></tr>');});});
@@ -833,7 +835,7 @@ function update(){
     else if(k==="costTable")el.innerHTML=costTable(c);
     else if(k==="cover")el.innerHTML=coverHtml(c);
     else if(k==="checks")el.innerHTML=checkList(checks(c));
-    else if(k==="congrats")el.innerHTML=checks(c).every(function(x){return !!x[1];})?'<p class="done">Well done, '+esc(w.team||"team")+'! Every euro has a payer, and everyone\'s time is in it. Take a moment to enjoy it together.</p>':'';
+    else if(k==="congrats")el.innerHTML=checks(c).every(function(x){return !!x[1];})?'<p class="done">Well done, '+esc(teamName())+'! Every euro has a payer, and everyone\'s time is in it. Take a moment to enjoy it together.</p>':'';
     else if(k==="doc")el.innerHTML=docHtml(c);
   });
   var live=document.getElementById("live"),ck=checks(c),ok=ck.filter(function(x){return !!x[1];}).length;
@@ -863,7 +865,7 @@ function render(focus){
   var y=window.scrollY,openF=[];stage.querySelectorAll("details[open] summary").forEach(function(s){openF.push(s.textContent);});
   uid=0;stage.innerHTML=STEPS[S.step].r();
   stage.querySelectorAll("details summary").forEach(function(s){if(openF.indexOf(s.textContent)>=0)s.parentNode.open=true;});
-  document.getElementById("progress").innerHTML='<span>'+(S.step?"Step "+S.step+" of "+LAST+" · "+STEPS[S.step].t:"Start")+'</span><span>'+(S.step&&S.w.team?esc(S.w.team):(S.chosen?"Situation "+S.w.card:""))+'</span>';
+  document.getElementById("progress").innerHTML='<span>'+(S.step?"Step "+S.step+" of "+LAST+" · "+STEPS[S.step].t:"Start")+'</span><span>'+(S.step>=2?esc(teamName()):(S.chosen?"Situation "+S.w.card:""))+'</span>';
   document.getElementById("back").style.visibility=S.step===0?"hidden":"";
   var n=document.getElementById("next");n.textContent=S.step===0?"Begin":S.step===LAST?"Save as PDF":"Next";n.disabled=S.step===0&&!S.chosen;
   update();refreshLink();
@@ -937,7 +939,7 @@ function printDoc(){
   document.getElementById("printarea").innerHTML=docHtml(calc())+
     '<div class="reopen"><p><b>Reopen this in the tool.</b> Tap the link below. Everything lives in the link, not with us.</p><p><a class="linkbox" href="'+esc(u)+'">Open it in the tool, as we left it</a></p></div>';
   var prev=document.title;
-  try{document.title="Budget "+(S.w.team||"")+" situation "+S.w.card;}catch(e){}
+  try{document.title="Budget "+teamName()+" situation "+S.w.card;}catch(e){}
   var done=function(){document.title=prev;window.removeEventListener("afterprint",done);};
   window.addEventListener("afterprint",done);
   try{window.print();}catch(err){}
