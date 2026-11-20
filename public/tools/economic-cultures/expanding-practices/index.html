@@ -673,15 +673,16 @@ var STEPS=[
  }},
  {t:"Why it's worth it",r:function(){
    return heading("Step 5","Why it's worth it")+'<div data-o="congrats"></div>'+
-   '<div class="panel">'+txt("why","Why this deserves fair support","Declare what this project is to Rotterdam and her people. Make it a statement, not a request.",null,true,240)+'</div>'+sendPanel()+
+   '<div class="panel">'+txt("why","Why this deserves fair support","Declare what this project is to Rotterdam and her people. Make it a statement, not a request.",null,true,240)+'</div>'+
    '<div class="panel"><h2>Is it complete and balanced?</h2>'+out("checks")+'</div>'+receipt()+
+   '<div class="docs">'+out("doc")+'</div>'+
    '<div class="panel"><h2>Our team\'s code</h2><p><b>Your team name, first names and numbers may be shown on our archive.</b></p>'+
    '<p>Scan it with each other\'s phones, and show it to the host before you go. The code is the whole budget: nothing is kept anywhere else.</p>'+
    '<div class="qrbox" data-o="qr"></div>'+
    '<div class="row"><button class="btn primary" data-act="print">Save as a PDF</button>'+(canShare()?'<button class="btn" data-act="share">Send the link</button>':'')+'<button class="btn" data-act="copy">Copy link</button></div>'+
    '<p class="note" style="margin-top:8px" data-o="copyMsg">'+pdfHint()+'</p>'+
    '<a class="linkbox" data-o="link" target="_blank" rel="noopener"></a></div>'+
-   '<div class="docs">'+out("doc")+'</div>'+
+   sendPanel()+
    '<p class="note">More to read: <a href="https://fairpracticecode.nl/" target="_blank" rel="noopener">Fair Practice Code</a> · <a href="https://www.stimuleringsfonds.nl/" target="_blank" rel="noopener">Stimuleringsfonds, the real fund behind the rules</a> · <a href="/tags/economic-cultures/">Economic Cultures on our archive</a></p>';
  }}
 ];
