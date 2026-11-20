@@ -64,6 +64,7 @@ input[type=number]{text-align:right;font-variant-numeric:tabular-nums}
 .ln .amt{display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:var(--label);font-size:14px;font-variant-numeric:tabular-nums}
 .ln.gap{border-color:var(--ink-2);border-style:dashed}
 .flag{font-family:var(--readable);font-size:14px;color:var(--accent-text);line-height:1.4}
+.flag:empty{display:none}
 
 .part{border-bottom:1px solid #CFC8B8;padding:10px 0}
 .part:last-child{border-bottom:0}
@@ -853,6 +854,7 @@ function update(){
     else if(k==="checks")el.innerHTML=checkList(checks(c));
     else if(k==="congrats")el.innerHTML=checks(c).every(function(x){return !!x[1];})?'<p class="done">Well done, '+esc(teamName())+'! Every euro has a payer, and everyone\'s time is in it. Take a moment to enjoy it together.</p>':'';
     else if(k==="doc")el.innerHTML=docHtml(c);
+    else if(k==="sendhint")el.textContent=sendHint();
   });
   var live=document.getElementById("live"),ck=checks(c),ok=ck.filter(function(x){return !!x[1];}).length;
   if(S.step===0)live.innerHTML="";
@@ -877,7 +879,7 @@ function sendPanel(){
   if(!sendOpen())return "";
   var h='<div class="panel send"><h2>The live report</h2>';
   if(SENDST.state==="done")return h+'<p class="status ok">'+esc(SENDST.msg)+'</p><div class="row"><button class="btn small" data-act="sendask">Changed something? Send it again</button></div></div>';
-  if(!SENDST.open)return h+(String(S.w.why||"").trim()?'':'<p class="flag">Write your claim above first: it is what the room reads.</p>')+'<div class="row"><button class="btn primary" data-act="sendask">Send to the live report</button></div></div>';
+  if(!SENDST.open)return h+'<p class="flag" data-o="sendhint">'+sendHint()+'</p>'+'<div class="row"><button class="btn primary" data-act="sendask">Send to the live report</button></div></div>';
   h+='<div class="consent"><p><b>What happens when you send</b></p><ul>'+
     '<li>We receive your team\'s code: your team name, your first names, your budget and your claim, exactly as in this tool.</li>'+
     '<li>It shows in the live report on the screen in this room, beside the other teams.</li>'+
@@ -887,6 +889,7 @@ function sendPanel(){
   if(SENDST.state==="fail")h+='<p class="status">'+esc(SENDST.msg)+' <a href="'+esc(formUrl())+'" target="_blank" rel="noopener">Send it through our form instead</a>, or show your code to the host.</p>';
   return h+'<div class="row"><button class="btn primary" data-act="sendgo">Send</button><button class="btn" data-act="sendno">Not now</button></div></div>';
 }
+function sendHint(){return String(S.w.why||"").trim()?"":"Write your claim above first: it is what the room reads.";}
 function sendGo(){
   if(!SEND.endpoint){SENDST.open=false;SENDST.state="";render(false);try{window.open(formUrl(),"_blank","noopener");}catch(e){location.href=formUrl();}return;}
   SENDST.state="sending";render(false);
