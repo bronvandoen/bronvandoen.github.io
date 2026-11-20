@@ -1,0 +1,805 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Budget your ambition, together · live report, 21 November 2026</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:wght@400;600&family=Big+Shoulders+Display:wght@800;900&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* The tools' sheet: riso on paper, baseline Blue + Bright Red and black. Teams carry their pawn colour; payers stay in ink. */
+:root{
+  --paper:#F7F3EA; --paper-raised:#FBF8F1; --ink:#111111; --ink-soft:#4A463F; --line:#CFC8B8;
+  --ink-1:#0078BF; --ink-2:#F15060; --eyebrow-ink:#3D5588; --accent-text:#B8293A;
+  --display:"Big Shoulders Display","Oswald","Arial Narrow",sans-serif;
+  --text:"Source Serif 4",Georgia,serif;
+  --readable:"Atkinson Hyperlegible Next",Verdana,sans-serif;
+  --label:"Atkinson Hyperlegible Mono","Courier New",monospace;
+  --p1:#0078BF; --p2:#FF48B0; --p3:#FF6C2F; --p4:#F15060; --p5:#765BA7;
+  --pay-f:#111111; --pay-r:#8C8472; --pay-o:#FBF8F1;
+  --u:clamp(10px,0.8vw,22px);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink)}
+body{font-family:var(--text);font-size:calc(var(--u)*1.6);line-height:1.45;padding:calc(var(--u)*2.4) calc(var(--u)*3) calc(var(--u)*8)}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+button{font:inherit;color:inherit}
+.eyebrow{font-family:var(--display);font-weight:800;font-size:calc(var(--u)*1.5);letter-spacing:.08em;color:var(--eyebrow-ink);text-transform:uppercase;margin:0 0 calc(var(--u)*.6)}
+.over{position:relative;margin:0}
+.over h1,.over .ghost{font-family:var(--display);font-weight:900;font-size:calc(var(--u)*6.4);line-height:.88;text-transform:uppercase;margin:0;mix-blend-mode:multiply;text-wrap:balance}
+.over h1{position:relative;color:var(--ink-1)}
+.over .ghost{position:absolute;left:.05em;top:.05em;color:var(--ink-2)}
+.label{font-family:var(--label);font-size:calc(var(--u)*1.1);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.soft{color:var(--ink-soft)}
+
+/* ---------- the frame ---------- */
+.head{display:grid;grid-template-columns:1.25fr 1fr;gap:calc(var(--u)*3);align-items:end;border-bottom:3px solid var(--ink);padding-bottom:calc(var(--u)*1.6)}
+.purpose{font-size:calc(var(--u)*1.7);margin:0}
+.tally{font-family:var(--display);font-weight:900;font-size:calc(var(--u)*3.2);line-height:1;text-transform:uppercase;margin:calc(var(--u)*1.2) 0 0}
+.tally small{display:block;font-family:var(--label);font-weight:400;font-size:calc(var(--u)*1.1);text-transform:none;letter-spacing:0;color:var(--ink-soft);margin-top:calc(var(--u)*.5)}
+.stance{display:grid;grid-template-columns:1.6fr 1fr;gap:calc(var(--u)*3);align-items:end;margin:calc(var(--u)*2) 0}
+.stance .big{font-family:var(--display);font-weight:900;font-size:calc(var(--u)*4);line-height:.95;text-transform:uppercase;color:var(--ink-1);margin:0;text-wrap:balance}
+.stance .fine{font-size:calc(var(--u)*1.45);line-height:1.45;margin:0;border-left:3px solid var(--ink);padding-left:calc(var(--u)*1.2)}
+
+/* ---------- the plans side by side ---------- */
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(calc(var(--u)*30),1fr));gap:calc(var(--u)*1.6);margin:calc(var(--u)*1.2) 0 calc(var(--u)*2.4)}
+.plan{position:relative;text-align:left;background:var(--paper-raised);border:3px solid var(--ink);padding:0;cursor:pointer;display:flex;flex-direction:column}
+.plan .head2,.plan .in{width:100%;align-self:stretch}
+.plan .head2{display:flex;flex-direction:column;gap:calc(var(--u)*.4);background:var(--pc);color:var(--on);padding:calc(var(--u)*1.1) calc(var(--u)*1.4) calc(var(--u)*1)}
+.plan .in{padding:calc(var(--u)*1.2) calc(var(--u)*1.4) calc(var(--u)*1.4);display:flex;flex-direction:column;gap:calc(var(--u)*.8);flex:1}
+.plan .team{font-family:var(--display);font-weight:900;font-size:calc(var(--u)*2.6);line-height:.95;text-transform:uppercase}
+.plan .claim{font-size:calc(var(--u)*1.7);line-height:1.3;flex:1}
+.plan .k{display:block;font-family:var(--label);font-size:calc(var(--u)*.95);font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);margin-bottom:calc(var(--u)*.3)}
+.plan .makes .m{display:block;font-family:var(--readable);font-weight:600;font-size:calc(var(--u)*1.35);line-height:1.3}
+.plan .funds{border-top:2px solid var(--ink);padding-top:calc(var(--u)*.6)}
+.plan .funds .f{display:flex;justify-content:space-between;gap:calc(var(--u)*1);font-family:var(--readable);font-size:calc(var(--u)*1.25);line-height:1.35;border-bottom:1px solid var(--line);padding:calc(var(--u)*.2) 0}
+.plan .funds .f b{font-family:var(--label);font-weight:600}
+.plan .funds .f.none{color:var(--accent-text)}
+.plan .k .nb{color:var(--accent-text)}
+.plan .who{font-family:var(--label);font-size:calc(var(--u)*1.05);color:var(--ink-soft)}
+.plan .open{font-family:var(--label);font-size:calc(var(--u)*1.05)}
+.plan .open b{color:var(--accent-text)}
+.plan.new{animation:land 1.2s ease-out both}
+.plan.new::after{content:"New";position:absolute;top:calc(var(--u)*1.6);right:calc(var(--u)*1.2);font-family:var(--label);font-size:calc(var(--u)*1);font-weight:600;background:var(--ink);color:var(--paper);padding:.15em .5em}
+@keyframes land{from{opacity:0;transform:translateY(calc(var(--u)*2))}to{opacity:1;transform:none}}
+.empty{border:3px dashed var(--line);padding:calc(var(--u)*3);font-family:var(--label);font-size:calc(var(--u)*1.3);color:var(--ink-soft);text-align:center}
+
+/* ---------- the money bar (one scale for every plan, so they compare) ---------- */
+.bar{position:relative;margin-top:calc(var(--u)*1.6)}
+.bar.big{margin-top:calc(var(--u)*4)}
+.bar .mark.right span{left:auto;right:4px}
+.bar .track{position:relative;height:var(--bh,calc(var(--u)*2.2));display:flex}
+.bar .seg{height:100%;border:2px solid var(--ink);margin-left:-2px;flex:none}
+.bar .seg:first-child{margin-left:0}
+.bar .seg.f{background:var(--pay-f)}
+.bar .seg.r{background:var(--pay-r)}
+.bar .seg.o{background:var(--pay-o)}
+.bar .seg.x{background:repeating-linear-gradient(45deg,var(--ink-2) 0 4px,var(--paper) 4px 9px);border-color:var(--accent-text)}
+.bar .seg.g{background:repeating-linear-gradient(90deg,transparent 0 6px,var(--line) 6px 8px);border-style:dashed;border-color:var(--ink-soft)}
+.bar .mark{position:absolute;top:calc(var(--u)*-1.2);bottom:calc(var(--u)*-.4);border-left:2px dashed var(--ink-2);pointer-events:none}
+.bar .mark span{position:absolute;top:0;left:4px;transform:translateY(-100%);font-family:var(--label);font-size:calc(var(--u)*.95);white-space:nowrap;color:var(--accent-text)}
+.bar .mark.p20{border-left:2px solid var(--ink-1)}
+.bar .mark.p20 span{color:var(--ink-1);top:auto;bottom:0;transform:translateY(100%)}
+.bar .scale{display:flex;justify-content:space-between;font-family:var(--label);font-size:calc(var(--u)*.9);color:var(--ink-soft);margin-top:calc(var(--u)*1.3)}
+
+/* ---------- the four points ---------- */
+.points{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(var(--u)*1.6);border-top:3px solid var(--ink);padding-top:calc(var(--u)*1.4)}
+.point .no{font-family:var(--display);font-weight:900;font-size:calc(var(--u)*4);line-height:.8;color:var(--ink-1)}
+.point h2{font-family:var(--display);font-weight:900;font-size:calc(var(--u)*2.4);line-height:.95;text-transform:uppercase;margin:calc(var(--u)*.4) 0 calc(var(--u)*.6)}
+.point p{font-size:calc(var(--u)*1.45);margin:0 0 calc(var(--u)*.5)}
+.point .ev{font-family:var(--readable);font-size:calc(var(--u)*1.3)}
+.strip{position:relative;height:calc(var(--u)*5);margin:calc(var(--u)*1.6) 0 calc(var(--u)*.4);border-bottom:2px solid var(--ink)}
+.strip .dot{position:absolute;bottom:0;width:calc(var(--u)*1.3);height:calc(var(--u)*1.3);border-radius:50%;background:var(--pc);border:2px solid var(--ink);transform:translate(-50%,50%)}
+.strip .tick{position:absolute;bottom:0;top:0;border-left:2px dashed var(--ink-2)}
+.strip .tick span{position:absolute;top:0;left:4px;font-family:var(--label);font-size:calc(var(--u)*.95);color:var(--accent-text);white-space:nowrap}
+
+/* ---------- one plan, full size ---------- */
+.full{display:none}
+body.open .overview{display:none}
+body.open .full{display:block}
+.full .top{display:grid;grid-template-columns:1.1fr 1fr;gap:calc(var(--u)*3);padding-top:calc(var(--u)*1.6)}
+.phead{background:var(--pc);color:var(--on);padding:calc(var(--u)*1.2) calc(var(--u)*1.6) calc(var(--u)*1.4)}
+.phead h1{font-family:var(--display);font-weight:900;font-size:calc(var(--u)*6);line-height:.9;text-transform:uppercase;margin:calc(var(--u)*.4) 0 0}
+.full .claim{font-family:var(--display);font-weight:900;font-size:calc(var(--u)*4.4);line-height:.95;text-transform:uppercase;margin:calc(var(--u)*.6) 0 calc(var(--u)*1.2)}
+.full .stmt{font-size:calc(var(--u)*1.8);font-style:italic;margin:0 0 calc(var(--u)*1.2)}
+.people{display:flex;flex-wrap:wrap;gap:calc(var(--u)*.8)}
+.person{border:2px solid var(--ink);background:var(--paper-raised);padding:calc(var(--u)*.5) calc(var(--u)*.9);font-family:var(--readable);font-size:calc(var(--u)*1.25);line-height:1.3}
+.person b{display:block;font-family:var(--display);font-weight:900;font-size:calc(var(--u)*1.9);text-transform:uppercase;line-height:1}
+.sec{margin-top:calc(var(--u)*2)}
+.sec h3{font-family:var(--display);font-weight:900;font-size:calc(var(--u)*2.1);text-transform:uppercase;margin:0 0 calc(var(--u)*.5);line-height:1}
+.sec h3 .no{color:var(--ink-1);margin-right:.3em}
+.payers{display:grid;gap:calc(var(--u)*.4);margin-top:calc(var(--u)*2.4)}
+.payer{display:grid;grid-template-columns:calc(var(--u)*1.6) 1fr auto;gap:calc(var(--u)*.8);align-items:baseline;font-family:var(--readable);font-size:calc(var(--u)*1.25)}
+.payer i{display:inline-block;width:calc(var(--u)*1.4);height:calc(var(--u)*1.4);border:2px solid var(--ink);vertical-align:middle}
+.payer .amt{font-family:var(--label);white-space:nowrap}
+.payer small{display:block;color:var(--ink-soft);font-size:.85em}
+table.work{border-collapse:collapse;width:100%;font-family:var(--readable);font-size:calc(var(--u)*1.2)}
+table.work th{font-family:var(--label);font-weight:600;font-size:calc(var(--u)*.95);text-transform:uppercase;text-align:left;padding:calc(var(--u)*.3) calc(var(--u)*.4);border-bottom:2px solid var(--ink)}
+table.work td{padding:calc(var(--u)*.35) calc(var(--u)*.4);border-bottom:1px solid var(--line);vertical-align:middle}
+table.work td.h{width:15%}
+table.work .cellbar{height:calc(var(--u)*1.1);background:var(--ink);display:block;margin-bottom:2px}
+table.work .cellbar.lead{background:var(--ink-1)}
+table.work .n{font-family:var(--label);font-size:calc(var(--u)*.95)}
+table.work tr.nobody td:first-child{color:var(--accent-text);font-weight:600}
+table.work tr.nobody .cellbar{background:repeating-linear-gradient(45deg,var(--ink-2) 0 4px,var(--paper) 4px 9px)}
+table.work tr.gives .cellbar{background:repeating-linear-gradient(90deg,var(--ink-soft) 0 6px,transparent 6px 8px)}
+.reading{font-family:var(--readable);font-size:calc(var(--u)*1.3);margin-top:calc(var(--u)*.6)}
+ul.open{list-style:none;padding:0;margin:0}
+ul.open li{font-family:var(--readable);font-size:calc(var(--u)*1.35);padding:calc(var(--u)*.5) 0 calc(var(--u)*.5) calc(var(--u)*2);border-bottom:1px solid var(--line);position:relative}
+ul.open li::before{content:"";position:absolute;left:0;top:calc(var(--u)*.85);width:calc(var(--u)*1);height:calc(var(--u)*1);border:2px solid var(--accent-text)}
+ul.open li.held::before{background:var(--ink);border-color:var(--ink)}
+.question{border:3px solid var(--ink);background:var(--paper-raised);padding:calc(var(--u)*1) calc(var(--u)*1.2);font-size:calc(var(--u)*1.5);margin-top:calc(var(--u)*1)}
+.given{font-family:var(--readable);font-size:calc(var(--u)*1.3)}
+.given b{font-family:var(--label)}
+
+/* ---------- the host's line ---------- */
+
+
+/* ---------- one bar: top on a screen or laptop, bottom (thumb) on a phone ---------- */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:5;display:flex;align-items:center;gap:calc(var(--u)*1.2);background:var(--paper);border-top:2px solid var(--ink);
+  padding:calc(var(--u)*.5) calc(var(--u)*3) calc(calc(var(--u)*.5) + env(safe-area-inset-bottom));min-height:calc(44px + var(--u))}
+.nav .mark{font-family:var(--display);font-weight:900;font-size:calc(var(--u)*1.7);line-height:1;color:var(--ink);text-decoration:none;white-space:nowrap}
+.nav .mark:hover{text-decoration:underline}
+.nav .mark small{font-family:var(--label);font-weight:400;font-size:calc(var(--u)*1);color:var(--ink-soft);margin-left:.6em;letter-spacing:.02em}
+.nav .ctx{flex:1;display:flex;align-items:center;justify-content:flex-start;gap:calc(var(--u)*.6);min-width:0}
+.nav .where{font-family:var(--label);font-size:calc(var(--u)*1.1);padding:0 calc(var(--u)*.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav button{min-height:44px;min-width:44px;border:2px solid var(--ink);background:var(--paper-raised);padding:0 calc(var(--u)*1);cursor:pointer;font-family:var(--label);font-size:calc(var(--u)*1.05);font-weight:600;white-space:nowrap}
+.nav button[aria-pressed="true"],.nav button.back{background:var(--ink);color:var(--paper)}
+.nav .seg2{display:flex}
+.nav .seg2 button+button{margin-left:-2px}
+.nav .live{font-family:var(--label);font-size:calc(var(--u)*.95);color:var(--ink-soft);white-space:nowrap}
+.nav .live .dot{display:inline-block;width:.7em;height:.7em;border-radius:50%;background:var(--ink-1);margin-right:.4em;vertical-align:baseline}
+.nav .live.warn{color:var(--accent-text)}
+.nav .live.warn .dot{background:var(--accent-text)}
+.nav .s{display:none}
+body.screen .nav .ctx,body.screen .nav .live{opacity:.15;transition:opacity .3s}
+body.screen .nav:hover .ctx,body.screen .nav:hover .live,body.screen .nav:focus-within .ctx,body.screen .nav:focus-within .live{opacity:1}
+
+@media (max-width:820px){
+  :root{--u:10px}
+  body{font-size:16px;padding:16px 16px 120px}
+  .head,.stance,.full .top{grid-template-columns:1fr}
+  .points{grid-template-columns:1fr}
+  .nav{padding:8px 12px calc(8px + env(safe-area-inset-bottom));gap:8px}
+  .nav .mark{font-size:16px}
+  .nav .mark small,.nav .live:not(.warn),.nav .l{display:none}
+  .nav .s{display:inline}
+  .nav .ctx{justify-content:flex-end;gap:6px}
+  .nav button{padding:0 10px}
+  .nav .where{padding:0 2px}
+  .over h1,.over .ghost{font-size:48px}
+}
+@media (max-width:480px){.points{grid-template-columns:1fr}}
+.stance.close{margin-top:calc(var(--u)*3);border-top:3px solid var(--ink);padding-top:calc(var(--u)*1.6)}
+@media (prefers-reduced-motion:reduce){.plan.new{animation:none}}
+
+/* ---------- the credit (variant: footer + bar) ---------- */
+.credit{display:grid;grid-template-columns:1fr 2fr;gap:calc(var(--u)*3);margin-top:calc(var(--u)*4);border-top:3px solid var(--ink);padding-top:calc(var(--u)*1.6)}
+.credit .who{font-family:var(--display);font-weight:900;font-size:calc(var(--u)*3);line-height:.95;margin:0}
+.credit .who span{display:block;font-family:var(--label);font-weight:400;font-size:calc(var(--u)*1.05);color:var(--ink-soft);margin-top:calc(var(--u)*.6)}
+.credit p{font-size:calc(var(--u)*1.35);margin:0 0 calc(var(--u)*.8)}
+.credit a{color:var(--ink)}
+.credit .links{font-family:var(--readable);font-weight:600}
+.credit .links a{margin-right:calc(var(--u)*1.6)}
+.credit .lic{font-family:var(--label);font-size:calc(var(--u)*.95);color:var(--ink-soft)}
+@media (max-width:820px){.credit{grid-template-columns:1fr;gap:12px}}
+
+/* ---------- final pass: order, cards, points, close ---------- */
+.head{align-items:end;margin-bottom:calc(var(--u)*1.6)}
+.over h1,.over .ghost{font-size:calc(var(--u)*5.6)}
+.purpose{font-size:calc(var(--u)*1.6)}
+.tally{font-size:calc(var(--u)*2.6);margin-top:calc(var(--u)*.9)}
+.plans{grid-auto-rows:auto;row-gap:calc(var(--u)*1.6);margin-top:0}
+.plan{display:grid;grid-template-rows:subgrid;grid-row:span 6;row-gap:0;color:var(--ink);font:inherit}
+.plan:hover{box-shadow:0 0 0 2px var(--ink)}
+.plan>*{padding-left:calc(var(--u)*1.4);padding-right:calc(var(--u)*1.4)}
+.plan .head2{padding-top:calc(var(--u)*1.1);padding-bottom:calc(var(--u)*1)}
+.plan .claim{margin:0;padding-top:calc(var(--u)*1.2);padding-bottom:calc(var(--u)*.8)}
+.plan .makes{padding-bottom:calc(var(--u)*.8)}
+.plan .k{font-size:calc(var(--u)*1.05)}
+.plan .funds{border-top:0;padding-top:0}
+.plan .funds>.k{border-top:2px solid var(--ink);padding-top:calc(var(--u)*.6)}
+.plan .funds .f.g{color:var(--ink-soft)}
+.plan .checks{list-style:none;margin:0;padding-top:calc(var(--u)*.8);padding-bottom:calc(var(--u)*.6);display:grid;gap:calc(var(--u)*.35)}
+.plan .checks li{display:grid;grid-template-columns:calc(var(--u)*1.6) calc(var(--u)*1.3) 1fr;align-items:center;gap:calc(var(--u)*.5);font-family:var(--readable);font-size:calc(var(--u)*1.2);line-height:1.25}
+.plan .checks b{font-family:var(--display);font-weight:900;font-size:calc(var(--u)*1.6);color:var(--ink-1);line-height:1}
+.plan .checks i{width:calc(var(--u)*1.1);height:calc(var(--u)*1.1);border:2px solid var(--accent-text)}
+.plan .checks li.ok i{background:var(--ink);border-color:var(--ink)}
+.plan .checks li.gap span{color:var(--accent-text)}
+.plan .who{margin:0;font-family:var(--readable);font-size:calc(var(--u)*1.2);line-height:1.35;color:var(--ink);border-top:1px solid var(--line);padding-top:calc(var(--u)*.6);padding-bottom:calc(var(--u)*1.2)}
+.plan .who b{font-weight:600}
+.points{margin-top:calc(var(--u)*2.4)}
+.point{display:flex;flex-direction:column}
+.strip{height:auto;margin:calc(var(--u)*1.2) 0 calc(var(--u)*.4);border-bottom:0}
+.strip .field{position:relative;height:calc(var(--u)*5.2);border-bottom:2px solid var(--ink)}
+.strip .dot{bottom:var(--row,0)}
+.strip .tick span{top:0;font-size:calc(var(--u)*1)}
+.strip .ends{display:flex;justify-content:space-between;font-family:var(--label);font-size:calc(var(--u)*.95);color:var(--ink-soft);margin-top:calc(var(--u)*.9)}
+.strip .cap{font-family:var(--label);font-size:calc(var(--u)*.95);color:var(--ink-soft);margin-top:calc(var(--u)*.2)}
+.close{display:grid;grid-template-columns:1.6fr 1fr;gap:calc(var(--u)*1.6) calc(var(--u)*3);align-items:end;margin-top:calc(var(--u)*3);border-top:3px solid var(--ink);padding-top:calc(var(--u)*2)}
+.close .big{font-family:var(--display);font-weight:900;font-size:calc(var(--u)*3.6);line-height:.95;text-transform:uppercase;color:var(--ink-1);margin:0;text-wrap:balance}
+.close .answer{font-family:var(--display);font-weight:900;font-size:calc(var(--u)*4.4);line-height:.95;text-transform:uppercase;color:var(--accent-text);margin:0}
+.close .fine{font-size:calc(var(--u)*1.45);line-height:1.45;margin:0;border-left:3px solid var(--ink);padding-left:calc(var(--u)*1.2)}
+.legend{display:flex;flex-wrap:wrap;gap:calc(var(--u)*.4) calc(var(--u)*1.6);font-family:var(--label);font-size:calc(var(--u)*.95);color:var(--ink-soft);margin-top:calc(var(--u)*.8)}
+.legend span::before{content:"";display:inline-block;width:0;height:1em;border-left:2px dashed var(--ink-2);margin-right:.5em;vertical-align:-.15em}
+.legend span.p20::before{border-left:2px solid var(--ink-1)}
+.bar .mark.p20 span{display:none}
+.lead-note{border-left:4px solid var(--ink-1);background:var(--paper-raised);padding:calc(var(--u)*.7) calc(var(--u)*1);font-family:var(--readable);font-size:calc(var(--u)*1.4);margin-top:calc(var(--u)*.8)}
+.lead-note b{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:1.25em;letter-spacing:.01em}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.full .top>div,.point,.plans>*{min-width:0}
+.strip .tick.r span{left:auto;right:4px;text-align:right}
+.strip{overflow:visible}
+.strip .tick.low span{top:1.5em}
+@media (max-width:820px){
+  .over h1,.over .ghost{font-size:44px}
+  .tally{font-size:28px}
+  .plan{grid-row:auto;display:flex;flex-direction:column}
+  .close{grid-template-columns:1fr}
+  .close .big{font-size:34px}.close .answer{font-size:40px}
+  .bar .mark span{display:none}
+  body.open .nav .ctx{justify-content:space-between}
+  table.work{min-width:560px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav" aria-label="This live report"></nav>
+<div class="overview" id="overview"></div>
+<div class="full" id="full"></div>
+<footer class="credit" id="credit">
+  <p class="who">a Situated Studio<span>Eindhoven</span></p>
+  <div>
+    <p>Economic Cultures is a programme by a Situated Studio, Minsung Wang and Gemma Medina, about money for starting creatives: workshops, open tools and a shared publication. This edition ran at Expanding Practices, Nieuwe Instituut, Rotterdam, on 21 November 2026, hosted by Minsung Wang.</p>
+    <p>The plans, names and claims are the teams' own. Fonds Lef is an imaginary fund; its rules follow the Stimuleringsfonds' Regeling Vormgeving.</p>
+    <p class="links"><a href="https://bronvandoen.github.io/tags/economic-cultures/">The slides, tools and essays of Economic Cultures</a><a href="https://bronvandoen.github.io/tools/economic-cultures/expanding-practices/">Budget your own ambition</a></p>
+    <p class="lic">Texts CC BY 4.0, a Situated Studio (Bron van Doen V.O.F.). Code MIT.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+/* ===== the tool's own code, copied at build time from /tools/economic-cultures/expanding-practices/ (data, decoding, arithmetic) ===== */
+var LAST=5, HOURS_PER_DAY=8, WEEKS_PER_MONTH=4.33, STORE="ec-expanding-practices";
+var LEAD_SHARE=0.25, ALSO_SHARE=0.25, CARRY_SHARE=0.6, MAX_MEMBERS=5, MIN_MEMBERS=3, MAX_PARTS=12, MAX_OTHERS=3, MAX_INK=4;
+var FUND={name:"Fonds Lef",sub:"an imaginary national fund for the creative industries",max:50000,min:20,cap:82.5};
+
+var KINDS=[["lead","Leading","leading"],["prod","Organising","organising"],["res","Researching","researching"],["make","Making","making"],["host","Gathering","gathering"]];
+var KIND_KEYS=KINDS.map(function(k){return k[0];});
+function kindName(k){for(var i=0;i<KINDS.length;i++)if(KINDS[i][0]===k)return KINDS[i][1];return "";}
+function kindWord(k){for(var i=0;i<KINDS.length;i++)if(KINDS[i][0]===k)return KINDS[i][2];return "";}
+
+/* ---------- the five situation cards: hypotheticals inspired by real situations in Rotterdam ---------- */
+/* Six starter parts for every situation: three named plainly, three for the team to name */
+function M(o1,o2,res,space,print,gat){return [["",o1,"Materials for our outcome, part 1 (name it)"],["",o2,"Materials for our outcome, part 2 (name it)"],["Research costs: access, fees, rights",res],["Space and equipment",space],["Printing and publicity",print],["Gathering: food, drinks, a venue",gat]];}
+function P(lead,org,res,m1,m2,gat){return [["Partner talks and decisions","lead",lead],["Planning, money and logistics","prod",org],["Research, fieldwork and writing","res",res],
+  ["","make",m1,"Our outcome, part 1 (name it)"],["","make",m2,"Our outcome, part 2 (name it)"],["","host",gat,"Bringing people together (name it)"]];}
+var CARDS={
+ 1:{title:"What the harbour remembers",lead:"The harbour is becoming a neighbourhood.",body:"Most of the people who worked here have already moved on; a few stay until the end. What should the new neighbourhood carry on from them?",
+    start:"We research what the harbour remembers, with the people who worked on its docks, and those who still do, and decide whether, and how, that memory has a place in the neighbourhood to come.",half:[],reg:"The municipality's area development",
+    parts:P(110,110,220,120,80,100),
+    mat:M(2500,1500,3500,1500,1000,1500),regPay:["p5","t5"],
+    ink:[["Archive access and a desk to work at",0,"The city archive"]],
+    partners:[["The port company","Its history is on these docks, and its name is on the new plans."],["A housing corporation","It builds the new homes, and wants neighbours who know where they live."],["A heritage foundation","It pays for what a city chooses to remember."],["A university of applied sciences","Its students need real fieldwork, and its researchers need sources."],["A brewery in an old shed","Its customers come for the harbour's story."]]},
+ 2:{title:"The empty shop",lead:"The city bought empty shop buildings to bring a shopping street back to life.",body:"One unit is yours, rent-free, for six months. After that, it goes to whoever can pay. What opens there, and how do you run it?",
+    start:"We open the empty unit for six months with the people of the street, and decide whether what we have started can stay when the rent comes back.",half:[],reg:"The municipality, as owner",
+    parts:P(110,90,80,160,100,200),
+    mat:M(3000,2000,300,1800,1200,1700),regPay:["t3","t4","t5"],
+    partners:[["The shopkeepers' association","A busy unit brings people to their doors too."],["A cooperative bank's local fund","It backs what keeps a street alive."],["A fashion label from the city","It wants a shop window that isn't an advert."],["A housing corporation","Its tenants live above these shops."]],
+    ink:[["The shop unit, rent-free for six months",0,"The municipality, as owner"]]},
+ 3:{title:"300 stalls later",lead:"Twice a week, 300 stalls fill a square in Zuid.",body:"By evening the stallholders have packed up, and thousands of kilos of leftover crates, fabric and fruit wait to be taken away. What if it didn't all have to go?",
+    start:"We give what the market leaves behind a value of its own, decide who does the work, and who benefits.",half:[],reg:"Cultuurfonds Zuid-Holland",
+    parts:P(100,80,120,170,110,160),
+    mat:M(2500,1500,300,3200,1000,1200),regPay:["p4"],
+    partners:[["The city's cleaning service","Less waste on the square is less work for them."],["The stallholders' association","What is left over at closing time costs them money."],["A neighbourhood cooperative","It turns leftovers into paid work."],["A vocational school","Its students learn a trade with real material."]],ink:[["Storage for what we collect, between market days",0,"The market organisation"]]},
+ 4:{title:"The next hot summer",lead:"Last summer was the hottest yet.",body:"About one in three Rotterdammers can't find a cool place at home or nearby. Many neighbours grew up with heat and know how to live with it. How, and where, does the neighbourhood keep cool next summer?",
+    start:"We learn how neighbours who grew up with heat keep cool, and decide with them how, and where, the neighbourhood keeps cool next summer.",half:[],reg:"The municipality's climate programme",
+    parts:P(110,80,160,160,100,130),
+    mat:M(3500,1500,500,1500,1000,1500),regPay:["t0","t3","t5"],
+    partners:[["A housing corporation","Hot flats are its problem too."],["The health service","Heat sends people to hospital."],["The water board","Shade and water are its daily work."],["The library","It is already one of the coolest rooms in the neighbourhood."]],ink:[["The hall for cool afternoons, on the hottest days",0,"The community centre"]]},
+ 5:{title:"Work that counts",lead:"In Zuid, many people have no steady income, and much of what keeps the neighbourhood going is never paid: cooking, mending, caring, translating.",body:"For some, earning more means losing their benefits; others aren't allowed to earn at all. What could the neighbourhood do differently, so people here can live a decent life?",
+    start:"We open an atelier in Zuid where what residents make and do is shown, traded or paid, and decide how that work builds a decent life for everyone here.",half:[],reg:"The municipality, with the National Programme Rotterdam Zuid",
+    parts:P(100,100,120,130,90,200),
+    mat:M(2000,1000,500,3500,1000,1000),regPay:["t3","t4","t5"],
+    partners:[["A vocational college","Its teachers know the talent; the jobs are elsewhere."],["Local businesses","They need these skills, and can't find them."],["A housing corporation","Tenants with work can pay their rent."],["A neighbourhood cooperative","It can pay where others can't take an invoice."]],ink:[["Sewing machines and a kitchen, on loan",0,"The neighbourhood centre"]]}
+};
+var CARD_KEYS=["1","2","3","4","5"];
+
+function copy(o){return JSON.parse(JSON.stringify(o));}
+function Mb(){return {n:"",d:"",b:"",days:1,r:55};}
+function Ln(m,h){return {m:m,h:h||0,nm:"",r:0,pay:"f"};}
+function base(c){
+  var k=CARDS[c]?String(c):"1",C=CARDS[k];
+  return {card:k,team:"",sent:C.start,why:"",months:6,rate:55,same:true,
+    mem:[Mb(),Mb(),Mb(),Mb()],meet:{e:2,h:2,pay:"f"},
+    parts:C.parts.map(function(p){return {n:p[0],k:p[1],ph:p[3]||"",l:[Ln("none",p[2])]};}),
+    mat:C.mat.map(function(m){return {d:m[0],a:m[1],ph:m[2]||"",pay:"f"};}),
+    reg:{n:C.reg},oth:[{n:""}],
+    ink:C.ink?C.ink.map(function(x){return {d:x[0],a:x[1],g:x[2]};}):null};
+}
+function preset(c){
+  var w=base(c);
+  (CARDS[w.card].regPay||[]).forEach(function(ref){var i=+ref.slice(1);if(ref.charAt(0)==="p"&&w.parts[i])w.parts[i].l[0].pay="r";if(ref.charAt(0)==="t"&&w.mat[i])w.mat[i].pay="r";});
+  return w;
+}
+
+/* ---------- state ---------- */
+var S={step:0,w:null,chosen:false};
+function set(path,val){var ks=path.split("."),o=S.w;for(var i=0;i<ks.length-1;i++){o=o[ks[i]];if(o==null)return;}o[ks[ks.length-1]]=val;}
+function get(path){return path.split(".").reduce(function(o,k){return o==null?undefined:o[k];},S.w);}
+function isMember(l){return typeof l.m==="number";}
+function mname(i){var m=S.w.mem[i];return m&&m.n?m.n:"Member "+(i+1);}
+function card(){return CARDS[S.w.card];}
+function first(i){var m=S.w.mem[i];return m&&m.n?m.n.split(" ")[0]:"Member "+(i+1);}
+
+/* ---------- the link carries the result: only what differs from the card, deflated ---------- */
+function b64u(bytes){var bin="";for(var i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);return btoa(bin).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");}
+function unb64u(str){var b=str.replace(/-/g,"+").replace(/_/g,"/");while(b.length%4)b+="=";var bin=atob(b),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return u;}
+function packLine(l){var a=[l.m==="none"?"x":l.m==="paid"?"p":l.m==="free"?"g":l.m,l.h];if(l.nm||l.r||l.pay!=="f"){a.push(l.nm,l.r);}if(l.pay!=="f")a.push(l.pay);return a;}
+function unpackLine(a){if(!Array.isArray(a))return Ln("none",0);var m=a[0]==="x"?"none":a[0]==="p"?"paid":a[0]==="g"?"free":a[0];return {m:m,h:a[1],nm:a[2]||"",r:a[3]||0,pay:a[4]||"f"};}
+function payOk(p,w){w=w||S.w;return p==="f"||p==="r"||(/^o\d$/.test(p)&&+p.charAt(1)<w.oth.length);}
+function pack(){
+  var w=S.w,p=preset(w.card),o={c:w.card};
+  ["team","why"].forEach(function(k){if(w[k])o[k]=w[k];});
+  if(w.sent!==p.sent)o.sent=w.sent;
+  if(w.months!==p.months)o.mo=w.months;
+  if(w.rate!==p.rate)o.ra=w.rate;
+  if(!w.same)o.sa=0;
+  if(w.meet.e!==p.meet.e||w.meet.h!==p.meet.h)o.me=[w.meet.e,w.meet.h];
+  if(w.meet.pay!=="f")o.mp=w.meet.pay;
+  o.m=w.mem.map(function(m){var a=[m.n,m.d,m.b,m.days];if(!w.same)a.push(m.r);return a;});
+  o.p=w.parts.map(function(pt,i){var q=p.parts[i],a=[pt.l.map(packLine)];if(!q||q.n!==pt.n||q.k!==pt.k)a.push(pt.n,pt.k);return a;});
+  if(JSON.stringify(w.mat)!==JSON.stringify(p.mat))o.t=w.mat.map(function(m,i){var q=p.mat[i];return q&&q.d===m.d&&q.a===m.a&&q.pay===m.pay&&q.ph===m.ph?0:[m.d,m.a,m.pay,m.ph];});
+  if(w.reg.n!==p.reg.n)o.rn=w.reg.n;
+  if(w.oth.length>1||w.oth[0].n)o.o=w.oth.map(function(x){return x.n;});
+  if(w.ink&&JSON.stringify(w.ink)!==JSON.stringify(p.ink))o.i=w.ink.map(function(x){return [x.d,x.a,x.g];});
+  return {v:1,t:S.step,w:o};
+}
+function num(x,max){var n=Number(x);return isFinite(n)&&n>=0?Math.min(n,max||1e7):0;}
+function str(x,n){return x==null?"":String(x).slice(0,n||300);}
+function lineOk(l,nm){var m=l.m;if(typeof m==="number"&&!(m>=0&&m<nm&&m===Math.floor(m)))m="none";if(typeof m!=="number"&&["paid","free","none"].indexOf(m)<0)m="none";
+  return {m:m,h:num(l.h,5000),nm:str(l.nm,60),r:num(l.r,1000)};}
+function unpack(snap){
+  var o=(snap&&snap.w)||{},w=preset(o.c);
+  w.team=str(o.team,40);if(o.sent!=null)w.sent=str(o.sent,240);w.why=str(o.why,240);
+  if(o.mo!=null)w.months=Math.min(24,Math.max(1,Math.round(num(o.mo))||1));
+  if(o.ra!=null)w.rate=num(o.ra,1000);
+  w.same=o.sa!==0;
+  if(Array.isArray(o.me)){w.meet.e=Math.min(8,Math.max(1,Math.round(num(o.me[0]))||1));w.meet.h=Math.min(8,num(o.me[1]));}
+  if(o.rn!=null)w.reg.n=str(o.rn,80);
+  if(Array.isArray(o.o)&&o.o.length)w.oth=o.o.slice(0,MAX_OTHERS).map(function(n){return {n:str(n,60)};});
+  if(o.mp!=null&&payOk(o.mp,w))w.meet.pay=o.mp;
+  if(Array.isArray(o.m)){var mem=o.m.slice(0,MAX_MEMBERS).map(function(a){a=Array.isArray(a)?a:[];return {n:str(a[0],40),d:str(a[1],40),b:str(a[2],80),days:Math.min(5,num(a[3])),r:a[4]!=null?num(a[4],1000):w.rate};});
+    while(mem.length<MIN_MEMBERS)mem.push(Mb());w.mem=mem;}
+  var nm=w.mem.length,pp=preset(w.card).parts;
+  if(Array.isArray(o.p))w.parts=o.p.slice(0,MAX_PARTS).map(function(a,i){a=Array.isArray(a)?a:[[]];var base=pp[i]||{n:"",k:"",ph:""};
+    var lines=(Array.isArray(a[0])?a[0]:[]).slice(0,8).map(function(x){var u=unpackLine(x),l=lineOk(u,nm);l.pay=payOk(u.pay,w)?u.pay:"f";return l;});
+    var k=a.length>2&&KIND_KEYS.indexOf(a[2])>=0?a[2]:(a.length>2?"":base.k);return {n:a.length>1?str(a[1],80):base.n,k:k,ph:k===base.k?base.ph:"",l:lines};});
+  if(Array.isArray(o.t)){var pm=preset(w.card).mat;w.mat=o.t.slice(0,20).map(function(a,i){if(a===0&&pm[i])return pm[i];a=Array.isArray(a)?a:[];return {d:str(a[0],80),a:num(a[1],1e6),pay:payOk(a[2],w)?a[2]:"f",ph:str(a[3],80)};});}
+  if(Array.isArray(o.i))w.ink=o.i.slice(0,MAX_INK).map(function(a){a=Array.isArray(a)?a:[];return {d:str(a[0],80),a:num(a[1],1e6),g:str(a[2],60)};});
+  S.w=w;S.step=Math.min(LAST,Math.max(0,Math.round(+snap.t||0)));S.chosen=true;
+}
+function canZip(){return typeof CompressionStream==="function"&&typeof DecompressionStream==="function"&&typeof Response==="function";}
+function json(){return JSON.stringify(pack());}
+function encodeSync(){return "j"+b64u(new TextEncoder().encode(json()));}
+function encodeZip(){
+  var stream=new Blob([new TextEncoder().encode(json())]).stream().pipeThrough(new CompressionStream("deflate-raw"));
+  return new Response(stream).arrayBuffer().then(function(buf){var u=new Uint8Array(buf);return canBig()?"Z"+to43(u):"z"+b64u(u);});
+}
+/* For the code: the deflated bytes in the QR's own 43-letter alphabet, about a quarter denser than base64 */
+var A43="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ$*+-./:",CH=[0,2,3,5,6,8,9,11,12];
+function canBig(){return typeof BigInt==="function";}
+function to43(bytes){var out="";for(var i=0;i<bytes.length;i+=8){var n=Math.min(8,bytes.length-i),v=BigInt(0);
+  for(var j=0;j<n;j++)v=v*BigInt(256)+BigInt(bytes[i+j]);var s="";for(var k=0;k<CH[n];k++){s=A43.charAt(Number(v%BigInt(43)))+s;v=v/BigInt(43);}out+=s;}return out;}
+function from43(str){var bytes=[],i=0;while(i<str.length){var left=str.length-i,n=8;while(n>0&&CH[n]>left)n--;if(!n)throw new Error("bad");
+  var v=BigInt(0);for(var k=0;k<CH[n];k++){var d=A43.indexOf(str.charAt(i+k));if(d<0)throw new Error("bad");v=v*BigInt(43)+BigInt(d);}
+  var chunk=[];for(var j=0;j<n;j++){chunk.unshift(Number(v%BigInt(256)));v=v/BigInt(256);}bytes=bytes.concat(chunk);i+=CH[n];}return new Uint8Array(bytes);}
+function decode(code){
+  if(code.charAt(0)==="Z"){
+    var st=new Blob([from43(code.slice(1))]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+    return new Response(st).text().then(function(t){unpack(JSON.parse(t));});
+  }
+  if(code.charAt(0)==="z"){
+    var stream=new Blob([unb64u(code.slice(1))]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+    return new Response(stream).text().then(function(t){unpack(JSON.parse(t));});
+  }
+  if(code.charAt(0)==="j"){unpack(JSON.parse(new TextDecoder().decode(unb64u(code.slice(1)))));return Promise.resolve();}
+  return Promise.reject(new Error("unknown"));
+}
+var saveTimer=null,CODE="",codeFor="";
+function persist(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(function(){
+    if(!S.chosen)return;
+    var key=json();
+    if(key===codeFor&&CODE)return;
+    var store=function(code){
+      if(key!==json())return;
+      CODE=code;codeFor=key;
+      try{history.replaceState(null,"",location.pathname+"?card="+S.w.card+"#s="+code);}catch(e){}
+      try{localStorage.setItem(STORE,code);}catch(e){}
+      refreshLink();
+    };
+    if(canZip())encodeZip().then(store,function(){store(encodeSync());});else store(encodeSync());
+  },300);
+}
+function load(){
+  var h="",q="";try{h=location.hash||"";q=location.search||"";}catch(e){}
+  var m=/[?&]card=(\d)/.exec(q),c=m&&CARDS[m[1]]?m[1]:null;
+  var tryCode=function(code){try{return decode(code);}catch(e){return Promise.reject(e);}};
+  var fresh=function(){S.w=preset(c||"1");S.chosen=!!c;S.step=0;};
+  var fromStore=function(){
+    try{var code=localStorage.getItem(STORE);if(code)return tryCode(code).then(function(){if(c&&S.w.card!==c){fresh();}},fresh);}catch(e){}
+    fresh();return Promise.resolve();};
+  if(h.indexOf("#s=")===0)return tryCode(h.slice(3)).catch(fromStore);
+  return fromStore();
+}
+
+/* ---------- numbers ---------- */
+function eur(n){return (n<0?"−€":"€")+Math.abs(Math.round(n||0)).toLocaleString("en-GB");}
+function rate(n){return "€"+Number(n||0).toLocaleString("en-GB",{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2});}
+function hrs(n){return Math.round(n||0).toLocaleString("en-GB")+" h";}
+function daysTxt(d){return (d||0)+(d===1?" day a week":" days a week");}
+function rateOf(i){var w=S.w;return w.same?w.rate:(w.mem[i]?w.mem[i].r:0);}
+function lineRate(l){return isMember(l)?rateOf(l.m):l.m==="none"?S.w.rate:l.r;}
+function lineAmt(l){return Math.round(l.h*lineRate(l));}
+function meetH(){var w=S.w;return w.meet.e?Math.round(w.months*WEEKS_PER_MONTH/w.meet.e*w.meet.h):0;}
+function commitOf(i){return Math.round(S.w.months*WEEKS_PER_MONTH*S.w.mem[i].days*HOURS_PER_DAY);}
+function eachLine(fn){S.w.parts.forEach(function(p,pi){p.l.forEach(function(l,li){fn(l,p,pi,li);});});}
+
+function roleOf(i){
+  var by={},tot=0;KIND_KEYS.forEach(function(k){by[k]=0;});
+  eachLine(function(l,p){if(l.m===i&&by[p.k]!==undefined){by[p.k]+=l.h;tot+=l.h;}});
+  var sorted=KIND_KEYS.slice().sort(function(a,b){return by[b]-by[a];}),txt;
+  if(!tot)txt="No parts yet";
+  else{var top=sorted[0],second=sorted[1];
+    if(by.lead/tot>=LEAD_SHARE)txt="Takes a lead role"+(top!=="lead"?", mostly "+kindWord(top):"");
+    else txt="Mostly "+kindWord(top)+(by[second]/tot>=ALSO_SHARE&&second!=="lead"?", also "+kindWord(second):"");}
+  return {by:by,tot:tot,txt:txt};
+}
+
+function calc(){
+  var w=S.w,c={team:0,outside:0,nobody:0,nobodyH:0,meet:0,people:0,mat:0,total:0,mem:[],teamCommit:0,teamH:0,leadH:0,givenTime:0,givenInk:0};
+  var mh=meetH();
+  w.mem.forEach(function(m,i){var commit=commitOf(i),ma=Math.round(mh*rateOf(i));
+    c.mem.push({h:mh,amt:ma,commit:commit,role:roleOf(i)});c.meet+=ma;c.teamCommit+=commit;});
+  eachLine(function(l,p){
+    var a=lineAmt(l);
+    if(l.m==="none"){c.nobody+=a;c.nobodyH+=l.h;return;}
+    if(isMember(l)){var mm=c.mem[l.m];mm.h+=l.h;mm.amt+=a;c.team+=a;if(p.k==="lead")c.leadH+=l.h;}
+    else if(l.m==="paid")c.outside+=a;
+    else c.givenTime+=a;
+  });
+  c.mem.forEach(function(m){c.teamH+=m.h;});
+  c.team+=c.meet;
+  c.people=c.team+c.outside+c.nobody;
+  w.mat.forEach(function(m){c.mat+=Math.round(m.a);});
+  c.total=c.people+c.mat;
+  if(w.ink)w.ink.forEach(function(x){c.givenInk+=Math.round(x.a);});
+  c.given=c.givenTime+c.givenInk;
+  c.by={f:0,r:0};w.oth.forEach(function(_,i){c.by["o"+i]=0;});
+  var add=function(p,a){if(c.by[p]===undefined)p="f";c.by[p]+=a;};
+  eachLine(function(l){if(l.m!=="free")add(l.pay,lineAmt(l));});
+  add(w.meet.pay,c.meet);
+  w.mat.forEach(function(m){add(m.pay,Math.round(m.a));});
+  c.fund=c.by.f;c.over=Math.max(0,c.fund-FUND.max);
+  c.others=c.total-c.fund;
+  c.pct=c.total?c.others/c.total*100:0;
+  c.short=Math.max(0,Math.ceil(FUND.min/100*c.total)-c.others);
+  return c;
+}
+
+
+/* ===== end of the tool's code ===== */
+
+/* ---------- the frame: written in advance, filled by the plans ---------- */
+var EDITION={
+  sheet:"1jKk63m2X2oAzEV1TW4OZXzHGiNmZZuzIQgL1fHM_BYQ",
+  series:"Economic Cultures at Expanding Practices",
+  where:"Nieuwe Instituut, Rotterdam · 21 November 2026",
+  title:"Budget your ambition, together",
+  purpose:"In half an hour, teams of people who had mostly just met took a situation drawn from Rotterdam today and wrote a budget for an ambitious cultural project of about €55,000: within the rules of Fonds Lef, an imaginary fund, and paying everyone in it fairly.",
+  statement:"No one doubts the talent of starting creatives. What they are asked to prove is that they can be trusted: with each other, with a partner, with money.",
+  fine:"Today the teams showed their working: who does each hour, who pays each euro, and at what rate. Economic Cultures prepares that ground. The other half is the industry's: to keep an open mind, to say plainly what it needs to see, and to build the infrastructure that lets newcomers find each other, and find backing.",
+  conclusion:"Their ambition deserves a fair chance.",
+  conclusionFine:"The numbers above can be checked. What each team claims and makes is a cultural promise, and no budget can prove that in advance. Backing it takes trust in the numbers, and the courage to bet on their ambitions.",
+  alone:25000,
+  questions:{
+    1:"An archive outlives the project. Nobody budgeted who looks after it after six months: the storage, the website, the rights. Who keeps it, and who pays?",
+    2:"Open two days a week for six months is about 416 hours behind the counter. Who stands in the shop?",
+    3:"Most people at this market speak another first language than yours. Who interprets, and who pays the neighbour who bridges it?",
+    4:"Six months from January ends before the hottest weeks. Who is there in July, and who pays for it?",
+    5:"Some residents can't send an invoice. Where does their work show up in your budget?"
+  }
+};
+var PAWN={1:"var(--p1)",2:"var(--p2)",3:"var(--p3)",4:"var(--p4)",5:"var(--p5)"};
+/* text on the pawn colour: paper on blue and purple, ink on pink, orange and red (each at least 4.5:1) */
+var ON={1:"#FBF8F1",2:"#111111",3:"#111111",4:"#111111",5:"#FBF8F1"};
+var PAWN_NAME={1:"Blue",2:"Pink",3:"Orange",4:"Red",5:"Purple"};
+var SAMPLES=[{"round": 1, "link": "https://bronvandoen.github.io/tools/economic-cultures/expanding-practices/?card=1#s=Z6RDN3P0.H$6GJZ1NIWO*CICACV3SFRVTN-R/5XZT-U27$$.F1AEC9TZKB:WXJQJ418/4ZE865KMK5EM8$+.M0WAIUEASPLJX7MC80JQUP24A0V*Q/CJV8GG$E5Q/8C-51$L73UPMUJGL:J$Q5M5NRHDHGIN-1+*SJSG3VANK5A:*F+Z4LUQ0075+3F7Q5HNU0U++5T4OC6UB2PV$GR9$SBZ0G5X7G3WKAJ8*0/--QAUYHOEQGM+FDSL1$$HJ6LPMEKV4MTDJD2.8SQ867*VFIRVKTB:0X:GID5+THLW08.1TB2M2J-V.Y8$RBHR4A7AFXUW68-6WMY7RRDV52NRALQHX8HR782N8+MJ9M/7M7T$M0U-1GD5S31NZ86HW+048CDAUT/66+US1JBJVBPXZTO746M.YRPHI/0/$H/D/DUHX3F-A135GFHUFVI1BGIHH$0DZML/LC*75N+QZ7E.HH53CMKEP/QSD9VMG65:*YH7L9X1E3W:2ZM3U1BVPQ9::J*4*1RFL89QW14KBH0UGL1W0T+GK33LC:8RL6C5.7H+AEIRTKL+1G1TDX-RVPKAGH2DGN$5JWB540JJJ9ERRCR7UF2X0B8HLY3W360ZQ:PKF2.QQ2VKPU9V-46RO2VHI+6WT45CSGOI7DAQVR1LDC.*.V8U7G+G6I$T-UR6J5Z:J2.PCXCW2$UZ8IHR-N:JAO+SYE+MY0$+I-71S"}, {"round": 1, "link": "https://bronvandoen.github.io/tools/economic-cultures/expanding-practices/?card=2#s=Z7A6-RJSO$TKG1T5I1WJMU+SBG8XGVVDP$E$BBRM*ORE0IB8B8FK1$OLNGVCJ9QA.C2.ZB1-HCD:WDVU5HYKL2S260U85WRQ5DUFU2XQG5M9+GSWSWN8Y:0012ZAJ+M/DVEW-22WFW5$90./L05TZ::CBPAXB9VY63Q1/NPUU562P:D7$.PD50ND-PD96C-0:E62178+VYOF68MTQG*0E1UPE0NW5Y5YIPQUJF1/TABHRTF:00U4JNV1XAU5XF+:MZ0GF9VH$GR72BA2B+O6MD9XBLIPG$LQWJ0*DNL14I-SN1+/:R+XTRINZ87YDDQ5XDJJZIEVAS3V/U4PY1ZB1BRRJT1ERAWB-H4WIR2TC4NWPI*8ATWZ/2VY.NF4YP3U-IAV05Y74PLPN8$BVB44J+O3B25.R3/BX-7TBGEVY7*DVZCC-6TEW.6T8AHS3AUT0WNPCYMZFC0JEGTJT+1BQ3UFOWWYQ5E6+4:.5X:Z+BR8U8*A/6W/JSBEN09UW$2K/YDMS5F-/LGGADOZ727DS**84MZXKBTG4VKIAS:P1B:IFU99PWXJ77QGHP704AECA0.I7AJJWX8YU0Y/FMYVWQ9-:DTST84HWZEVJ3KD152+3"}, {"round": 1, "link": "https://bronvandoen.github.io/tools/economic-cultures/expanding-practices/?card=3#s=Z6RDN3P0.H$6GJZ1NGS.JLXPE0BUA50.K7+PPA2$Q+T3AUM:.979Y727ONYT-9*2R/*C2SIUTIWZE40DWDYXHC1Q628E8+:*T9J0GDT/P9IGOCD5CMF3H0NT0HL3+9/0EW+1/JPNT6JHS10G/7M0JGWX8SJU+5TTWMGJ9YGH.5KWKIKXDK:-$5F4JOFIEV18O9K9MJGW2Z+AXB23HZ78EMT742IGWY5S1GK98CP$8T0EWG-FCGTYGAY/VLBA+BPT:KQI67$QD2L/CM0EL16+$D*/54-HN*124GAV+3Q6RQSETF47S-HJ+-Z4/E3O$PE$/VWB249019AT48TIPCVG1Z:J9I-Z36.DG**RTB$3B1*RSQW*2-MEK6ZN0J3NO3-.$BZOI5/MV*2Q3CAT*72BQMV723J-7DB/BLV8F0OG+S7F1I4N7IHRIB*Q20ZI179Z+.P8P9S7WEDTL1NZRO2G.8CNR7YJM$.FDIORB*G+9-4VCC48ECRXZA81ZAPYJ90-:T48V7FEW-HE.:G6+IFZX7T3SE4EV3H6C7TD+$2:68/CPSC9/5-AX5B:4I9.0HJ-Q9UX5+D9BN65YET5*5F7M$8EZ2VHXBWGZ4K$HG75UKJ*GQ*887H61TLP:OH:W9IGB:8DM49CHJJPCJH8+1PBR2UD3GG7MEZAGF:I:OWTGRBBX4LPDOMIBDVZR"}, {"round": 2, "link": "https://bronvandoen.github.io/tools/economic-cultures/expanding-practices/?card=4#s=Z6QK/TU3KSLJV1SU$3ERPQI:SIQY*BGJNLW8FI.Z0-GHE1CD5E7*4N1ZDT3-WAGN4GEAZABJ.B.32*YH/E+*BB$4X750Q$NETFC5R2Y3SC0.SHOFGD2DS9.O5AB$D4:FUP2XNCBANPD9P155G4NRGG6*RLH1*IU+NHC$M2YF*FS84P3BT208HAAY7098-O22AE.GOP8U4B2Y1BYVS+.AL$G$4HGJ21OC6O5SS3YL$ORYPU5M-91F1H-2B0Z2LH/UOHT2NOU5TH$4PX*MX$H3BHXTN6$8NYJF8JCE89OE/1UY80KKX*1U/L27$466XKZ2:IC-OI-:FJ2TT.C+92*C3W4I-RF8EH/9ZEX-SPC.RBU8-Q6.O49BV86R:AD:YM+UH2$C8LED:3LLC62DJSNQY27Z13B:S$/4EDL.*4:IHBX7:T0/S9UY-P7YBJ$QE28WAX710EW$T6LG$*C$RVRYMBE9.R+3H62217IGKIGUV.5DL0SZ4E8-41*$IA$GDLYK*U6YLEHUX6Y+NW0-O73XJC5M.XD2G3U2O2W-SG.2X8BQ*MMXG4F2RG:GQ74$5.XXIE:+JVIZT7X$R57NUOC6FM*I$IGPEA85FLGNJ63OVMF-S42G:J1AXI9KCU7H-2O/JPKNE.Z.6"}, {"round": 2, "link": "https://bronvandoen.github.io/tools/economic-cultures/expanding-practices/?card=5#s=Z7$Z+MY1-238TBQO+4ZYS-8WR6I87O1.6LDB6I.S8R5NCMQVM4U$6.KM59Y907E.8SL0AH-ZIF:K:GY04/9RVA+LHTGCZ/D//AAME+-SUDB5OEC3R-RY3.-8G3/FY*Z2$4T9381PWLN8BXC-47:OZX9O.9N-FE*A96*DP1F/1CO/29UP:DPX6C.O62CA*$S.KDCXWZYPVIO+.IH3HWM6R-ASM6Q*GA1MM7ZJJ1G:54L570WIT28X6P./CPZS79VD86P5JCKBMB7M$EV7TJDPQA.-M3B+741-98PJIZMCPEQSL8S4ZA4MX8P:JBI7$BCQ7FD6/A5EY8GG4S*:GDXW8**:FAU-D7GC2X/X+RJ$WDAL9QC7KZD332U+$5WBTQ31W5IYA2TWIEGC3JXS1F68:KHMC9AL7LTSW8TH130MCB2YLOK5HJ2YJY/77F08EF3OYE$+*BRK*HC$FNK9YRNU+0-3TO:GV75/.6.1HYIVVE29D4:O7OGU+7*.KGUD:UZS/LK+X8WUGNH9RLS0G1XT7P8CXEPDP769T3XUHP1M0A/LWWH*CG7N052X1B$QD0.W1B75BP133ZX4.0JB-Z32S"}];
+var FORCE_DEMO=/*FORCE_DEMO*/false;
+
+/* ---------- small helpers ---------- */
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch];});}
+function pct(n){return Math.round(n)+"%";}
+function clean(t){return String(t||"").replace(/\s*\(name it\)\s*$/,"");}
+function partName(p){return p.n||clean(p.ph)||"A part of their own";}
+function matName(m){return m.d||clean(m.ph)||"A cost";}
+function teamName(pl){return pl.w.team||"Team "+PAWN_NAME[pl.w.card];}
+function firsts(w){return w.mem.map(function(m,i){return m.n?m.n.split(" ")[0]:"Member "+(i+1);});}
+function list(a){a=a.filter(Boolean);if(a.length<2)return a.join("");return a.slice(0,-1).join(", ")+" and "+a[a.length-1];}
+
+/* ---------- reading one link into a plan, with the tool's own unpack() and calc() ---------- */
+function codeOf(link){var t=String(link||"").trim(),i=t.indexOf("#s=");return i<0?"":t.slice(i+3).replace(/\s+/g,"");}
+function readPlan(link){
+  var code=codeOf(link);if(!code)return Promise.reject(new Error("not a team link"));
+  return decode(code).then(function(){var w=JSON.parse(JSON.stringify(S.w)),c=calc();return describe(w,c,code);});
+}
+function describe(w,c,code){
+  var C=CARDS[w.card],pl={w:w,c:c,code:code,C:C};
+  /* who pays for what: titles of the lines each payer carries */
+  var pays={};function add(p,title,amt){if(!amt)return;(pays[p]=pays[p]||{amt:0,items:[]}).amt+=amt;if(pays[p].items.indexOf(title)<0)pays[p].items.push(title);}
+  w.parts.forEach(function(p){p.l.forEach(function(l){if(l.m!=="free")add(c.by[l.pay]!==undefined?l.pay:"f",partName(p),lineAmt(l));});});
+  if(c.meet)add(c.by[w.meet.pay]!==undefined?w.meet.pay:"f","Team meetings",c.meet);
+  w.mat.forEach(function(m){add(c.by[m.pay]!==undefined?m.pay:"f",matName(m),Math.round(m.a));});
+  pl.pays=pays;
+  /* the work by person and kind */
+  var rows=w.mem.map(function(m,i){return {name:firsts(w)[i],sub:m.d,by:{},tot:0,kind:"mem"};});
+  var outside={name:"Paid, outside the team",by:{},tot:0,kind:"paid"},gives={name:"Gives time",by:{},tot:0,kind:"gives"},nobody={name:"Nobody yet",by:{},tot:0,kind:"nobody"};
+  var nobodyParts=[],giverNames=[];
+  w.parts.forEach(function(p){p.l.forEach(function(l){
+    var r=typeof l.m==="number"?rows[l.m]:l.m==="paid"?outside:l.m==="free"?gives:nobody;if(!r)return;
+    r.by[p.k]=(r.by[p.k]||0)+l.h;r.tot+=l.h;
+    if(l.m==="none"&&l.h>0&&nobodyParts.indexOf(partName(p))<0)nobodyParts.push(partName(p));
+    if(l.m==="free"&&l.nm&&giverNames.indexOf(l.nm)<0)giverNames.push(l.nm);
+  });});
+  pl.rows=rows.concat([outside,gives,nobody].filter(function(r){return r.tot>0;}));
+  pl.nobodyParts=nobodyParts;pl.givers=giverNames;pl.givenH=gives.tot;
+  /* who carries the leading */
+  var leadBy=rows.map(function(r){return r.by.lead||0;}),leadTot=leadBy.reduce(function(a,b){return a+b;},0),top=0;
+  leadBy.forEach(function(h,i){if(h>leadBy[top])top=i;});
+  pl.leadShare=leadTot?leadBy[top]/leadTot:0;pl.leadTop=rows[top]?rows[top].name:"";
+  pl.leading=!leadTot?"none":pl.leadShare>=CARRY_SHARE?"one":"shared";
+  /* the gaps, plainly */
+  var open=[];
+  if(c.over>0)open.push("Fonds Lef is asked "+eur(c.over)+" more than it can give.");
+  if(c.short>0)open.push("Others pay "+pct(c.pct)+" of the total. Fonds Lef asks at least "+FUND.min+"%: "+eur(c.short)+" still to find.");
+  if(c.nobodyH>0)open.push(hrs(c.nobodyH)+" of work have nobody beside them yet: "+list(nobodyParts.map(function(t){return t.charAt(0).toLowerCase()+t.slice(1);}))+".");
+  if(pl.leading==="none")open.push("Nobody in the team holds the leading.");
+  var gap=c.teamCommit-c.teamH;
+  if(gap>40)open.push(hrs(gap)+" of the time the team committed is not in the budget.");
+  if(gap<-40)open.push("The budget asks "+hrs(-gap)+" more than the team committed.");
+  /* the fund's hourly cap holds for every paid hour (the same rule as the tool's check) */
+  var high=[];
+  if(w.same){if(w.rate>FUND.cap)high.push("The team rate, "+rate(w.rate)+",");}
+  else w.mem.forEach(function(m,i){if(m.r>FUND.cap)high.push(firsts(w)[i]+"'s rate, "+rate(m.r)+",");});
+  w.parts.forEach(function(p){p.l.forEach(function(l){if(l.m==="paid"&&l.r>FUND.cap)high.push("The rate for "+(l.nm||"someone paid from outside")+", "+rate(l.r)+",");});});
+  high.forEach(function(h){open.push(h+" is above "+FUND.name+"'s "+rate(FUND.cap)+" an hour.");});
+  pl.capOk=!high.length;
+  pl.open=open;pl.holds=c.over===0&&c.short===0&&c.total>0&&pl.capOk;
+  return pl;
+}
+
+/* ---------- the money bar: one scale for every plan ---------- */
+var SCALE=70000;
+function payerLabel(pl,p){var w=pl.w;if(p==="f")return FUND.name;if(p==="r")return w.reg.n||"The regional backer";var i=+p.slice(1);return (w.oth[i]&&w.oth[i].n)||"The third partner";}
+function bar(pl,big){
+  var c=pl.c,segs=[],fundIn=Math.min(c.fund,FUND.max);
+  segs.push(["f",fundIn]);
+  if(c.over>0)segs.push(["x",c.over]);
+  Object.keys(c.by).forEach(function(k){if(k!=="f"&&c.by[k]>0)segs.push([k==="r"?"r":"o",c.by[k],k]);});
+  var given=c.given||0;if(given>0)segs.push(["g",given]);
+  var max=Math.max(SCALE,c.total+given),w=function(a){return (a/max*100)+"%";};
+  var h='<div class="bar'+(big?" big":"")+'" style="--bh:'+(big?"calc(var(--u)*3.4)":"calc(var(--u)*2.2)")+'"><div class="track" role="img" aria-label="'+esc(barText(pl))+'">'+
+    segs.map(function(s){return '<span class="seg '+s[0]+'" style="width:'+w(s[1])+'"></span>';}).join("")+
+    '<span class="mark" style="left:'+w(EDITION.alone)+'"><span>'+(big?"€25,000 alone":"€25k alone")+'</span></span>'+
+    '<span class="mark right" style="left:'+w(FUND.max)+'"><span>'+(big?"€50,000 together":"€50k together")+'</span></span>'+
+    (big?'<span class="mark p20" style="left:'+w(c.total*(1-FUND.min/100))+'"><span>others pay from here: 20%</span></span>':'')+
+    '</div>'+(big?'<div class="scale"><span>€0</span><span>'+eur(max)+'</span></div><div class="legend"><span>€25,000: what Fonds Lef gives one maker alone</span><span>€50,000: what it gives partners</span><span class="p20">From here, the other backers pay the last 20%</span></div>':'')+'</div>';
+  return h;
+}
+function barText(pl){var c=pl.c;return "Total "+eur(c.total)+". "+FUND.name+" "+eur(c.fund)+", others "+pct(c.pct)+"."+(c.given?" Given, not in euros: "+eur(c.given)+".":"");}
+
+/* ---------- the overview ---------- */
+var PLANS=[],ROUND="all",SEEN={},FIRST=true,OPEN=null;
+function shown(){return PLANS.filter(function(p){return ROUND==="all"||String(p.round)===ROUND;});}
+function renderOverview(){
+  var ps=shown(),people=ps.reduce(function(a,p){return a+p.w.mem.filter(function(m){return m.n;}).length;},0);
+  var h='<header class="head"><div><p class="eyebrow">'+esc(EDITION.series)+' · '+esc(EDITION.where)+'</p>'+
+    '<div class="over"><div class="ghost" aria-hidden="true">'+esc(EDITION.title)+'</div><h1>'+esc(EDITION.title)+'</h1></div></div>'+
+    '<div><p class="purpose">'+esc(EDITION.purpose)+'</p>'+
+    '<p class="tally">'+(ps.length?ps.length+(ps.length===1?" team":" teams")+" · "+people+" people":"Waiting for the first budget")+'</p></div></header>';
+  h+=ps.length?'<section class="plans" aria-label="The plans">'+ps.map(planCard).join("")+'</section>':'<div class="empty">Scan a team\'s code, paste its link in the form, and its plan appears here.</div>';
+  h+=points(ps);
+  h+='<section class="close"><p class="big">'+esc(EDITION.statement)+'</p><p class="fine">'+esc(EDITION.fine)+'</p>'+
+     '<p class="answer">'+esc(EDITION.conclusion)+'</p><p class="fine">'+esc(EDITION.conclusionFine)+'</p></section>';
+  document.getElementById("overview").innerHTML=h;
+  Array.prototype.forEach.call(document.querySelectorAll(".plan"),function(b){
+    b.addEventListener("click",function(){openPlan(b.getAttribute("data-k"));});
+    b.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();openPlan(b.getAttribute("data-k"));}});
+  });
+}
+function makes(pl){return pl.w.parts.filter(function(p){return p.k==="make"&&p.n&&p.n.trim();}).map(function(p){return p.n.trim();});}
+function shares(pl){
+  var c=pl.c,out=[],keys=["f","r"].concat(Object.keys(c.by).filter(function(k){return /^o/.test(k);}));
+  keys.forEach(function(k){var a=k==="f"?Math.min(c.fund,FUND.max):c.by[k];if(a>0)out.push([payerLabel(pl,k),a]);});
+  if(c.over>0)out.push(["Nobody yet",c.over]);
+  /* whole percentages that add up to 100: largest remainder */
+  var raw=out.map(function(x){return c.total?x[1]/c.total*100:0;}),fl=raw.map(Math.floor),left=100-fl.reduce(function(a,b){return a+b;},0);
+  raw.map(function(r,i){return [r-fl[i],i];}).sort(function(p,q){return q[0]-p[0];}).slice(0,Math.max(0,left)).forEach(function(p){fl[p[1]]++;});
+  return out.map(function(x,i){return {name:x[0],pct:fl[i],none:x[0]==="Nobody yet"};});
+}
+function checks(pl){
+  var c=pl.c,one=c.fund>EDITION.alone,two=c.nobodyH===0&&pl.leading!=="none";
+  return [
+    [1,one,one?"Beyond what one maker gets alone":"Within what one maker gets alone"],
+    [2,two,c.nobodyH>0?hrs(c.nobodyH)+" of work with nobody yet":pl.leading==="none"?"Nobody holds the leading":"Every hour has a name"],
+    [3,pl.holds,c.over>0?FUND.name+" asked "+eur(c.over)+" too much":!pl.capOk?"A rate above "+FUND.name+"'s limit":c.short>0?"Others pay "+pct(c.pct)+"; 20% is asked":"Others pay "+pct(c.pct)]
+  ];
+}
+function planCard(pl){
+  var w=pl.w,c=pl.c,isNew=!FIRST&&!SEEN[pl.key],mk=makes(pl),fs=firsts(w);
+  return '<article class="plan'+(isNew?" new":"")+'" role="button" tabindex="0" aria-label="Open the plan of '+esc(teamName(pl))+'" data-k="'+esc(pl.key)+'" style="--pc:'+PAWN[w.card]+';--on:'+ON[w.card]+'">'+
+    '<div class="head2"><span class="label">Situation '+w.card+' · '+esc(pl.C.title)+'</span><span class="team">'+esc(teamName(pl))+'</span></div>'+
+    '<p class="claim">'+(w.why?esc(w.why):'<span class="soft">No claim written.</span>')+'</p>'+
+    '<div class="makes">'+(mk.length?'<span class="k">What they make</span>'+mk.map(function(m){return '<span class="m">'+esc(m)+'</span>';}).join(""):'')+'</div>'+
+    '<div class="funds"><span class="k">'+eur(c.total)+' budgeted, paid by</span>'+
+      shares(pl).map(function(x){return '<span class="f'+(x.none?" none":"")+'"><span>'+esc(x.name)+'</span><b>'+pct(x.pct)+'</b></span>';}).join("")+
+      (c.given?'<span class="f g"><span>Also given, not in euros</span><b>'+eur(c.given)+'</b></span>':'')+'</div>'+
+    '<ul class="checks" aria-label="Against the three points">'+checks(pl).map(function(k){return '<li class="'+(k[1]?"ok":"gap")+'"><b>'+k[0]+'</b><i aria-hidden="true"></i><span>'+esc(k[2])+'</span></li>';}).join("")+'</ul>'+
+    '<p class="who">'+w.mem.map(function(m,i){return '<b>'+esc(fs[i])+'</b>'+(m.d?', '+esc(m.d):'');}).join(" · ")+'</p>'+
+    '</article>';
+}
+function strip(ps,val,lo,hi,ticks,ends,cap){
+  var pos=ps.map(function(p){var v=Math.max(lo,Math.min(hi,val(p)));return {p:p,x:(v-lo)/(hi-lo)*100};}).sort(function(a,b){return a.x-b.x;});
+  var last=[-99,-99,-99];
+  pos.forEach(function(d){var r=0;while(r<2&&d.x-last[r]<3.2)r++;d.r=r;last[r]=d.x;});
+  return '<div class="strip"><div class="field">'+
+    ticks.map(function(t,i){var x=(t[0]-lo)/(hi-lo)*100;return '<span class="tick'+(x>55?" r":"")+(i%2?" low":"")+'" style="left:'+((t[0]-lo)/(hi-lo)*100)+'%"><span>'+t[1]+'</span></span>';}).join("")+
+    pos.map(function(d){return '<span class="dot" title="'+esc(teamName(d.p))+'" style="left:'+d.x+'%;--pc:'+PAWN[d.p.w.card]+';--row:calc(var(--u)*'+(d.r*1.5)+')"></span>';}).join("")+
+    '</div><div class="ends"><span>'+ends[0]+'</span><span>'+ends[1]+'</span></div><div class="cap">'+cap+'</div></div>';
+}
+function points(ps){
+  if(!ps.length)return "";
+  var n=ps.length,
+    asks=ps.map(function(p){return p.c.fund;}),overAlone=asks.filter(function(a){return a>EDITION.alone;}).length,
+    hTot=0,hNamed=0,hNobody=0,carried=0,holds=0,pcts=[];
+  ps.forEach(function(p){
+    p.rows.forEach(function(r){hTot+=r.tot;if(r.kind==="nobody")hNobody+=r.tot;else hNamed+=r.tot;});
+    if(p.leading==="one")carried++;if(p.holds)holds++;pcts.push(p.c.pct);
+  });
+  var lo=Math.min.apply(null,asks),hi=Math.max.apply(null,asks);
+  return '<section class="points" aria-label="What the plans show">'+
+   pt(1,"Together the ceiling rises","Alone, Fonds Lef gives one maker at most €25,000. As partners, up to €50,000.",
+     strip(ps,function(p){return p.c.fund;},0,60000,[[EDITION.alone,"€25,000 alone"],[FUND.max,"€50,000 together"]],["€0","€60,000"],"What each team asks of Fonds Lef"),
+     (overAlone===n?"Every team":overAlone+" of "+n+" teams")+" asked for more than one maker could get alone: "+(lo===hi?eur(lo):"from "+eur(lo)+" to "+eur(hi))+".")+
+   pt(2,"All the work has a name","Leading, organising, researching, making and gathering: each lands with someone, by name.",
+     strip(ps,function(p){return p.leadShare*100;},0,100,[[CARRY_SHARE*100,"one person carries it"]],["0%","100%"],"The biggest share of the leading held by one person"),
+     hrs(hNamed)+" of "+hrs(hTot)+" have a name"+(hNobody?"; "+hrs(hNobody)+" are still open":"")+". "+
+     (carried?"In "+carried+" of "+n+" teams one person carries most of the leading.":"In every team the leading is shared."))+
+   pt(3,"Every euro has a payer","Fonds Lef is the main backer. The other backers pay at least 20% between them, each for its own purpose.",
+     strip(ps,function(p){return p.c.pct;},0,40,[[FUND.min,"20% asked"]],["0%","40%"],"What the other backers pay, per team"),
+     "Here the other backers pay "+(n>1?"between "+pct(Math.min.apply(null,pcts))+" and "+pct(Math.max.apply(null,pcts)):pct(pcts[0]))+". "+
+     (holds===n?"In every budget":"In "+holds+" of "+n+" budgets")+" every euro is placed within Fonds Lef's rules.")+
+   '</section>';
+}
+function pt(no,title,body,vis,ev){return '<div class="point"><div class="no">'+no+'</div><h2>'+title+'</h2><p>'+body+'</p>'+(vis||"")+(ev?'<p class="ev">'+esc(ev)+'</p>':'')+'</div>';}
+
+/* ---------- one plan, full size ---------- */
+function renderFull(pl){
+  var w=pl.w,c=pl.c,KN=KINDS.map(function(k){return k[0];});
+  var maxCell=1;pl.rows.forEach(function(r){KN.forEach(function(k){maxCell=Math.max(maxCell,r.by[k]||0);});});
+  var payers=Object.keys(pl.pays).sort(function(a,b){return a==="f"?-1:b==="f"?1:a==="r"?-1:b==="r"?1:0;}).map(function(p){
+    var sw=p==="f"?"var(--pay-f)":p==="r"?"var(--pay-r)":"var(--pay-o)";
+    return '<div class="payer"><i style="background:'+sw+'"></i><span><b>'+esc(payerLabel(pl,p))+'</b><small>pays for '+esc(pl.pays[p].items.map(function(t){return t.charAt(0).toLowerCase()+t.slice(1);}).join(" · "))+'</small></span><span class="amt">'+eur(pl.pays[p].amt)+'</span></div>';
+  }).join("");
+  if(c.given)payers+='<div class="payer"><i style="background:repeating-linear-gradient(90deg,transparent 0 6px,var(--line) 6px 8px)"></i><span><b>Given, not in euros</b><small>'+esc(list((w.ink||[]).filter(function(x){return x.a>0;}).map(function(x){return x.d.toLowerCase()+", from "+x.g.replace(/^(The|A|An) /,function(m){return m.toLowerCase();});})))+(pl.givenH?(w.ink&&w.ink.some(function(x){return x.a>0;})?"; ":"")+hrs(pl.givenH)+" of time from "+esc(list(pl.givers)||"people outside the team"):"")+'</small></span><span class="amt">'+eur(c.given)+'</span></div>';
+  var work='<table class="work"><thead><tr><th>Who</th>'+KINDS.map(function(k){return '<th>'+k[1]+'</th>';}).join("")+'</tr></thead><tbody>'+
+    pl.rows.map(function(r){return '<tr class="'+r.kind+'"><td><b>'+esc(r.name)+'</b>'+(r.sub?' <span class="soft">'+esc(r.sub)+'</span>':'')+'</td>'+
+      KN.map(function(k){var v=r.by[k]||0;return '<td class="h">'+(v?'<span class="cellbar'+(k==="lead"?" lead":"")+'" style="width:'+(v/maxCell*100)+'%"></span><span class="n">'+hrs(v)+'</span>':'')+'</td>';}).join("")+'</tr>';}).join("")+
+    '</tbody></table>';
+  var reading=pl.leading==="one"?'<b>The lead is a role, not a title.</b> '+esc(pl.leadTop)+" holds "+pct(pl.leadShare*100)+" of the leading hours. Is it shared and budgeted?":
+    pl.leading==="shared"?"The leading is shared: nobody carries more than "+pct(pl.leadShare*100)+" of it.":"Nobody holds the leading yet.";
+  var ps=shown(),idx=0;ps.forEach(function(p,j){if(p.key===pl.key)idx=j;});
+  var h=    '<div class="phead" style="--pc:'+PAWN[w.card]+';--on:'+ON[w.card]+'"><p class="label">Situation '+w.card+' · '+esc(pl.C.title)+' · round '+pl.round+'</p>'+
+    '<h1>'+esc(teamName(pl))+'</h1></div>'+
+    '<div class="top" style="--pc:'+PAWN[w.card]+'"><div>'+
+    '<p class="claim">'+(w.why?esc(w.why):'No claim written.')+'</p>'+
+    '<p class="stmt">'+esc(w.sent)+'</p>'+
+    '<div class="people">'+w.mem.map(function(m,i){return '<span class="person"><b>'+esc(firsts(w)[i])+'</b>'+esc([m.d,m.b].filter(Boolean).join(" · "))+'</span>';}).join("")+'</div>'+
+    '<div class="sec"><h3>Who does the work</h3><div class="tablewrap">'+work+'</div><p class="'+(pl.leading==="one"?"lead-note":"reading")+'">'+reading+'</p></div>'+
+    '</div><div>'+
+    '<div class="sec" style="margin-top:0"><h3>Who pays</h3>'+bar(pl,true)+'<div class="payers">'+payers+'</div>'+
+    '<p class="reading">'+eur(c.total)+' in all, '+(w.same?'at '+rate(w.rate)+' an hour for everyone':'at each member\'s own rate')+'. '+FUND.name+' '+eur(c.fund)+'; others '+pct(c.pct)+'.'+'</p></div>'+
+    '<div class="sec"><h3>Still open</h3><ul class="open">'+(pl.open.length?pl.open.map(function(o){return '<li>'+esc(o)+'</li>';}).join(""):'<li class="held">Every euro has a payer, and the work is named.</li>')+'</ul>'+
+    '<div class="question"><span class="label">The question this situation asks</span><br>'+esc(EDITION.questions[w.card]||"")+'</div></div>'+
+    '</div></div>';
+  document.getElementById("full").innerHTML=h;
+}
+function openPlan(k){
+  var pl=PLANS.filter(function(p){return p.key===k;})[0];if(!pl){closePlan();return;}
+  OPEN=k;renderFull(pl);document.body.classList.add("open");renderNav();
+  try{history.replaceState(null,"",location.pathname+location.search+"#"+encodeURIComponent(k));}catch(e){}
+  window.scrollTo(0,0);
+}
+function closePlan(){var k=OPEN;OPEN=null;document.body.classList.remove("open");renderNav();try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}
+  var el=k&&document.querySelector('.plan[data-k="'+k+'"]');if(el)el.scrollIntoView({block:"center"});}
+function step(d){var ps=shown();if(!ps.length)return;var i=-1;ps.forEach(function(p,j){if(p.key===OPEN)i=j;});openPlan(ps[(i+d+ps.length)%ps.length].key);}
+
+/* ---------- reading the sheet ---------- */
+function parseCSV(t){var rows=[],row=[],f="",q=false;for(var i=0;i<t.length;i++){var ch=t[i];
+  if(q){if(ch==='"'){if(t[i+1]==='"'){f+='"';i++;}else q=false;}else f+=ch;}
+  else if(ch==='"')q=true;else if(ch===","){row.push(f);f="";}else if(ch==="\n"){row.push(f);rows.push(row);row=[];f="";}else if(ch!=="\r")f+=ch;}
+  if(f||row.length){row.push(f);rows.push(row);}return rows;}
+var params=new URLSearchParams(location.search),DEMO=params.has("demo")||FORCE_DEMO,SHEET=params.get("sheet")||EDITION.sheet;
+if(params.get("round")==="1"||params.get("round")==="2")ROUND=params.get("round");
+if(params.has("screen"))document.body.classList.add("screen");
+var LAST_OK=null,BAD=0,BUSY=false;
+function fetchRows(){
+  if(DEMO)return Promise.resolve(SAMPLES.map(function(s,i){return ["sample "+(i+1),s.link,String(s.round)];}));
+  return fetch("https://docs.google.com/spreadsheets/d/"+encodeURIComponent(SHEET)+"/gviz/tq?tqx=out:csv&_="+Date.now(),{cache:"no-store"})
+    .then(function(r){if(!r.ok)throw new Error("sheet "+r.status);return r.text();}).then(function(t){return parseCSV(t).slice(1);});
+}
+function read(){
+  if(BUSY)return;BUSY=true;
+  fetchRows().then(function(rows){
+    var bad=0,chain=Promise.resolve(),byKey={},order=[];
+    rows.forEach(function(r){var link=r[1],round=/2/.test(r[2]||"")?2:1;
+      chain=chain.then(function(){return readPlan(link).then(function(pl){
+        pl.round=round;pl.key=pl.w.card+"-"+(pl.w.team||firsts(pl.w).join("+")).toLowerCase().replace(/[^a-z0-9+]+/g,"-");
+        if(!byKey[pl.key])order.push(pl.key);byKey[pl.key]=pl;   /* a later scan of the same team replaces the earlier one */
+      },function(){bad++;});});
+    });
+    return chain.then(function(){
+      PLANS=order.map(function(k){return byKey[k];}).sort(function(a,b){return a.round-b.round||a.w.card-b.w.card;});
+      BAD=bad;LAST_OK=new Date();render();
+      PLANS.forEach(function(p){SEEN[p.key]=true;});FIRST=false;
+    });
+  }).catch(function(){state(true);}).then(function(){BUSY=false;});
+}
+function render(){
+  renderOverview();
+  if(OPEN){var still=PLANS.some(function(p){return p.key===OPEN;});if(still)renderFull(PLANS.filter(function(p){return p.key===OPEN;})[0]);else closePlan();}
+  state(false);
+}
+var FAILED=false;
+function state(failed){FAILED=failed;renderNav();}
+function renderNav(){
+  var t=LAST_OK?LAST_OK.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}):"–",ctx;
+  if(OPEN){
+    var ps=shown(),idx=0,cur=null;ps.forEach(function(p,j){if(p.key===OPEN){idx=j;cur=p;}});
+    ctx='<button class="back" data-nav="back"><span class="l">← All budgets</span><span class="s">← All</span></button>'+
+      '<span class="where">'+(idx+1)+' of '+ps.length+(cur?'<span class="l"> · '+esc(teamName(cur))+'</span>':'')+'</span>'+
+      '<button data-nav="prev" aria-label="Previous budget">‹<span class="l"> Previous</span></button><button data-nav="next" aria-label="Next budget"><span class="l">Next </span>›</button>';
+  }else{
+    ctx='<span class="seg2" role="group" aria-label="Rounds">'+[["all","Both rounds","All"],["1","Round 1","1"],["2","Round 2","2"]].map(function(r){
+      return '<button data-round="'+r[0]+'" aria-pressed="'+(ROUND===r[0])+'"><span class="l">'+r[1]+'</span><span class="s">'+r[2]+'</span></button>';}).join("")+'</span>';
+  }
+  var warn=FAILED||BAD,live=FAILED?"Sheet not read · showing "+t:BAD?BAD+(BAD===1?" row is":" rows are")+" not a team link":
+    (DEMO?"Sample plans":"Live")+" · "+t;
+  document.getElementById("nav").innerHTML=
+    '<span class="ctx">'+ctx+'</span><span class="live'+(warn?" warn":"")+'" title="New budgets appear by themselves; last checked '+t+'"><span class="dot"></span>'+esc(live)+'</span>';
+}
+document.getElementById("nav").addEventListener("click",function(e){
+  var b=e.target.closest("button");if(!b)return;
+  var n=b.getAttribute("data-nav"),r=b.getAttribute("data-round");
+  if(n==="back")closePlan();else if(n==="next")step(1);else if(n==="prev")step(-1);
+  else if(r){ROUND=r;if(OPEN)closePlan();renderOverview();renderNav();}
+});
+document.addEventListener("keydown",function(e){
+  if(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName))return;
+  if(e.key==="Escape")closePlan();else if(e.key==="ArrowRight")step(1);else if(e.key==="ArrowLeft")step(-1);else if(e.key==="r"||e.key==="R")read();
+});
+read();
+var want=decodeURIComponent((location.hash||"").slice(1));
+if(want){var t0=setInterval(function(){if(PLANS.length){clearInterval(t0);openPlan(want);}},300);setTimeout(function(){clearInterval(t0);},8000);}
+if(!DEMO)setInterval(read,10000);
+})();
+</script>
+</body>
+</html>

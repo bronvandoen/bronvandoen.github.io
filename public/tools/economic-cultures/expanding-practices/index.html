@@ -90,6 +90,7 @@ input[type=number]{text-align:right;font-variant-numeric:tabular-nums}
 .fair b{font-family:var(--label);font-size:13px;display:block;color:var(--eyebrow-ink);text-transform:uppercase;letter-spacing:.04em}
 .tip{border-left:var(--rule-heavy) solid var(--ink-2);padding:2px 0 2px 12px;margin:16px 0;font-size:16px}
 .tip b{font-family:var(--label);font-size:13px;display:block;text-transform:uppercase;letter-spacing:.04em}
+.send .row{margin-top:12px}.send .consent{border:var(--rule) solid var(--ink);background:var(--paper);padding:14px 16px;margin-top:12px}.send .consent ul{margin:8px 0 0;padding-left:20px;font-family:var(--readable);font-size:15px;line-height:1.45}.send .status{font-family:var(--readable);font-size:15px;line-height:1.4;margin-top:10px}.send .status.ok{font-weight:700}
 .done{font-family:var(--display);font-weight:900;font-size:24px;line-height:1.2;background:var(--accent-text);color:var(--paper);padding:14px 16px;margin:18px 0}
 .pause{display:block;font-family:var(--label);font-size:14px;font-weight:600;background:var(--ink);color:var(--paper);padding:12px 14px;margin:18px 0}
 .pause::before{content:"Pause · "}
@@ -343,6 +344,16 @@ function preset(c){
 
 /* ---------- state ---------- */
 var S={step:0,w:null,chosen:false};
+/* "Send to the live report": only during an edition, only after the team reads what is sent and confirms.
+   The receiver (apps-script/team-budgets.gs) checks the window, the link and doubles; the host form is the fallback. */
+var SEND={edition:"expanding-practices-2026-11-21",until:"2026-11-21T23:59:59+01:00",round2:"2026-11-21T15:50:00+01:00",
+  endpoint:"https://script.google.com/macros/s/AKfycbxyIrIdvhaaKAa_r2aStQBvD6ZiUofRKFZs3fMfQ1kDu4pE9563ugRWBuaqMckr8kIX/exec",
+  form:"https://docs.google.com/forms/d/e/1FAIpQLSefzdGn6Pkp1ENWQ_VV-TlQ7HYBw3xHctQt1re3_Mwhvoksbw/viewform?usp=pp_url",
+  fLink:"entry.1663580900",fRound:"entry.2076705856"};
+var SENDST={open:false,state:"",msg:""};
+function sendOpen(){try{if(/[?&]send=1/.test(location.search))return true;return Date.now()<=new Date(SEND.until).getTime();}catch(e){return false;}}
+function formUrl(){var r=Date.now()>=new Date(SEND.round2).getTime()?"2":"1";
+  return SEND.form+"&"+SEND.fLink+"="+encodeURIComponent(shareUrl())+"&"+SEND.fRound+"="+r;}
 function set(path,val){var ks=path.split("."),o=S.w;for(var i=0;i<ks.length-1;i++){o=o[ks[i]];if(o==null)return;}o[ks[ks.length-1]]=val;}
 function get(path){return path.split(".").reduce(function(o,k){return o==null?undefined:o[k];},S.w);}
 function isMember(l){return typeof l.m==="number";}
@@ -662,7 +673,7 @@ var STEPS=[
  }},
  {t:"Why it's worth it",r:function(){
    return heading("Step 5","Why it's worth it")+'<div data-o="congrats"></div>'+
-   '<div class="panel">'+txt("why","Why this deserves fair support","Declare what this project is to Rotterdam and her people. Make it a statement, not a request.",null,true,240)+'</div>'+
+   '<div class="panel">'+txt("why","Why this deserves fair support","Declare what this project is to Rotterdam and her people. Make it a statement, not a request.",null,true,240)+'</div>'+sendPanel()+
    '<div class="panel"><h2>Is it complete and balanced?</h2>'+out("checks")+'</div>'+receipt()+
    '<div class="panel"><h2>Our team\'s code</h2><p><b>Your team name, first names and numbers may be shown on our archive.</b></p>'+
    '<p>Scan it with each other\'s phones, and show it to the host before you go. The code is the whole budget: nothing is kept anywhere else.</p>'+
@@ -861,6 +872,29 @@ function pdfHint(){var u="";try{u=navigator.userAgent||"";}catch(e){}
   if(/Android/i.test(u))return "On Android the print screen opens: choose “Save as PDF”, then tap the round PDF button.";
   if(/iPhone|iPad|iPod/i.test(u)||(/Macintosh/.test(u)&&navigator.maxTouchPoints>1))return "On an iPhone the print screen opens: tap the share icon at the top, then “Save to Files”.";
   return "In the print window, choose “Save as PDF” as the printer.";}
+function sendPanel(){
+  if(!sendOpen())return "";
+  var h='<div class="panel send"><h2>The live report</h2>';
+  if(SENDST.state==="done")return h+'<p class="status ok">'+esc(SENDST.msg)+'</p><div class="row"><button class="btn small" data-act="sendask">Changed something? Send it again</button></div></div>';
+  if(!SENDST.open)return h+(String(S.w.why||"").trim()?'':'<p class="flag">Write your claim above first: it is what the room reads.</p>')+'<div class="row"><button class="btn primary" data-act="sendask">Send to the live report</button></div></div>';
+  h+='<div class="consent"><p><b>What happens when you send</b></p><ul>'+
+    '<li>We receive your team\'s code: your team name, your first names, your budget and your claim, exactly as in this tool.</li>'+
+    '<li>It shows in the live report on the screen in this room, beside the other teams.</li>'+
+    '<li>Afterwards the live report stays on our archive as the record of today, under CC BY 4.0, credited to your team.</li>'+
+    '<li>Nothing else is sent, and nothing about this phone.</li></ul></div>';
+  if(SENDST.state==="sending")return h+'<p class="status">Sending…</p></div>';
+  if(SENDST.state==="fail")h+='<p class="status">'+esc(SENDST.msg)+' <a href="'+esc(formUrl())+'" target="_blank" rel="noopener">Send it through our form instead</a>, or show your code to the host.</p>';
+  return h+'<div class="row"><button class="btn primary" data-act="sendgo">Send</button><button class="btn" data-act="sendno">Not now</button></div></div>';
+}
+function sendGo(){
+  if(!SEND.endpoint){SENDST.open=false;SENDST.state="";render(false);try{window.open(formUrl(),"_blank","noopener");}catch(e){location.href=formUrl();}return;}
+  SENDST.state="sending";render(false);
+  var body=new URLSearchParams({edition:SEND.edition,link:shareUrl(),website:""});
+  fetch(SEND.endpoint,{method:"POST",body:body}).then(function(r){return r.json();}).then(function(res){
+    if(res&&res.ok){SENDST.state="done";SENDST.msg=res.duplicate?"It was already in the live report. Look up at the screen!":"It is in the live report. Look up at the screen!";}
+    else{SENDST.state="fail";SENDST.msg=res&&res.error==="closed"?"Sending is closed for today.":"That did not go through.";}
+  }).catch(function(){SENDST.state="fail";SENDST.msg="That did not go through.";}).then(function(){render(false);});
+}
 function canShare(){try{return typeof navigator.share==="function";}catch(e){return false;}}
 
 /* ---------- render & events ---------- */
@@ -932,6 +966,9 @@ stage.addEventListener("click",function(e){
   if(a==="addmat"){if(w.mat.length<20)w.mat.push({d:"",a:0,ph:"",pay:"f"});render(false);return;}
   if(a==="addoth"){if(w.oth.length<MAX_OTHERS)w.oth.push({n:""});render(false);return;}
   if(a==="addink"){if(w.ink&&w.ink.length<MAX_INK)w.ink.push({d:"",a:0,g:""});render(false);return;}
+  if(a==="sendask"){SENDST.open=true;SENDST.state="";render(false);return;}
+  if(a==="sendno"){SENDST.open=false;SENDST.state="";render(false);return;}
+  if(a==="sendgo"){sendGo();return;}
   if(a==="print"){printDoc();return;}
   if(a==="share"){try{navigator.share({title:document.title,url:shareUrl()}).catch(function(){});}catch(err){}return;}
   if(a==="copy"){var url=shareUrl(),m=stage.querySelector('[data-o="copyMsg"]');

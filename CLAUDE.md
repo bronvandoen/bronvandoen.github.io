@@ -13,6 +13,7 @@ This file is the current layout. Where the `situated-studio-lead` skill and this
 | A voice memo's audio (MP3) | `public/audio/<entry id>.mp3` | `/audio/<entry id>.mp3` |
 | A print (flyer, poster) and its exported image | `public/prints/<project>/<print>/` | `/prints/<project>/<print>/` |
 | The feedback page (unlisted: no entry, no link from the site, noindex; recipe "Feedback QR" below) | `public/feedback/index.html` | `/feedback/` |
+| A live report (a workshop tool's companion page: every team's plan side by side, live during a session; unlisted, no entry and noindex until it is frozen into an archive piece; receiver below) | `public/tools/<project>/<tool>/live-report-<YYYY-MM-DD>/index.html` | `/tools/<project>/<tool>/live-report-<YYYY-MM-DD>/` |
 | Categories (the public name for `kind`: working notes, workshop tools, prints, essays) | `categories` in `src/lib/entries.ts` | `/categories/<slug>/` |
 | Tags | `src/data/tags.json` (a tag must be listed here before an entry uses it) | `/tags/<tag>/` |
 | Tokens and styles | `src/styles/tokens.css`, `src/styles/archive.css` | |
@@ -56,6 +57,12 @@ Checked by `src/content.config.ts`; the build stops on a mistake.
 2. `pip install segno`, then `python3 scripts/feedback_qr.py <label> <out folder>`. It checks the label, prints the link (`https://bronvandoen.github.io/feedback/?w=<label>`) and writes a PNG (for a slide: upload it to the deck as an image) and an SVG (for print and HTML), ink on transparent. Never change the page or the script to make a code: only the label changes.
 3. Next to the code, print `bronvandoen.github.io/feedback` for people who type. In the slide's speaker notes, name the label and the evening it belongs to, so a reused deck gets a new code.
 4. Messages arrive in the Google Sheet "a Situated Studio Feedback" (Minsung's Drive, the studio's general folder), one row each: Received, Workshop, Name, Message. Only Minsung reads it; Claude can read it through the Google Sheets connector when asked. The receiver's copy is `apps-script/feedback.gs`; a change there only works after Minsung pastes it into the Sheet's Apps Script and chooses Deploy → Manage deployments → edit → Version: New version, which keeps the address. A "New deployment" makes a new address, and the page keeps sending to the old one until `ENDPOINT` in `public/feedback/index.html` is changed and published.
+
+**Team budgets receiver** (the "Send to the live report" button in a workshop tool):
+1. A team taps the button, reads what is sent and where (the consent panel), and confirms with a second tap. Nothing leaves the tool before that. The tool posts its own link to `SEND.endpoint`; the receiver writes it to the sheet "Expanding Practices: team links (host only) (Responses)", the same tab as the host form, with "tool" in its fourth column. The live report reads that sheet.
+2. The receiver's copy is `apps-script/team-budgets.gs`. It holds the editions in `EDITIONS`: each with the window it accepts sends in, the moment round 2 starts, and the address of the tool it accepts links from. It refuses anything else and never writes a link twice. The tool shows the button only until the window's end (`SEND.until`).
+3. Deploying works as for the feedback receiver: Deploy → Manage deployments → edit → Version: New version keeps the address.
+4. The host form stays as the fallback: the tool offers its pre-filled link when a send fails, and the host can scan a team's code and paste it there. The host corrects or deletes rows in the sheet.
 
 **Essays and statements**: an essay is writing between our raw notes (working notes) and published work. A statement (where we stand) is an essay tagged `statement`.
 
