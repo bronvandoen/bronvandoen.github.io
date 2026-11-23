@@ -1,6 +1,7 @@
 ---
 title: Budget your ambition, together
 date: 2026-11-19
+updated: 2026-11-23
 summary: A phone tool for our Economic Cultures session at Expanding Practices, Nieuwe Instituut. A team picks a situation in Rotterdam and budgets a project of about €55,000 with three backers, each paying for its own purpose.
 kind: tool
 tags: [economic-cultures, budgets, fair-practice]

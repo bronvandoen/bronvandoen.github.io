@@ -566,7 +566,7 @@ var STEPS=[
      h+=situ(true)+
      '<div class="panel"><h2>The rules of the game</h2><table class="frame">'+
      '<tr><td>'+FUND.name+'</td><td>'+FUND.sub.charAt(0).toUpperCase()+FUND.sub.slice(1)+'. Pays at most '+eur(FUND.max)+'. Others must pay at least '+FUND.min+'% of the total.</td></tr>'+
-     '<tr><td>Backers</td><td>'+esc(S.w.reg.n)+', already paying for a few lines, and a third partner you name or roll</td></tr>'+
+     '<tr><td>Backers</td><td>'+esc(S.w.reg.n)+', already paying for a few lines, and a third partner or your own income (sales, tickets), named or rolled</td></tr>'+
      '<tr><td>Time</td><td>6 months, a day a week each</td></tr>'+
      '<tr><td>Rate</td><td>€55 an hour, the same for everyone</td></tr>'+
      '<tr><td>Parts</td><td>'+hrs(S.w.parts.reduce(function(s,p){return s+p.l.reduce(function(t,l){return t+l.h;},0);},0))+' of work in five parts, not yet given to anyone</td></tr>'+
@@ -580,7 +580,7 @@ var STEPS=[
  }},
  {t:"Who we are",r:function(){
    var w=S.w,h=heading("Step 1","Who we are")+situ(false)+
-   '<p class="lead">You may have met a minute ago. Start from what each of you brings.</p>';
+   '<p class="lead">You may have met a minute ago. Start from what each of you brings. The typist types as you talk, not afterwards.</p>';
    w.mem.forEach(function(m,i){
      var b="mem."+i;
      h+='<div class="panel card"><div class="cardhead"><h2>'+esc(m.n||"Member "+(i+1))+'</h2>'+(w.mem.length>MIN_MEMBERS?'<button class="btn small" data-delm="'+i+'">Remove</button>':'')+'</div>'+
@@ -597,7 +597,6 @@ var STEPS=[
    var C=card();
    return heading("Step 2","Our sentence")+chips()+situ(true)+
    '<div class="panel">'+txt("sent","Our project statement","What you make, with whom, and where. A starter, finished but not decided: make it yours.",null,true,240)+
-   txt("team","Our team's name",null,null,false,40,teamPh())+
    txt("months","How many months does it run?","Keep it at 6 for today. Change it, and watch the number below.","number")+
    '<table class="sum"><tr class="t"><td>Our time in this project<small>'+out("commitHow")+'</small></td><td>'+out("teamCommit")+'</td></tr></table></div>'+
    pause("Read it out loud. Each of you says one thing to change, and the typist types it. Then decide together, and say it out loud.");
@@ -625,11 +624,11 @@ var STEPS=[
  }},
  {t:"Who pays for what",r:function(){
    var w=S.w,c=calc(),h=heading("Step 4","Who pays for what")+
-   '<p class="lead">Three backers, each paying for its own purpose. Tap who pays for each line.</p>'+
+   '<p class="lead">Three backers, each paying for its own purpose; the third can also be what the project earns itself. Tap who pays for each line.</p>'+
    '<div class="panel"><h2>Our backers</h2>'+
    '<h3>1 · '+FUND.name+'</h3><p>'+FUND.sub.charAt(0).toUpperCase()+FUND.sub.slice(1)+'. Pays at most '+eur(FUND.max)+'; others must pay at least '+FUND.min+'% of the total. Every line starts here.</p>'+
    '<h3>2 · Our regional backer</h3>'+cell("reg.n","Who",null,80)+'<p class="note" style="margin-top:6px">It starts with the lines it would usually pay for.</p>'+
-   '<h3>3 · Our third partner</h3>';
+   '<h3>3 · Our third partner, or our own income</h3><p class="note">A partner who pays for its own purpose, or what the project earns: sales, tickets.</p>';
    w.oth.forEach(function(x,i){
      var why=partnerWhy(x.n);
      h+='<div class="ln"><div class="pickrow">'+cell("oth."+i+".n",i?"Another partner":"Who",null,60)+'<button class="btn small" data-roll="'+i+'">'+DIE+'Roll</button></div>'+
@@ -674,10 +673,11 @@ var STEPS=[
  }},
  {t:"Why it's worth it",r:function(){
    return heading("Step 5","Why it's worth it")+'<div data-o="congrats"></div>'+
-   '<div class="panel">'+txt("why","Why this deserves fair support","Declare what this project is to Rotterdam and her people. Make it a statement, not a request.",null,true,240)+'</div>'+
+   '<div class="panel">'+txt("why","Why this deserves fair support","Declare what this project is to Rotterdam and her people. Make it a statement, not a request.",null,true,240)+
+   txt("team","Our project's name","Now that you know what it is, name it. The name replaces your team's colour.",null,false,40,teamPh())+'</div>'+
    '<div class="panel"><h2>Is it complete and balanced?</h2>'+out("checks")+'</div>'+receipt()+
    '<div class="docs">'+out("doc")+'</div>'+
-   '<div class="panel"><h2>Our team\'s code</h2><p><b>Your team name, first names and numbers may be shown on our archive.</b></p>'+
+   '<div class="panel"><h2>Our team\'s code</h2><p><b>Your project\'s name, first names and numbers may be shown on our archive.</b></p>'+
    '<p>Scan it with each other\'s phones. The code is the whole budget: nothing is kept anywhere else.</p>'+
    '<div class="qrbox" data-o="qr"></div>'+
    '<div class="row"><button class="btn primary" data-act="print">Save as a PDF</button>'+(canShare()?'<button class="btn" data-act="share">Send the link</button>':'')+'<button class="btn" data-act="copy">Copy link</button></div>'+
@@ -733,7 +733,7 @@ function checks(c){
   list.push([FUND.name+" pays at most "+eur(FUND.max),!c.over,c.over?eur(c.over)+" over: move lines to the others":""]);
   list.push(["Others pay at least "+FUND.min+"%",c.pct>=FUND.min,Math.round(c.pct)+"% now"+(c.short?", "+eur(c.short)+" short":"")]);
   var t0=w.oth[0]||{n:""};
-  list.push(["Our third partner is named, and pays for something",!!(t0.n&&c.by.o0>0)]);
+  list.push(["Our third partner or own income is named, and pays for something",!!(t0.n&&c.by.o0>0)]);
   /* the hourly cap holds for every paid hour: the team rate, members' own rates and people paid from outside the team */
   var high=[];
   if(w.same){if(w.rate>FUND.cap)high.push("our team rate");}
@@ -881,7 +881,7 @@ function sendPanel(){
   if(SENDST.state==="done")return h+'<p class="status ok">'+esc(SENDST.msg)+'</p><div class="row"><button class="btn small" data-act="sendask">Changed something? Send it again</button></div></div>';
   if(!SENDST.open)return h+'<p class="flag" data-o="sendhint">'+sendHint()+'</p>'+'<div class="row"><button class="btn primary" data-act="sendask">Send to the live report</button></div></div>';
   h+='<div class="consent"><p><b>What happens when you send</b></p><ul>'+
-    '<li>We receive your team\'s code: your team name, your first names, your budget and your claim, exactly as in this tool.</li>'+
+    '<li>We receive your team\'s code: your project\'s name, your first names, your budget and your claim, exactly as in this tool.</li>'+
     '<li>It shows in the live report on the screen in this room, beside the other teams.</li>'+
     '<li>Afterwards the live report stays on our archive as the record of today, under CC BY 4.0, credited to your team.</li>'+
     '<li>Nothing else is sent, and nothing about this phone.</li></ul></div>';
