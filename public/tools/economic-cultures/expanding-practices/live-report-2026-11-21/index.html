@@ -499,13 +499,12 @@ function calc(){
 
 /* ---------- the frame: written in advance, filled by the plans ---------- */
 var EDITION={
-  sheet:"1jKk63m2X2oAzEV1TW4OZXzHGiNmZZuzIQgL1fHM_BYQ",
   series:"Economic Cultures at Expanding Practices",
   where:"Nieuwe Instituut, Rotterdam · 21 November 2026",
   title:"Budget your ambition, together",
   purpose:"In half an hour, teams of people who had mostly just met took a situation drawn from Rotterdam today and wrote a budget for an ambitious cultural project of about €55,000: within the rules of Fonds Lef, an imaginary fund, and paying everyone in it fairly.",
   statement:"No one doubts the talent of starting creatives. What they are asked to prove is that they can be trusted: with each other, with a partner, with money.",
-  fine:"Today the teams showed their working: who does each hour, who pays each euro, and at what rate. Economic Cultures prepares that ground. The other half is the industry's: to keep an open mind, to say plainly what it needs to see, and to build the infrastructure that lets newcomers find each other, and find backing.",
+  fine:"On 21 November the teams showed their working: who does each hour, who pays each euro, and at what rate. Economic Cultures prepares that ground. The other half is the industry's: to keep an open mind, to say plainly what it needs to see, and to build the infrastructure that lets newcomers find each other, and find backing.",
   conclusion:"Their ambition deserves a fair chance.",
   conclusionFine:"The numbers above can be checked. What each team claims and makes is a cultural promise, and no budget can prove that in advance. Backing it takes trust in the numbers, and the courage to bet on their ambitions.",
   alone:25000,
@@ -521,8 +520,29 @@ var PAWN={1:"var(--p1)",2:"var(--p2)",3:"var(--p3)",4:"var(--p4)",5:"var(--p5)"}
 /* text on the pawn colour: paper on blue and purple, ink on pink, orange and red (each at least 4.5:1) */
 var ON={1:"#FBF8F1",2:"#111111",3:"#111111",4:"#111111",5:"#FBF8F1"};
 var PAWN_NAME={1:"Blue",2:"Pink",3:"Orange",4:"Red",5:"Purple"};
-var SAMPLES=[{"round": 1, "link": "https://bronvandoen.github.io/tools/economic-cultures/expanding-practices/?card=1#s=Z6RDN3P0.H$6GJZ1NIWO*CICACV3SFRVTN-R/5XZT-U27$$.F1AEC9TZKB:WXJQJ418/4ZE865KMK5EM8$+.M0WAIUEASPLJX7MC80JQUP24A0V*Q/CJV8GG$E5Q/8C-51$L73UPMUJGL:J$Q5M5NRHDHGIN-1+*SJSG3VANK5A:*F+Z4LUQ0075+3F7Q5HNU0U++5T4OC6UB2PV$GR9$SBZ0G5X7G3WKAJ8*0/--QAUYHOEQGM+FDSL1$$HJ6LPMEKV4MTDJD2.8SQ867*VFIRVKTB:0X:GID5+THLW08.1TB2M2J-V.Y8$RBHR4A7AFXUW68-6WMY7RRDV52NRALQHX8HR782N8+MJ9M/7M7T$M0U-1GD5S31NZ86HW+048CDAUT/66+US1JBJVBPXZTO746M.YRPHI/0/$H/D/DUHX3F-A135GFHUFVI1BGIHH$0DZML/LC*75N+QZ7E.HH53CMKEP/QSD9VMG65:*YH7L9X1E3W:2ZM3U1BVPQ9::J*4*1RFL89QW14KBH0UGL1W0T+GK33LC:8RL6C5.7H+AEIRTKL+1G1TDX-RVPKAGH2DGN$5JWB540JJJ9ERRCR7UF2X0B8HLY3W360ZQ:PKF2.QQ2VKPU9V-46RO2VHI+6WT45CSGOI7DAQVR1LDC.*.V8U7G+G6I$T-UR6J5Z:J2.PCXCW2$UZ8IHR-N:JAO+SYE+MY0$+I-71S"}, {"round": 1, "link": "https://bronvandoen.github.io/tools/economic-cultures/expanding-practices/?card=2#s=Z7A6-RJSO$TKG1T5I1WJMU+SBG8XGVVDP$E$BBRM*ORE0IB8B8FK1$OLNGVCJ9QA.C2.ZB1-HCD:WDVU5HYKL2S260U85WRQ5DUFU2XQG5M9+GSWSWN8Y:0012ZAJ+M/DVEW-22WFW5$90./L05TZ::CBPAXB9VY63Q1/NPUU562P:D7$.PD50ND-PD96C-0:E62178+VYOF68MTQG*0E1UPE0NW5Y5YIPQUJF1/TABHRTF:00U4JNV1XAU5XF+:MZ0GF9VH$GR72BA2B+O6MD9XBLIPG$LQWJ0*DNL14I-SN1+/:R+XTRINZ87YDDQ5XDJJZIEVAS3V/U4PY1ZB1BRRJT1ERAWB-H4WIR2TC4NWPI*8ATWZ/2VY.NF4YP3U-IAV05Y74PLPN8$BVB44J+O3B25.R3/BX-7TBGEVY7*DVZCC-6TEW.6T8AHS3AUT0WNPCYMZFC0JEGTJT+1BQ3UFOWWYQ5E6+4:.5X:Z+BR8U8*A/6W/JSBEN09UW$2K/YDMS5F-/LGGADOZ727DS**84MZXKBTG4VKIAS:P1B:IFU99PWXJ77QGHP704AECA0.I7AJJWX8YU0Y/FMYVWQ9-:DTST84HWZEVJ3KD152+3"}, {"round": 1, "link": "https://bronvandoen.github.io/tools/economic-cultures/expanding-practices/?card=3#s=Z6RDN3P0.H$6GJZ1NGS.JLXPE0BUA50.K7+PPA2$Q+T3AUM:.979Y727ONYT-9*2R/*C2SIUTIWZE40DWDYXHC1Q628E8+:*T9J0GDT/P9IGOCD5CMF3H0NT0HL3+9/0EW+1/JPNT6JHS10G/7M0JGWX8SJU+5TTWMGJ9YGH.5KWKIKXDK:-$5F4JOFIEV18O9K9MJGW2Z+AXB23HZ78EMT742IGWY5S1GK98CP$8T0EWG-FCGTYGAY/VLBA+BPT:KQI67$QD2L/CM0EL16+$D*/54-HN*124GAV+3Q6RQSETF47S-HJ+-Z4/E3O$PE$/VWB249019AT48TIPCVG1Z:J9I-Z36.DG**RTB$3B1*RSQW*2-MEK6ZN0J3NO3-.$BZOI5/MV*2Q3CAT*72BQMV723J-7DB/BLV8F0OG+S7F1I4N7IHRIB*Q20ZI179Z+.P8P9S7WEDTL1NZRO2G.8CNR7YJM$.FDIORB*G+9-4VCC48ECRXZA81ZAPYJ90-:T48V7FEW-HE.:G6+IFZX7T3SE4EV3H6C7TD+$2:68/CPSC9/5-AX5B:4I9.0HJ-Q9UX5+D9BN65YET5*5F7M$8EZ2VHXBWGZ4K$HG75UKJ*GQ*887H61TLP:OH:W9IGB:8DM49CHJJPCJH8+1PBR2UD3GG7MEZAGF:I:OWTGRBBX4LPDOMIBDVZR"}, {"round": 2, "link": "https://bronvandoen.github.io/tools/economic-cultures/expanding-practices/?card=4#s=Z6QK/TU3KSLJV1SU$3ERPQI:SIQY*BGJNLW8FI.Z0-GHE1CD5E7*4N1ZDT3-WAGN4GEAZABJ.B.32*YH/E+*BB$4X750Q$NETFC5R2Y3SC0.SHOFGD2DS9.O5AB$D4:FUP2XNCBANPD9P155G4NRGG6*RLH1*IU+NHC$M2YF*FS84P3BT208HAAY7098-O22AE.GOP8U4B2Y1BYVS+.AL$G$4HGJ21OC6O5SS3YL$ORYPU5M-91F1H-2B0Z2LH/UOHT2NOU5TH$4PX*MX$H3BHXTN6$8NYJF8JCE89OE/1UY80KKX*1U/L27$466XKZ2:IC-OI-:FJ2TT.C+92*C3W4I-RF8EH/9ZEX-SPC.RBU8-Q6.O49BV86R:AD:YM+UH2$C8LED:3LLC62DJSNQY27Z13B:S$/4EDL.*4:IHBX7:T0/S9UY-P7YBJ$QE28WAX710EW$T6LG$*C$RVRYMBE9.R+3H62217IGKIGUV.5DL0SZ4E8-41*$IA$GDLYK*U6YLEHUX6Y+NW0-O73XJC5M.XD2G3U2O2W-SG.2X8BQ*MMXG4F2RG:GQ74$5.XXIE:+JVIZT7X$R57NUOC6FM*I$IGPEA85FLGNJ63OVMF-S42G:J1AXI9KCU7H-2O/JPKNE.Z.6"}, {"round": 2, "link": "https://bronvandoen.github.io/tools/economic-cultures/expanding-practices/?card=5#s=Z7$Z+MY1-238TBQO+4ZYS-8WR6I87O1.6LDB6I.S8R5NCMQVM4U$6.KM59Y907E.8SL0AH-ZIF:K:GY04/9RVA+LHTGCZ/D//AAME+-SUDB5OEC3R-RY3.-8G3/FY*Z2$4T9381PWLN8BXC-47:OZX9O.9N-FE*A96*DP1F/1CO/29UP:DPX6C.O62CA*$S.KDCXWZYPVIO+.IH3HWM6R-ASM6Q*GA1MM7ZJJ1G:54L570WIT28X6P./CPZS79VD86P5JCKBMB7M$EV7TJDPQA.-M3B+741-98PJIZMCPEQSL8S4ZA4MX8P:JBI7$BCQ7FD6/A5EY8GG4S*:GDXW8**:FAU-D7GC2X/X+RJ$WDAL9QC7KZD332U+$5WBTQ31W5IYA2TWIEGC3JXS1F68:KHMC9AL7LTSW8TH130MCB2YLOK5HJ2YJY/77F08EF3OYE$+*BRK*HC$FNK9YRNU+0-3TO:GV75/.6.1HYIVVE29D4:O7OGU+7*.KGUD:UZS/LK+X8WUGNH9RLS0G1XT7P8CXEPDP769T3XUHP1M0A/LWWH*CG7N052X1B$QD0.W1B75BP133ZX4.0JB-Z32S"}];
-var FORCE_DEMO=/*FORCE_DEMO*/false;
+/* the record of 21 November 2026: the four plans the teams sent, as the sheet held them at the close (rounds as the receiver set them: round 2 from 15:50) */
+var RECORD=[
+{
+"sent": "21/11/2026 15:49:08",
+"round": 1,
+"link": "https://bronvandoen.github.io/tools/economic-cultures/expanding-practices/?card=1#s=Z8KML5XX3KD1O1T5F01GU$IJN8PAXWPQYOCLT4LJ.YCMW:65L7H6Z29GM.+LL3P:DV806DR99IGM/6:L*+GRW2DBM0IP-E9TGIV4*QKQHO0KZB6Q90:55+ULP3G/-ZF4L-C2*3/8-JQL88KCMFNL7D-CMMPB2ASTMDNZOV.KQ0W5MZ:FY-9$/7C499TU5V8KR5SM:Q9V5V-5ODRL+YC$UW/ZV7T7L8M971BHW7YT6Y+.+RTMK3.WV0PCYB9RZBP0B/Z5.5HNY1$Q/-7DKYBA$2VMGY7RP++*X889004T4A+7BAH/2BN9IJ+LAIVEAZGLUW98XEK9Q8WIGK6-.8W372YZZ6$/R9H/N:UYJ0T1MF8/Q.Z+$8W28C/Y:0JYOX1-II99I4902LNURG+3PT8CY0$2KA1ZTHU.FD59S3+3B7O$WA7Y5FN006A8Y.0-9IT1JLVOH**GLHDKYUOYX2H2TJ32TJYL5SV/A4*LMLGPXHF4-8DHZFDGRVTQ/JGU7Y8*231EFI153OAMV9:1WJGMLJV$KJKCZB7/EWIRE4TQ7JYFL+4ZNXEI:HFBVAEHVA6H84*N9ILFS3M9QE1RZ5-YC-NHVGVO-ENAW097C0AIXHDI$+F*.I8RTK56:WJUX4E6CVJR2HBQGEC9S.MBH22MJJJST9*1:0.3A4BNQE$*+7HXKA-XY75+4.J97J15ANOOKA91180BTPAAOEHCQ9WALQN:ITSOSGDCILWM7/SO48DU$5T.Y2OPYA/GB$C*BGBV*0DI9-H/OUD/I3T.SHARO"
+},
+{
+"sent": "21/11/2026 15:49:19",
+"round": 1,
+"link": "https://bronvandoen.github.io/tools/economic-cultures/expanding-practices/?card=2#s=Z7$Z.:HH54C3R1T/1$VF5Y07A8S..LJ+AMIU3AED$J59I9QWN7QM.$0HPYX213F/0L*K7/T$45$06NKZB+S1$8AZ6OP/+4J1.D7KZ6-GQ8OHQALP:9Q5XP4ZJ595T*RXZNV4KI/JRHKG*IQYC7M2Z5M1E/1R55Z87IN8T$NO8FR8-PH$AQFPLI*OU:.V8D-M2A9E73Z0TBR50E+ATI-H92EAJ4JT9+7CDGI1G2QJJ3473-GXYC5EG3BUIQJ.Q4665CZX5D.ZHGFWR2IH$32W:13-9OPUV:G.3G75D6IHBGAMG0:B15D5Z3A/16W22G7VM0EW7B4GB+OVJ:*/.EV3ANKWAW0VLGE/9$DOS-P896+FYWR-Z0YO/1E1I7D10RDC0CFZOEH6QVW:B0JZ9.ZKUF4-3FSLJJUHWM4Z*8-PQVH-2QS6G7W2*Z-A27VGLEP9XTTW3362-DJ6/UV6BU.L/6WJS*JHEYFFN6+K*E$F5KBE1DA$2EH107SQ8J0U4FWU$4WG1H*TWTA*7WO-S90:B3LHD-J7CJ78+ADC6OL9P4E$H/:K-F43HI$V9KBM3Q2X1JFEIRZRXPI5NC8.*FQFK40P47SK0Z5HU$S7+IRE+Z*+QDT/E2QAMNA$4MMM"
+},
+{
+"sent": "21/11/2026 16:39:55",
+"round": 2,
+"link": "https://bronvandoen.github.io/tools/economic-cultures/expanding-practices/?card=3#s=Z6QL08*3B-+I.1SNN9UC92YAL9NNMLXOZYU**B:94FDR927P.CCH8L6QVICS*3K+5SM./NA**64J45HRK-E06H:-2MHGS0Z9$47NQD*0HS-DSCTTT*WRXARY86DU/1LA.+IH1GA-/7A7ATWR83P2QB861H+8/744.KR/R9KQO048-WKM5$$1T0V48D5VH-XU*7.1J+7IK5K9HG*MT/3*KNBEG8E314F2Q7AOFB7SA4XYVSQ/:AJ/+CF0V.4W4DRO+T2:E-F0L36+D7A0$O:PI57XKPH1RAM4*JO/SS1:KOKEK7*5A28M25UTQ2*TDV$1PNJBBJWY5/1Y6HRHI2$PYF6FCN0M0FBJC:-0C:RORBZ.E22VJQPHEC7FO2$K6L9MK8L8X$4E3/*6CHZ9W6:L2B3X0BZ522ZOIE0RG2L3RMAC-B5EQ7VZ:95+SE/U3HYLA+OXHHEMC567BJS58LGWJ4NL59*VA/LOBJR9*ZSSOSE3P9BU$QUO3LA1TD-EH43VPTVXW37.8MC+U3NYM8I0-FWGTOK8.BV76DPA+H*TQFCHU4EUR8Y-/J2/3Z4843P1BE9CU7SFT+3LY8.9P0.UAN2UAI50LRXMLUKVEH0QT5FMX.R/G3MOZAR2J87NMA0KC0WP1YX1IIN6Y$6VE2Z7*D$Y7RLNVQSARC554HK8*KAG810.BWWH3P.XL3KZ46R3XSHMJ9MTRHW93FJN73981E1VG7$/.1MMSK"
+},
+{
+"sent": "21/11/2026 16:41:45",
+"round": 2,
+"link": "https://bronvandoen.github.io/tools/economic-cultures/expanding-practices/?card=2#s=ZA/9E2S-DHIF71R+5Z/J1EK*VAX-56LGTNP9C11AL-APFLH*98A$2BR$LAJOB9$$SUSH739EZ0F871NT93G:SD-HI24IN3DN+3:I./RG:8L3N86GL/G5CD-GG1.W3V1T7HHZB0.EQR733GAA7ITAI6I31NIQRFA5PP8R8KS:K974TAPKS$DUHBLW0F8JII:314$0IN6/TVBEP9:-19O3ODS8SI-T4Z4Z2NZGX4QJ8G2X*$VYE01L.0GNTQUCA1LEVSS/*P7JBD95458$$V6KGFXCM02OS18DRAQ:IW.7X:532E9S*RJ*1U4S2BC5S*QI0$XSV04KA.$HMZ4:97KL5SSK2WO632Q8I-88/G2LTE0YZLTKY5D/C85J99II.4+LRA.:H8IGDTF.DCB0LS1KGJU.78:JSP*YVLBZP1Q4+ZUE/G2I$8VT/.LR*P2-I9XK/NT-P699T8MOJ:I/J:YM4HL593H81EJZ7A$OSIAVQII8Y7UBYGW/:GZCT8.:5FIYUIO$0A*7ESVLTXE6MDI3XE8$8N*2-ANB//UR6H3RV7TMYMWZKAPGV1WSBT0WNLE9N9JHHA6SMCYF5DUEB0DQLG8GEC*0Y.CBB2930DD.CG9QE2JNR4K5U$LKMVXZ$G9V*LAN6DLS*991Y0RCDG5LOHJJLXSVDCD3LIBVL$K*WJ/VE7QVDYD3KBRTY6+SGS1*QXA/17DTP2O2OVWGPIDQEW+*Q/0A:DEJGTE2$X.VW98N$KZR.VG*44MIO/2PELLC*5FVFNO+OU*LZ8T1TBKEMACAYAI.L98*-KCSWHNBXFL9QO3Y:85TZFJJMT6+GDV96FBUGY5R4AZ53VY8/5/X8CR7TVH9QC3011Z69EDX74.K36HQ+A/91Q7US7+D7D/VV48$FBVIV.XXHYB-2D2ES1OX-/2$:AXCD-U57IQFH00"
+}
+];
 
 /* ---------- small helpers ---------- */
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch];});}
@@ -538,7 +558,7 @@ function list(a){a=a.filter(Boolean);if(a.length<2)return a.join("");return a.sl
 function codeOf(link){var t=String(link||"").trim(),i=t.indexOf("#s=");return i<0?"":t.slice(i+3).replace(/\s+/g,"");}
 function readPlan(link){
   var code=codeOf(link);if(!code)return Promise.reject(new Error("not a team link"));
-  return decode(code).then(function(){var w=JSON.parse(JSON.stringify(S.w)),c=calc();return describe(w,c,code);});
+  return decode(code).then(function(){var w=JSON.parse(JSON.stringify(S.w),function(k,v){return typeof v==="string"?v.trim():v;}),c=calc();return describe(w,c,code);});
 }
 function describe(w,c,code){
   var C=CARDS[w.card],pl={w:w,c:c,code:code,C:C};
@@ -731,20 +751,12 @@ function closePlan(){var k=OPEN;OPEN=null;document.body.classList.remove("open")
   var el=k&&document.querySelector('.plan[data-k="'+k+'"]');if(el)el.scrollIntoView({block:"center"});}
 function step(d){var ps=shown();if(!ps.length)return;var i=-1;ps.forEach(function(p,j){if(p.key===OPEN)i=j;});openPlan(ps[(i+d+ps.length)%ps.length].key);}
 
-/* ---------- reading the sheet ---------- */
-function parseCSV(t){var rows=[],row=[],f="",q=false;for(var i=0;i<t.length;i++){var ch=t[i];
-  if(q){if(ch==='"'){if(t[i+1]==='"'){f+='"';i++;}else q=false;}else f+=ch;}
-  else if(ch==='"')q=true;else if(ch===","){row.push(f);f="";}else if(ch==="\n"){row.push(f);rows.push(row);row=[];f="";}else if(ch!=="\r")f+=ch;}
-  if(f||row.length){row.push(f);rows.push(row);}return rows;}
-var params=new URLSearchParams(location.search),DEMO=params.has("demo")||FORCE_DEMO,SHEET=params.get("sheet")||EDITION.sheet;
+/* ---------- reading the record ---------- */
+var params=new URLSearchParams(location.search);
 if(params.get("round")==="1"||params.get("round")==="2")ROUND=params.get("round");
 if(params.has("screen"))document.body.classList.add("screen");
-var LAST_OK=null,BAD=0,BUSY=false;
-function fetchRows(){
-  if(DEMO)return Promise.resolve(SAMPLES.map(function(s,i){return ["sample "+(i+1),s.link,String(s.round)];}));
-  return fetch("https://docs.google.com/spreadsheets/d/"+encodeURIComponent(SHEET)+"/gviz/tq?tqx=out:csv&_="+Date.now(),{cache:"no-store"})
-    .then(function(r){if(!r.ok)throw new Error("sheet "+r.status);return r.text();}).then(function(t){return parseCSV(t).slice(1);});
-}
+var BAD=0,BUSY=false;
+function fetchRows(){return Promise.resolve(RECORD.map(function(r){return [r.sent,r.link,String(r.round)];}));}
 function read(){
   if(BUSY)return;BUSY=true;
   fetchRows().then(function(rows){
@@ -757,20 +769,19 @@ function read(){
     });
     return chain.then(function(){
       PLANS=order.map(function(k){return byKey[k];}).sort(function(a,b){return a.round-b.round||a.w.card-b.w.card;});
-      BAD=bad;LAST_OK=new Date();render();
+      BAD=bad;render();
       PLANS.forEach(function(p){SEEN[p.key]=true;});FIRST=false;
     });
-  }).catch(function(){state(true);}).then(function(){BUSY=false;});
+  }).then(function(){BUSY=false;});
 }
 function render(){
   renderOverview();
   if(OPEN){var still=PLANS.some(function(p){return p.key===OPEN;});if(still)renderFull(PLANS.filter(function(p){return p.key===OPEN;})[0]);else closePlan();}
   state(false);
 }
-var FAILED=false;
-function state(failed){FAILED=failed;renderNav();}
+function state(){renderNav();}
 function renderNav(){
-  var t=LAST_OK?LAST_OK.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}):"–",ctx;
+  var ctx;
   if(OPEN){
     var ps=shown(),idx=0,cur=null;ps.forEach(function(p,j){if(p.key===OPEN){idx=j;cur=p;}});
     ctx='<button class="back" data-nav="back"><span class="l">← All budgets</span><span class="s">← All</span></button>'+
@@ -780,10 +791,9 @@ function renderNav(){
     ctx='<span class="seg2" role="group" aria-label="Rounds">'+[["all","Both rounds","All"],["1","Round 1","1"],["2","Round 2","2"]].map(function(r){
       return '<button data-round="'+r[0]+'" aria-pressed="'+(ROUND===r[0])+'"><span class="l">'+r[1]+'</span><span class="s">'+r[2]+'</span></button>';}).join("")+'</span>';
   }
-  var warn=FAILED||BAD,live=FAILED?"Sheet not read · showing "+t:BAD?BAD+(BAD===1?" row is":" rows are")+" not a team link":
-    (DEMO?"Sample plans":"Live")+" · "+t;
+  var live=BAD?BAD+(BAD===1?" plan":" plans")+" could not be read":"The record of 21 November 2026";
   document.getElementById("nav").innerHTML=
-    '<span class="ctx">'+ctx+'</span><span class="live'+(warn?" warn":"")+'" title="New budgets appear by themselves; last checked '+t+'"><span class="dot"></span>'+esc(live)+'</span>';
+    '<span class="ctx">'+ctx+'</span><span class="live'+(BAD?" warn":"")+'">'+esc(live)+'</span>';
 }
 document.getElementById("nav").addEventListener("click",function(e){
   var b=e.target.closest("button");if(!b)return;
@@ -793,12 +803,11 @@ document.getElementById("nav").addEventListener("click",function(e){
 });
 document.addEventListener("keydown",function(e){
   if(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName))return;
-  if(e.key==="Escape")closePlan();else if(e.key==="ArrowRight")step(1);else if(e.key==="ArrowLeft")step(-1);else if(e.key==="r"||e.key==="R")read();
+  if(e.key==="Escape")closePlan();else if(e.key==="ArrowRight")step(1);else if(e.key==="ArrowLeft")step(-1);
 });
 read();
 var want=decodeURIComponent((location.hash||"").slice(1));
 if(want){var t0=setInterval(function(){if(PLANS.length){clearInterval(t0);openPlan(want);}},300);setTimeout(function(){clearInterval(t0);},8000);}
-if(!DEMO)setInterval(read,10000);
 })();
 </script>
 </body>
