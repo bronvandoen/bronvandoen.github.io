@@ -3,7 +3,7 @@ title: "Economic Cultures at Expanding Practices: the slides"
 date: 2026-11-21
 summary: The slides of Budget your ambition, together, as we showed them at Expanding Practices, Nieuwe Instituut, Rotterdam, on 21 November 2026. Ten slides for a thirty-minute round, from picking a situation to every euro placed.
 kind: print
-tags: [economic-cultures, budgets, fair-practice]
+tags: [economic-cultures, budgets, fair-practice, nieuwe-instituut]
 project: Economic Cultures
 href: /prints/economic-cultures/expanding-practices-2026-11-21/budget-your-ambition-together-slides.pdf
 image: /prints/economic-cultures/expanding-practices-2026-11-21/budget-your-ambition-together-slides.png

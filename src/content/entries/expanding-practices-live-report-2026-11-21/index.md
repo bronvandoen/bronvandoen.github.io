@@ -3,7 +3,7 @@ title: "Live report: Budget your ambition, together"
 date: 2026-11-21
 summary: The four budgets that teams wrote in half an hour at Expanding Practices, Nieuwe Instituut, Rotterdam, side by side as they came in on the day, with what they show together.
 kind: tool
-tags: [economic-cultures, budgets, fair-practice]
+tags: [economic-cultures, budgets, fair-practice, nieuwe-instituut]
 project: Economic Cultures
 href: /tools/economic-cultures/expanding-practices/live-report-2026-11-21/
 ---
