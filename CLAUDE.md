@@ -35,6 +35,10 @@ Checked by `src/content.config.ts`; the build stops on a mistake.
 - Texts, images and prints are CC BY 4.0, crediting a Situated Studio (`LICENSE-CONTENT.md`). The code (site and tools) is MIT (`LICENSE`). Copyright holder: Bron van Doen V.O.F. Quotes and photographs credited to someone else stay theirs.
 - Home, About, entries and tags are indexable. Tools, prints and the 404 page carry `<meta name="robots" content="noindex">`: in a hand-built page under `public/` write the tag in the `<head>`; in an Astro page pass `noindex` to the `Base` layout.
 
+## Data in tools
+
+Tools keep personal input in the browser: no tracking, no analytics, nothing sent in the background. Data leaves the browser only by the user's own active choice, after they have read what is sent and where it goes (the consent panel of the team budgets receiver, below). The work itself lives in the tool's own link, after the `#`.
+
 ## Recipes
 
 **Update a tool or print** (for example new dates on a flyer):
