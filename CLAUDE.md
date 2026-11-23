@@ -64,6 +64,14 @@ Checked by `src/content.config.ts`; the build stops on a mistake.
 3. Deploying works as for the feedback receiver: Deploy → Manage deployments → edit → Version: New version keeps the address.
 4. The host form stays as the fallback: the tool offers its pre-filled link when a send fails, and the host can scan a team's code and paste it there. The host corrects or deletes rows in the sheet.
 
+**Freeze a live report** (after the session; done first for Expanding Practices, 21 November 2026):
+1. Read the session's rows from the team-links sheet (Google Sheets connector) and check the rounds against the receiver's round-2 time.
+2. In the live report's `index.html`, replace the sheet reading with the rows written into the page (`RECORD`: sent, round, link), and remove the polling, the demo samples, the `?sheet` and `?demo` options and the live indicator; the status line names the day ("The record of …"). Put the frame text in the past tense. Change no word the teams typed; trim spaces only.
+3. Add an entry (`kind: tool`, dated the day of the session) with `href` to the report. The page keeps its `noindex` like any tool.
+4. After publishing, the sheet no longer needs "anyone with the link can view".
+
+**Host tags**: every entry made at or for a host institution carries that host's tag (`design-academy-eindhoven`, `nieuwe-instituut`), described as "Our work at and with <host>, starting with …". A new host gets a new tag in `src/data/tags.json`.
+
 **Essays and statements**: an essay is writing between our raw notes (working notes) and published work. A statement (where we stand) is an essay tagged `statement`.
 
 **Change the About page**: it shows the newest entry tagged `about` (an essay tagged `about` and `statement`); older ones tagged `about` are listed as earlier versions. A wording fix edits that entry and sets `updated`. A changed position is a new essay tagged `about` and `statement`, with `supersedes: <old id>`; the old one stays.
