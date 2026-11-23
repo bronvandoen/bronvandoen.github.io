@@ -3,7 +3,7 @@ title: "Fair Practice Code: ten questions to ask yourself"
 date: 2026-11-04
 summary: A one-page handout for Economic Cultures. The ten themes from the 2024 Dutch edition of the Fair Practice Code, in our English translation, and one question about where the code stays a nice idea and not yet a practice.
 kind: print
-tags: [economic-cultures, fair-practice]
+tags: [economic-cultures, fair-practice, design-academy-eindhoven]
 project: Economic Cultures
 href: /prints/economic-cultures/fair-practice-ten-themes/
 image: /prints/economic-cultures/fair-practice-ten-themes/fair-practice-code-ten-themes.png

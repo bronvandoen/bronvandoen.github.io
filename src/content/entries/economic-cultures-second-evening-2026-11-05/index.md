@@ -3,7 +3,7 @@ title: Economic Cultures, the second evening
 date: 2026-11-10
 summary: A look back at the second evening of Economic Cultures at Design Academy Eindhoven, on 5 November 2026, with references from that evening.
 kind: essay
-tags: [economic-cultures, budgets, alternative-economies]
+tags: [economic-cultures, budgets, alternative-economies, design-academy-eindhoven]
 project: Economic Cultures
 updated: 2026-11-17
 voices: [Minsung Wang, Gemma Medina, Ned Kaar]

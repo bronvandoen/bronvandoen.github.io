@@ -3,7 +3,7 @@ title: "Economic Cultures, Module 5: Seeds of Hope"
 date: 2026-11-10
 summary: The slides of Seeds of Hope as we ran it at DAE on 10 November 2026, the definitive version. An editor's table with twelve bookmarks from the earlier modules, the printed transcript of our first conversation, and the end of the workshop.
 kind: print
-tags: [economic-cultures, alternative-economies, commons]
+tags: [economic-cultures, alternative-economies, commons, design-academy-eindhoven]
 project: Economic Cultures
 href: /prints/economic-cultures/modules-2026-11-10/module-5-seeds-of-hope-part-2.pdf
 image: /prints/economic-cultures/modules-2026-11-10/module-5-seeds-of-hope-part-2.png

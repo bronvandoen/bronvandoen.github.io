@@ -1,7 +1,7 @@
 {
   "economic-cultures": {
     "label": "Economic Cultures",
-    "about": "Our workshop on money for recent design graduates, with DAE Blueprints."
+    "about": "Our programme about money for starting creatives, initiated through DAE Blueprints."
   },
   "fair-practice": {
     "label": "Fair practice",
@@ -38,5 +38,9 @@
   "nieuwe-instituut": {
     "label": "Nieuwe Instituut",
     "about": "Our work at and with the Nieuwe Instituut in Rotterdam, starting with Expanding Practices in November 2026."
+  },
+  "design-academy-eindhoven": {
+    "label": "Design Academy Eindhoven",
+    "about": "The first edition of Economic Cultures: three evenings with DAE Blueprints for recent graduates of Design Academy Eindhoven, November 2026."
   }
 }

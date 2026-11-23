@@ -29,7 +29,7 @@ The four plans, as the teams sent them that afternoon, are on [the live report](
 
 ## A tender room
 
-I felt it at the Design Academy, and I felt it here: the people we work with are tender. They are young and truly curious, and there is a rawness to them, a slight hesitation in their position. It showed in what they asked the panel and in how they worked in the rounds. Some were very careful about even saying what they bring to the table.
+I felt it at Design Academy Eindhoven, and I felt it here: the people we work with are tender. They are inexperienced and truly curious, and there is a rawness to them, a slight hesitation in their position. It showed in what they asked the panel and in how they worked in the rounds. Some were very careful about even saying what they bring to the table.
 
 At the drinks, a few of them told me plainly that they felt out of their element and didn't know who to talk to. I told them it is already something that they came. This is an occasion to walk up to someone you found interesting, in the panel, in a workshop, or someone you have heard of and never spoken to, and say hello. You don't need a pitch or a portfolio. Tell them how you found the event, and what you learned and missed; they want to hear it. The people here gave up a Saturday evening to meet new people and hear new perspectives. You don't need to be more professional than you already are.
 
@@ -43,7 +43,7 @@ Outside, Economic Cultures overlaps too. It touches business basics, bookkeeping
 
 So we never assume we know better. When we work with graduates, we trust their talent because we trust their school: a diploma is a seal of approval, earned by the students and by the teachers who taught them. We trust the entrepreneurial courses inside, and the practices outside.
 
-What is ours is this: we count pennies, and we never shy away from it. In the creative industries, inside school and out, money is a topic people avoid, or think beneath them. For us it is daily. We weigh what a workshop like this one pays against what we think the work is worth, and whether any discount is worth taking. Right now we are working out how to fund a full Agents of Change project in Eindhoven. Whether you are one year out of school or ten, that weighing never stops, and it is what burns people out and drives them towards something steadier. Everything we teach in Economic Cultures is real for us, almost depressingly so.
+What we never shy away from is counting pennies. In the creative industries, inside school and out, money is a topic people avoid, or think beneath them. For us it is daily. We weigh what a workshop like this one pays against what we think the work is worth, and whether any discount is worth taking. Right now we are working out how to fund a full Agents of Change project in Eindhoven. Whether you are one year out of school or ten, that weighing never stops, and it is what burns people out and drives them towards something steadier. Everything we teach in Economic Cultures is real for us, almost depressingly so.
 
 ## A first footing
 
@@ -55,7 +55,7 @@ A few young creatives asked if they could join the full Economic Cultures progra
 
 ## Resources
 
-- [Live report: Budget your ambition, together](/entries/expanding-practices-live-report-2026-11-21/), the four plans of 21 November
+- [Live report: Budget your ambition, together](/entries/expanding-practices-live-report-2026-11-21/), the outcomes of 21 November
 - [Budget your ambition, together](/entries/budget-your-ambition-together/), the tool
 - [The slides of the session](/entries/expanding-practices-slides-2026-11-21/)
 - [All of Economic Cultures](/tags/economic-cultures/): the tools, slides and essays from the Design Academy Eindhoven edition

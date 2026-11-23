@@ -3,7 +3,7 @@ title: Economic Cultures, the first evening
 date: 2026-11-04
 summary: A look back at the first evening of Economic Cultures at Design Academy Eindhoven, on 3 November 2026, with references from that evening.
 kind: essay
-tags: [economic-cultures, fair-practice, rates-and-fees]
+tags: [economic-cultures, fair-practice, rates-and-fees, design-academy-eindhoven]
 project: Economic Cultures
 voices: [Minsung Wang, Gemma Medina, Ned Kaar]
 ---

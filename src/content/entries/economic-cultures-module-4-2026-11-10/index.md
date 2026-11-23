@@ -3,7 +3,7 @@ title: "Economic Cultures, Module 4: Interdependence"
 date: 2026-11-10
 summary: The slides of the fourth module, as we showed them at DAE on 10 November 2026. Mixed teams budget one project together with Our project budget, one slide per step, from what each of us brings to what each of us invoices.
 kind: print
-tags: [economic-cultures, budgets, fair-practice]
+tags: [economic-cultures, budgets, fair-practice, design-academy-eindhoven]
 project: Economic Cultures
 href: /prints/economic-cultures/modules-2026-11-10/module-4-interdependence.pdf
 image: /prints/economic-cultures/modules-2026-11-10/module-4-interdependence.png

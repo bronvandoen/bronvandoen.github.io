@@ -3,7 +3,7 @@ title: "Economic Cultures, Module 3: Project budget"
 date: 2026-11-05
 summary: The slides of the third module, as we showed them at DAE on 5 November 2026. You budget a project of your own with the project-budget tool, one slide per step, from the ambition to who pays for what.
 kind: print
-tags: [economic-cultures, budgets, rates-and-fees]
+tags: [economic-cultures, budgets, rates-and-fees, design-academy-eindhoven]
 project: Economic Cultures
 href: /prints/economic-cultures/modules-2026-11-05/module-3-project-budget.pdf
 image: /prints/economic-cultures/modules-2026-11-05/module-3-project-budget.png

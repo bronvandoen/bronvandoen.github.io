@@ -3,7 +3,7 @@ title: Economic Cultures, the third evening
 date: 2026-11-17
 summary: A look back at the third and last evening of Economic Cultures at Design Academy Eindhoven, on 10 November 2026, and at the three evenings together, with references.
 kind: essay
-tags: [economic-cultures, budgets, commons]
+tags: [economic-cultures, budgets, commons, design-academy-eindhoven]
 project: Economic Cultures
 voices: [Minsung Wang, Gemma Medina, Ned Kaar]
 ---

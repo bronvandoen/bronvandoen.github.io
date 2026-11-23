@@ -3,7 +3,7 @@ title: "Economic Cultures poster: when it's your turn"
 date: 2026-11-04
 summary: An A3 poster for the door of Room 2A at Design Academy Eindhoven, for the students still working late who wonder what we're up to. The same poster in two colour pairings.
 kind: print
-tags: [economic-cultures]
+tags: [economic-cultures, design-academy-eindhoven]
 project: Economic Cultures
 href: /prints/economic-cultures/poster-2026-11/economic-cultures-poster-teal-pink.pdf
 image: /prints/economic-cultures/poster-2026-11/economic-cultures-poster-teal-pink.jpg
